@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sección de Tabulación</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 20px;
+    }
+    .tabs {
+      display: flex;
+      cursor: pointer;
+      border-bottom: 2px solid #ccc;
+    }
+    .tab {
+      padding: 10px 20px;
+      border: 1px solid #ccc;
+      border-bottom: none;
+      background-color: #f1f1f1;
+      margin-right: 5px;
+      transition: background-color 0.3s;
+    }
+    .tab:hover {
+      background-color: #ddd;
+    }
+    .tab.active {
+      background-color: #fff;
+      border-top: 2px solid #007BFF;
+      border-right: 2px solid #007BFF;
+      border-left: 2px solid #007BFF;
+      font-weight: bold;
+    }
+    .tab-content {
+      display: none;
+      padding: 20px;
+      border: 2px solid #ccc;
+      border-top: none;
+      background-color: #fff;
+    }
+    .tab-content.active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <h1>Sección de Tabulación</h1>
+  <div class="tabs">
+    <div class="tab active" data-tab="tab1">Tab 1</div>
+    <div class="tab" data-tab="tab2">Tab 2</div>
+    <div class="tab" data-tab="tab3">Tab 3</div>
+  </div>
+  <div id="tab1" class="tab-content active">
+    <h2>Contenido de Tab 1</h2>
+    <p>Este es el contenido de la primera pestaña.</p>
+  </div>
+  <div id="tab2" class="tab-content">
+    <h2>Contenido de Tab 2</h2>
+    <p>Este es el contenido de la segunda pestaña.</p>
+  </div>
+  <div id="tab3" class="tab-content">
+    <h2>Contenido de Tab 3</h2>
+    <p>Este es el contenido de la tercera pestaña.</p>
+  </div>
+
+  <script>
+    const tabs = document.querySelectorAll('.tab');
+    const tabContents = document.querySelectorAll('.tab-content');
+
+    tabs.forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Eliminar clases activas de todas las pestañas y contenidos
+        tabs.forEach(t => t.classList.remove('active'));
+        tabContents.forEach(content => content.classList.remove('active'));
+
+        // Agregar clase activa a la pestaña seleccionada y su contenido correspondiente
+        tab.classList.add('active');
+        document.getElementById(tab.dataset.tab).classList.add('active');
+      });
+    });
+  </script>
+</body>
+</html>

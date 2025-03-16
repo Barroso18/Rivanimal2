@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="es">
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="logoRivanimal.jpg" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="description" content="Página web para la gestión de voluntarios de Rivanimal" />
+        <meta name="keywords" content="Rivanimal, Protectora, Animales" />
+        <title>Calendario Semanal</title>
+        <link rel="stylesheet" type="text/css" href="estiloMenu.css">
+        <style>
+            .turnos{
+                font-size: 10px;
+            }
+            body {
+                font-family: Arial, sans-serif;
+            }
+            table {
+                /*width: 100%;*/
+                border-collapse: collapse;
+                margin: 20px auto;
+            }
+            th, td {
+                border: 1px solid #000;
+                padding: 10px;
+                text-align: center;
+            }
+            th {
+                background-color: #f4f4f4;
+                font-weight: bold;
+            }
+            th:nth-child(7), td:nth-child(7) {
+                color: red;
+            }
+            .header {
+                text-align: center;
+                font-size: 14px;
+            }
+            h1{
+                justify-content: center;
+                text-align: center;
+            }
+            
+        </style>
+    </head>
+    <body>
+        <nav>
+            <ul>
+                <li>
+                    <a href="calendarioSemanal.html">Inicio</a>
+                </li>
+                <li>
+                    <a href="listaAnimales.html">Animales</a>
+                </li>
+                <li>
+                    <a>Voluntarios</a>
+                </li>
+                <li>
+                    <a>Gestión</a>
+                </li>
+                <li>
+                    <a href="calendarioSemanal.html">Semana</a>
+                </li>
+                <li>
+                    <a href="perfil.html">Tu perfil</a>
+                </li>
+            </ul>
+        </nav>
+        <div id="cabecera">
+            <button>Anterior</button>
+            <h1>Calendario</h1>
+            <button>Siguiente</button>
+        </div>
+        
+        <div>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="header" colspan="2">Turnos</th>
+                        <th>Lunes <br> 12/23</th>
+                        <th>Martes <br> 12/24</th>
+                        <th>Miércoles <br> 12/25</th>
+                        <th>Jueves <br> 12/26</th>
+                        <th>Viernes <br> 12/27</th>
+                        <th>Sábado <br> 12/28</th>
+                        <th>Domingo <br> 12/29</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td rowspan="2" class="turnos">TURNO MAÑANA</td>
+                        <td class="turnos">Voluntarios</td>
+                        <td class="Lunes"></td>
+                        <td class="Martes"></td>
+                        <td class="Miercoles"></td>
+                        <td class="Jueves"></td>
+                        <td class="Viernes"></td>
+                        <td class="Sabado"></td>
+                        <td class="Domingo"></td>
+                    </tr>
+                    <tr>
+                        <td class="turnos">Padrinos y adoptantes</td>
+                        <td class="Lunes">David<br/>Sara</td>
+                        <td class="Martes"></td>
+                        <td class="Miercoles"></td>
+                        <td class="Jueves"></td>
+                        <td class="Viernes"></td>
+                        <td class="Sabado"></td>
+                        <td class="Domingo"></td>
+                    </tr>
+                    <tr>
+                        <td rowspan="2" class="turnos">TURNO TARDE</td>
+                        <td class="turnos">Voluntarios</td>
+                        <td class="Lunes"></td>
+                        <td class="Martes"></td>
+                        <td class="Miercoles"></td>
+                        <td class="Jueves"></td>
+                        <td class="Viernes"></td>
+                        <td class="Sabado"></td>
+                        <td class="Domingo"></td>
+                    </tr>
+                    <tr>
+                        <td class="turnos">Padrinos y adoptantes</td>
+                        <td class="Lunes"></td>
+                        <td class="Martes"></td>
+                        <td class="Miercoles"></td>
+                        <td class="Jueves"></td>
+                        <td class="Viernes"></td>
+                        <td class="Sabado"></td>
+                        <td class="Domingo"></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button>Apuntate</button>
+        </div>
+        <script>
+            //Aqui va el codigo del modal de apuntate
+            function apuntate(){
+                
+            }
+        </script>
+    </body>
+</html>

@@ -1,0 +1,118 @@
+{
+  "animales": [
+    {
+      "url": "../imagenes/Ohana1.jpg",
+      "nombre": "Ohana",
+      "nivel": 2,
+      "clase": "perro",
+      "raza": "Mestizo Pastor Alemán",
+      "sexo": "hembra",
+      "id": "0",
+      "tamaño": "mediano",
+      "situacion": "refugio",
+      "fecha_nacimiento": "2021-07-01",
+      "fecha_ingreso": "2023-09-12",
+      "peso": 0,
+      "comportamiento": ""
+    },
+    {
+      "url": "../imagenes/Gante.jpg",
+      "nombre": "Gante",
+      "nivel": 3,
+      "clase": "perro",
+      "raza": "Mestizo Pastor Alemán",
+      "sexo": "macho",
+      "id": "1",
+      "tamaño": "mediano",
+      "situacion": "refugio",
+      "fecha_nacimiento": "",
+      "fecha_ingreso": "",
+      "peso": 0,
+      "comportamiento": ""
+    },
+    {
+      "url": "../imagenes/Frozen.jpg",
+      "nombre": "Frozen",
+      "nivel": 1,
+      "clase": "perro",
+      "raza": "Mestizo",
+      "sexo": "hembra",
+      "id": "2",
+      "tamaño": "mediano",
+      "situacion": "refugio",
+      "fecha_nacimiento": "",
+      "fecha_ingreso": "2024-12-28",
+      "peso": 0,
+      "comportamiento": ""
+    },
+    {
+      "url": "../imagenes/Guada.jpg",
+      "nombre": "Guada",
+      "nivel": 1,
+      "clase": "perro",
+      "raza": "Dogo Argentino",
+      "sexo": "hembra",
+      "id": "3",
+      "tamaño": "mediano",
+      "situacion": "refugio",
+      "fecha_nacimiento": "2021-07-01",
+      "fecha_ingreso": "2024-11-20",
+      "peso": 0,
+      "comportamiento": ""
+    }
+  ],
+  "paseos": [
+    {
+      "voluntario": "Alex",
+      "animal": "Ohana",
+      "lugarPaseo": "MONTARCO",
+      "cacas": 1,
+      "duracion": 10,
+      "descripcion": "hola",
+      "id": "ccfe"
+    },
+    {
+      "voluntario": "David",
+      "animal": "Gante",
+      "lugarPaseo": "POLIGONO",
+      "cacas": 3,
+      "duracion": 20,
+      "descripcion": "El paseo muy bien se mostro receptivo",
+      "id": "4089"
+    }
+  ],
+  "usuarios": [
+    {
+      "nombre": "David",
+      "pass": "$2a$10$ZsXSYqwDx1yDUF75rfxJmO4lmW.u248h7tw5o9gTbbxP2SxowzemC",
+      "id": "76ee"
+    },
+    {
+      "nombre": "Alex",
+      "pass": "$2a$10$RFRyXYdGGB6XEeIH8ECN0evITAViiCJP4hkfVITXTq2WRwNtDnRbG",
+      "id": "744e"
+    }
+  ],
+  "lugares": [
+    {
+      "nombre": "MONTARCO",
+      "id": "b204"
+    },
+    {
+      "nombre": "A3",
+      "id": "d056"
+    },
+    {
+      "nombre": "CASA MÚSICA",
+      "id": "0304"
+    },
+    {
+      "nombre": "POLIGONO",
+      "id": "821e"
+    },
+    {
+      "nombre": "RAYUELA",
+      "id": "d9d4"
+    }
+  ]
+}

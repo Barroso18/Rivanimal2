@@ -1,0 +1,90 @@
+/* Estilos del menú superior */
+.menu-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #000; /* Fondo negro */
+  color: #fff; /* Texto blanco */
+  padding: 10px 20px;
+  position: relative; /* Clave para posicionar el carrito correctamente */
+}
+
+.icono-supermercado {
+  height: 40px;
+  width: auto;
+}
+
+.carrito-texto {
+  display: inline-block;
+  background-color: #ff0000; /* Círculo rojo */
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 5px 10px;
+  text-align: center;
+  margin-left: 5px;
+  position: relative;
+  top: -3px; /* Ajuste para centrar verticalmente con el icono */
+}
+
+.toggle-carrito {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #fff; /* Icono del carrito en blanco */
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+/* Hover para el botón del carrito */
+.toggle-carrito:hover {
+  color: #f0ad4e; /* Cambia a un color ámbar al pasar el ratón */
+}
+
+/* Contenedor del carrito de productos */
+.carrito-productos {
+  position: absolute;
+  top: 100%; /* Coloca el carrito justo debajo del botón */
+  right: 0; /* Alinea el carrito a la derecha */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  width: 250px;
+  z-index: 1;
+  text-align: left;
+  max-height: 300px; /* Limita la altura del carrito */
+  overflow-y: auto; /* Permite desplazamiento si hay más productos */
+}
+
+.carrito-productos h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.carrito-productos ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.carrito-productos ul li {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+  color: #333; /* Color del texto en la lista */
+}
+
+.carrito-productos ul li:last-child {
+  border-bottom: none;
+}
+
+.carrito-productos p {
+  margin: 0;
+  text-align: center;
+  color: #999;
+}

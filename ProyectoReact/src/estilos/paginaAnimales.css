@@ -1,0 +1,50 @@
+img{
+    width: 200px;
+    height: 200px;
+}
+.Animales{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+.lista{
+    display: flex;
+    width: 100%;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+}
+.lista ul{
+    display: flex;
+    width: 50%;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    flex-direction: column;
+    list-style-type: none;
+}
+.lista ul li{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    border: 2px solid black;
+}
+.lista ul li div{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    border: 2px solid black;
+}
+.lista li div button{
+    display: flex;
+    height: 50%;
+}

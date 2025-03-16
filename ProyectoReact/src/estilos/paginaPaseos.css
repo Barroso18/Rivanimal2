@@ -1,0 +1,114 @@
+/* Barra de navegación */
+.navbar {
+    background-color: black;
+    padding: 10px;
+}
+
+.navbar a {
+    color: white;
+    text-decoration: none;
+    margin: 10px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    color: #FFD700;
+}
+
+/* Contenedores de los paseos */
+
+.paseo-container {
+    border: 2px solid #000;
+    border-radius: 10px;
+    padding: 15px;
+    margin: 10px auto;
+    width: 80%;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.2);
+    background-color: #f9f9f9;
+}
+
+
+button {
+    background-color: #007BFF;
+    color: white;
+    padding: 8px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 14px;
+}
+.btn-Paseo-borrar{
+    background-color:red ;
+}
+button:hover {
+    background-color: #0056b3;
+}
+
+
+
+
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  li {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 10px;
+    padding: 15px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  li div{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+  }
+  li strong {
+    color: #0073e6;
+  }
+  
+  li div:first-child {
+    flex: 1; /* El contenido ocupa el máximo espacio disponible */
+  }
+  
+  li button {
+    margin-left: 10px;
+    padding: 8px 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+  }
+  
+ /* li button:first-of-type {
+    background-color: #0073e6;
+    color: #fff;
+  }
+  
+  li button:first-of-type:hover {
+    background-color: #005bb5;
+  }
+  
+  li button:last-of-type {
+    background-color: #e60000;
+    color: #fff;
+  }
+  
+  li button:last-of-type:hover {
+    background-color: #b30000;
+  }
+  */
+  p {
+    /*color: #888;
+    font-style: italic;*/
+    text-align: center;
+  }

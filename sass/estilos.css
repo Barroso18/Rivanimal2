@@ -1,0 +1,20 @@
+table {
+  /*width: 100%;*/
+  border-collapse: collapse;
+  margin: 20px auto;
+}
+
+th, td {
+  border: 1px solid #000;
+  padding: 10px;
+  text-align: center;
+}
+
+th {
+  background-color: #f4f4f4;
+  font-weight: bold;
+}
+
+th:nth-child(7), td:nth-child(7) {
+  color: red;
+}/*# sourceMappingURL=estilos.css.map */
