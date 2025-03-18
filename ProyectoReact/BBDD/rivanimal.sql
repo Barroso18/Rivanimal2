@@ -30,7 +30,9 @@ CREATE TABLE 'usuario'(
     telefono varchar(15) UNIQUE,
     email varchar(50) NOT NULL UNIQUE,
     direccion varchar(255) NOT NULL,
-    foto varchar(100)
+    foto varchar(100),
+    token VARCHAR(64) NULL,
+    token_expira DATETIME NULL
 );
 
 CREATE TABLE 'chenil'(
