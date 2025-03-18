@@ -54,4 +54,3 @@ if (isset($data->usuario) && isset($data->contrasena)) {
     echo json_encode(array("message" => "Credenciales incompletas"));
 }
 ?>
-?>

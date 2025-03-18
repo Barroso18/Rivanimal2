@@ -1,7 +1,7 @@
 CREATE DATABASE rivanimal;
 USE rivanimal;
 
-CREATE TABLE 'animal'(
+CREATE TABLE animal(
     id_animal int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre varchar(50) NOT NULL,
     clase varchar(50) NOT NULL,
@@ -18,37 +18,35 @@ CREATE TABLE 'animal'(
     foto varchar(100),
     comportamiento varchar(255) NOT NULL
 );
-CREATE TABLE 'usuario'(
+CREATE TABLE usuario(
     id_usuario int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     nombre varchar(50) NOT NULL,
     apellido1 varchar(25) NOT NULL,
     apellido2 varchar(25) NOT NULL,
-    password varchar(50) NOT NULL,
+    contrasena varchar(255) NOT NULL,
     nombre_usuario varchar(25) NOT NULL UNIQUE,
     roles varchar(255),
     dni varchar(15) NOT NULL UNIQUE,
     telefono varchar(15) UNIQUE,
     email varchar(50) NOT NULL UNIQUE,
     direccion varchar(255) NOT NULL,
-    foto varchar(100),
-    token VARCHAR(64) NULL,
-    token_expira DATETIME NULL
+    foto varchar(100)
 );
 
-CREATE TABLE 'chenil'(
+CREATE TABLE chenil(
     id_chenil int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     numero int(11) NOT NULL,
     guillotina boolean NOT NULL
 );
 
-CREATE TABLE 'chenil_animal'(
+CREATE TABLE chenil_animal(
     id_chenil_animal int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     animal int(11) NOT NULL,
     chenil int(11) NOT NULL,
     activo boolean NOT NULL
 );
 
-CREATE TABLE 'reporte_diario'(
+CREATE TABLE reporte_diario(
     id_reporte_diario int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     usuario int(11) NOT NULL,
     rol varchar(30),
@@ -56,7 +54,7 @@ CREATE TABLE 'reporte_diario'(
     horario varchar(30) NOT NULL
 );
 
-CREATE TABLE 'reporte_tarea'(
+CREATE TABLE reporte_tarea(
     id_tarea int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     reporte_diario int(11) NOT NULL,
     descripcion varchar(255) NOT NULL,
@@ -64,7 +62,7 @@ CREATE TABLE 'reporte_tarea'(
     fecha_hora_fin datetime NOT NULL
 );
 
-CREATE TABLE 'reporte_paseo'(
+CREATE TABLE reporte_paseo(
     id_paseo int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     animal int(11) NOT NULL,
     usuario int(11) NOT NULL,
@@ -76,7 +74,7 @@ CREATE TABLE 'reporte_paseo'(
     ubicaciones varchar(255) NOT NULL
 );
 
-CREATE TABLE 'reporte_gatos'(
+CREATE TABLE reporte_gatos(
     id_rep_gatos int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     reporte_diario int(11) NOT NULL,
     usuario int(11) NOT NULL,
@@ -86,7 +84,7 @@ CREATE TABLE 'reporte_gatos'(
     fecha_hora_fin datetime NOT NULL
 );
 
-CREATE TABLE 'tratamiento'(
+CREATE TABLE tratamiento(
     id_tratamiento int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY,
     animal int(11) NOT NULL,
     descripcion varchar(255) NOT NULL,
@@ -107,3 +105,8 @@ ALTER TABLE reporte_gatos ADD FOREIGN KEY (reporte_diario) REFERENCES reporte_di
 ALTER TABLE reporte_gatos ADD FOREIGN KEY (usuario) REFERENCES usuario(id_usuario);
 ALTER TABLE reporte_gatos ADD FOREIGN KEY (gato) REFERENCES animal(id_animal);
 ALTER TABLE tratamiento ADD FOREIGN KEY (animal) REFERENCES animal(id_animal);
+
+
+CREATE USER 'daw2'@'%' IDENTIFIED BY 'LaElipa';
+GRANT ALL PRIVILEGES ON rivanimal.* TO 'daw2'@'%';
+FLUSH PRIVILEGES;

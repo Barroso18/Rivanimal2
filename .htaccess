@@ -1,0 +1,24 @@
+# Habilitar la reescritura de URL
+RewriteEngine On
+
+# Redirigir a login.php si la URL contiene 'login'
+RewriteCond %{REQUEST_URI} ^/login [NC]
+RewriteRule ^(.*)$ FuncionesPHP/login.php [L,QSA]
+
+# Redirigir a registro.php si la URL contiene 'registro'
+RewriteCond %{REQUEST_URI} ^/registro [NC]
+RewriteRule ^(.*)$ FuncionesPHP/registro.php [L,QSA]
+
+# Redirigir a contacto.php si la URL contiene 'contacto'
+RewriteCond %{REQUEST_URI} ^/contacto [NC]
+RewriteRule ^(.*)$ FuncionesPHP/contacto.php [L,QSA]
+
+# Redirigir todas las demás solicitudes a index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php [L,QSA]
+
+<LimitExcept GET POST>
+    Order Deny,Allow
+    Allow from all
+</LimitExcept>
