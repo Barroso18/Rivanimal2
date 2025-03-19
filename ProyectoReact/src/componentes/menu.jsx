@@ -24,7 +24,7 @@ const MenuSuperior = ({ paseos }) => {
         alt="Logo Rivanimal"
         className="icono-supermercado"
       />
-      <div className="item-menu">{user}</div>
+      <div className="item-menu">{user?.data.usuario}</div>
 
       <Link to="/">
         <button className="item-menu">Animales</button>

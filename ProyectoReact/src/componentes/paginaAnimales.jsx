@@ -7,6 +7,7 @@ import {Link} from "react-router-dom";
 import Modal from "./Modal.jsx";
 import PaseoCrear from "./PaseoCrear.jsx";
 import { useAuth } from '../Login/AuthProvider';
+import { jwtDecode } from 'jwt-decode';
 const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
   // errores Almacena los errores del formulario
   const [errores,setErrores] = useState({});
@@ -14,8 +15,8 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
   const [animalesFiltrado,setAnimalesFiltrado] = useState(animales);
   const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
   // Creamos un usuario de forma temporal
-  const usuario = user;
-
+  const usuario = user.data.usuario ;
+console.log("Usuario: ",user);
   const [modals, setModals] = useState({
     crear: false,
     consultar: false,

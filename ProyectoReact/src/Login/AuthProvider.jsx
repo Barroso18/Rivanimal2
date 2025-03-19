@@ -1,23 +1,45 @@
 import React, { createContext, useContext, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import {jwtDecode}  from 'jwt-decode';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-  //const [user, setUser] = useState(null);
-  const [user, setUser] = useState(()=>{
-    //Recuperar usuario desde localStorage si existe
-    return localStorage.getItem('user') ? JSON.parse(localStorage.getItem('user')):null;
+  const navigate = useNavigate();
+
+  // Recuperar usuario desde el token en localStorage
+  const [user, setUser] = useState(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      try {
+        return jwtDecode(token); // Extraer datos del usuario desde el token
+      } catch (error) {
+        console.error('Token inválido:', error);
+        return null;
+      }
+    }
+    return null;
   });
-  /*const login = (userData) => setUser(userData);
-  const logout = () => setUser(null);*/
-  const login = (userData) => {
-    setUser(userData);
-    localStorage.setItem('user',JSON.stringify(userData));
+
+  // Función para iniciar sesión
+  const login = (token) => {
+    try {
+      const decodedUser = jwtDecode(token); // Decodifica el token
+      setUser(decodedUser); // Guarda solo los datos del usuario
+      localStorage.setItem('token', token);
+      navigate('/');
+    } catch (error) {
+      console.error('Error al decodificar token:', error);
+    }
   };
+
+  // Función para cerrar sesión
   const logout = () => {
     setUser(null);
-    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    navigate('/login');
   };
+
   return (
     <AuthContext.Provider value={{ user, login, logout }}>
       {children}
@@ -26,3 +48,5 @@ export const AuthProvider = ({ children }) => {
 };
 
 export const useAuth = () => useContext(AuthContext);
+
+
