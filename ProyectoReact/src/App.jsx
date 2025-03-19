@@ -11,6 +11,7 @@ import useStateStorage from './servicios/UseStateStorage';
 import PaginaPaseos from './componentes/PaginaPaseos';
 import { AuthProvider } from './Login/AuthProvider';
 import Login from './Login/login';
+import Registro from './Login/Registro';
 import RutasProtegidas from './Login/RutasProtegidas';
 import ServicioUsuarios from './servicios/servicioUsuarios';
 
@@ -91,6 +92,7 @@ function App() {
               </RutasProtegidas>
             } />
             <Route path="/login" element={<Login />} />
+            <Route path="/registro" element={<Registro />} />
           </Routes>
         </main>
       </div>

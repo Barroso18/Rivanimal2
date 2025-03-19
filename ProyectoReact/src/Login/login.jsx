@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import ServicioUsuario from '../servicios/servicioUsuarios';
 import bcrypt from 'bcryptjs';
@@ -61,7 +61,7 @@ const Login = () => {
         usuario: usuario,
         contrasena: contrasena,
       };
-      axios.post('http://localhost/login.php', datosLogin)
+      axios.post('http://localhost/FuncionesPHP/login.php', datosLogin)
       .then((response) => {
         if (response.data.jwt) {
           localStorage.setItem('token', response.data.jwt);
@@ -110,6 +110,9 @@ const Login = () => {
         {error && <p style={{ color: 'red' }}>{error}</p>}
         {mensaje && <p>{mensaje}</p>}
         <button type="submit">Login</button>
+        <Link to="/registro">
+          <button>Registro</button>
+        </Link>
       </form>
     </div>
   );
