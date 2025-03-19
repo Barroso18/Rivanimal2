@@ -1,23 +1,32 @@
 <?php
+header("Access-Control-Allow-Origin: *"); // Allow any domain (replace * with a specific origin if needed)
+header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow specific HTTP methods
+header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allow necessary headers
+
 header('Content-Type: application/json');
 include("ConexionBBDD.php");
+// Recibir datos del cuerpo de la petición
+$input = file_get_contents("php://input");
 
+// Decodificar JSON a un array asociativo
+$data = json_decode($input, true);
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombre = $_POST['nombre'] ?? '';
-    $apellido1 = $_POST['apellido1'] ?? '';
-    $apellido2 = $_POST['apellido2'] ?? '';
-    $contrasena = $_POST['contrasena'] ?? '';
-    $nombre_usuario = $_POST['nombre_usuario'] ?? '';
-    $roles = $_POST['roles'] ?? 'usuario';
-    $dni = $_POST['dni'] ?? '';
-    $telefono = $_POST['telefono'] ?? '';
-    $email = $_POST['email'] ?? '';
-    $direccion = $_POST['direccion'] ?? '';
+    
+    $nombre = $data['nombre'] ?? '';
+    $apellido1 = $data['apellido1'] ?? '';
+    $apellido2 = $data['apellido2'] ?? '';
+    $contrasena = $data['contrasena'] ?? '';
+    $nombre_usuario = $data['nombreUsuario'] ?? '';
+    $roles = $data['roles'] ?? 'usuario';
+    $dni = $data['dni'] ?? '';
+    $telefono = $data['telefono'] ?? '';
+    $email = $data['email'] ?? '';
+    $direccion = $data['direccion'] ?? '';
     $foto = '';
 
     // Verificar que los campos obligatorios no estén vacíos
     if (empty($nombre) || empty($apellido1) || empty($contrasena) || empty($nombre_usuario) || empty($dni) || empty($email) || empty($direccion)) {
-        echo json_encode(["message" => "Todos los campos obligatorios deben estar llenos"]);
+        echo json_encode(["message" => "Todos los campos obligatorios deben estar llenos".$_POST['nombre']]);
         exit();
     }
 

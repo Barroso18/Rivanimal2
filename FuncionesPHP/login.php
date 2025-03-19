@@ -1,5 +1,8 @@
 <?php
-header('Content-Type: application/json');
+header("Access-Control-Allow-Origin: *");
+header("Content-Type: application/json; charset=UTF-8");
+header("Access-Control-Allow-Methods: POST");
+header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 include("ConexionBBDD.php");
 require_once 'vendor/autoload.php';
 use \Firebase\JWT\JWT;
@@ -8,21 +11,19 @@ $secret_key = "mi_clave_secreta";  // Clave secreta para firmar el JWT
 $issued_at = time();  // Tiempo de emisión
 $expiration_time = $issued_at + 3600;  // El token expirará en 1 hora
 $issuer = "mi_aplicacion_php";
+$data = json_decode(file_get_contents("php://input"),true);
 
-$data = json_decode(file_get_contents("php://input"));
-
-if (isset($data->usuario) && isset($data->contrasena)) {
-    $usuario = $data->usuario;
-    $contrasena = $data->contrasena;
+if (isset($data['usuario']) && isset($data['contrasena'])) {
+    $usuario = $data['usuario'];
+    $contrasena = $data['contrasena'];
 
     // Consulta para verificar si el usuario existe
-    $sql = "SELECT * FROM usuarios WHERE usuario = '$usuario'";
+    $sql = "SELECT * FROM usuario WHERE nombre_usuario = '$usuario'";
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
-        
-        // Verificar si la contraseña es correcta (se debe verificar con una contraseña encriptada, aquí es solo un ejemplo)
+        // Verificar si la contraseña es correcta
         if (password_verify($contrasena, $row['contrasena'])) {
             // Datos para generar el token
             $payload = array(
@@ -30,8 +31,8 @@ if (isset($data->usuario) && isset($data->contrasena)) {
                 "iat" => $issued_at,
                 "exp" => $expiration_time,
                 "data" => array(
-                    "id" => $row['id'],
-                    "usuario" => $row['usuario']
+                    "id" => $row['id_usuario'],
+                    "usuario" => $row['nombre_usuario']
                 )
             );
 
