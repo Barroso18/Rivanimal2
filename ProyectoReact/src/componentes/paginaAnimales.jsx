@@ -14,6 +14,8 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
   const { user, logout } = useAuth();
   const [animalesFiltrado,setAnimalesFiltrado] = useState(animales);
   const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
+   const [tipoSeleccionado, setTipoSeleccionado] = useState("");
+   const [estadoSeleccionado, setEstadoSeleccionado] = useState("");
   // Creamos un usuario de forma temporal
   const usuario = user.data.usuario ;
 console.log("Usuario: ",user);
@@ -26,6 +28,16 @@ console.log("Usuario: ",user);
       animal:'',
       raza:''
   });
+  // Manejador del evento onChange
+  const handleChange = (event) => {
+    const {name,value} = event.target;
+    setSitioSeleccionado(event.target.value);
+    console.log("Sitio seleccionado:", event.target.value);
+    setForm({
+        ...form,
+        [name]:value,
+    });
+};
   const gestionarModal = (tipoModal, estadoAbierto) => {
       setModals((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
     };
@@ -114,7 +126,7 @@ console.log("Usuario: ",user);
       <div className="Animales">
         <div className="buscador">
           <form onSubmit={enviaFormulario}>
-            {/* Campo de texto para nombre VOLUNTARIO */}
+            {/* Campo de texto para nombre animal */}
             <label htmlFor="nombre">Nombre del animal: </label>
             <input
                 id="nombre"
@@ -124,8 +136,32 @@ console.log("Usuario: ",user);
                 onChange={gestionarCambio}
                 placeholder="nombre del animal"
             /><br/>
-            {errores.voluntario && <p className="error">{errores.voluntario}</p>}
-
+            {errores.animal && <p className="error">{errores.animal}</p>}
+            {/* Campo de texto para tipo animal */}
+            <label htmlFor="tipo">Tipo de animal: </label>
+            <select
+                id="tipo"
+                name="tipo"
+                value={tipoSeleccionado}
+                onChange={handleChange}>
+                <option value="">-- Selecciona --</option>
+                <option value="perro">Perro</option>
+                <option value="gato">Gato</option>
+            </select><br/>
+            {errores.tipo && <p className="error">{errores.tipo}</p>}
+            {/* Campo de texto para tipo animal */}
+            <label htmlFor="estado">Estado de animal: </label>
+            <select
+                id="estado"
+                name="estado"
+                value={estadoSeleccionado}
+                onChange={handleChange}>
+                <option value="">-- Selecciona --</option>
+                <option value="chenil">Chenil/jaula</option>
+                <option value="acogida">Acogida</option>
+                <option value="adopcion">Adopción</option>
+            </select><br/>
+            {errores.estado && <p className="error">{errores.estado}</p>}
             {/* Botón de envío */}
             <button type="submit">Buscar</button>
           </form>

@@ -9,6 +9,7 @@ import ServicioAnimales from './servicios/servicioAnimales';
 import ServicioPaseos from './servicios/servicioPaseos';
 import useStateStorage from './servicios/UseStateStorage';
 import PaginaPaseos from './componentes/PaginaPaseos';
+import Calendario from './componentes/Calendario';
 import { AuthProvider } from './Login/AuthProvider';
 import Login from './Login/login';
 import Registro from './Login/Registro';
@@ -89,6 +90,11 @@ function App() {
                   setPaseos={setPaseos}
                   usuarios={usuarios}
                 />
+              </RutasProtegidas>
+            } />
+            <Route path='/Semana' element={
+              <RutasProtegidas>
+                <Calendario/>
               </RutasProtegidas>
             } />
             <Route path="/login" element={<Login />} />
