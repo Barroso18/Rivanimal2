@@ -18,13 +18,40 @@ const Registro = () => {
     const [foto, setFoto] = useState('');
     const [mensaje, setMensaje] = useState('');
       const [error, setError] = useState('');
+    const [errores, setErrores] = useState('');
+    const [image, setImage] = useState(null);
+    const [preview, setPreview] = useState(null);
+    const navigate = useNavigate();
+    const [message, setMessage] = useState("");
 
-    
-    const controlaRegistro = async (e) => {
+    const handleImageChange = (event) => {
+      const file = event.target.files[0];
+      if (file) {
+          setFoto(file);
+          setPreview(URL.createObjectURL(file)); // Mostrar vista previa de la imagen
+      }
+  };
+    /*const subirFoto = async (e) => {
+      const formData = new FormData();
+      formData.append("file", image);
+      try {
+        const response = await fetch("http://localhost/Rivanimal2/FuncionesPHP/subeFoto.php", {
+          method: "POST",
+          body: formData,
+        });
   
+        const data = await response.json();
+        setMessage(data.message);
+      } catch (error) {
+        console.error("Error al subir la imagen:", error);
+        setMessage("Error al subir la imagen.");
+      }
+    };*/
+
+    const controlaRegistro = async (e) => {
         e.preventDefault();
         var url = "http://localhost/Rivanimal2/FuncionesPHP/registro.php";
-        var datos = {
+        /*var datos = {
           nombre: nombre,
           apellido1: apellido1,
           apellido2: apellido2,
@@ -34,11 +61,28 @@ const Registro = () => {
           dni: dni,
           telefono: telefono,
           email: email,
-          direccion: direccion,
-          foto: foto
-        };
-        console.log("Datos:",datos);
-        axios.post(url, datos)
+          direccion: direccion, 
+          foto: image
+        };*/
+        // Crear un objeto FormData para enviar los datos
+        const formData = new FormData();
+        formData.append("nombre", nombre);
+        formData.append("apellido1", apellido1);
+        formData.append("apellido2", apellido2);
+        formData.append("contrasena", contrasena);
+        formData.append("nombreUsuario", nombreUsuario);
+        formData.append("roles", roles);
+        formData.append("dni", dni);
+        formData.append("telefono", telefono);
+        formData.append("email", email);
+        formData.append("direccion", direccion);
+        if (foto) {
+            formData.append("file", foto); // Adjuntar la imagen
+        }
+
+        //console.log("Datos:",datos);
+        /*
+        axios.post(url, formData,{headers: { 'Content-Type': 'multipart/form-data' }})
           .then(response => {
             if (response.data === "OK") {
               setMensaje("Usuario registrado correctamente");
@@ -50,6 +94,31 @@ const Registro = () => {
           .catch(error => {
             setError("Error al registrar el usuario2");
           });
+          */
+          try {
+            const response = await axios.post(
+                "http://localhost/Rivanimal2/FuncionesPHP/registro.php",
+                formData,
+                {
+                    headers: {
+                        "Content-Type": "multipart/form-data",
+                    },
+                }
+            );
+
+            if (response.data.message === "Registro exitoso") {
+                setMensaje("Usuario registrado correctamente");
+                setError("");
+            } else if (response.data.errores) {
+                setError(Object.values(response.data.errores).join(", "));
+            } else {
+                setError("Error desconocido al registrar el usuario");
+            }
+        } catch (error) {
+            setError("Error en la petición de registro.");
+            console.error("Error en axios:", error);
+        }
+
     };
     return (
         <div>
@@ -158,12 +227,7 @@ const Registro = () => {
             </div>
             <div>
               <label><strong>Foto: </strong></label>{/* Esto hay que cambiarlo por un tipo file*/}
-              <input
-                type="text"
-                value={foto}
-                name='foto'
-                onChange={(e) => setFoto(e.target.value)}
-              />
+              <input type="file" accept="image/*" onChange={handleImageChange} />
             </div>
             {error && <p style={{ color: 'red' }}>{error}</p>}
             {mensaje && <p>{mensaje}</p>}
