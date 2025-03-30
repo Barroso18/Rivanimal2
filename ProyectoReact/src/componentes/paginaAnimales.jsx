@@ -1,4 +1,5 @@
 import "../estilos/paginaAnimales.css";
+import "../estilos/estilos.css";
 import { useState,useEffect, React } from 'react';
 import {buscarAnimal} from "../herramientas/buscaAnimal";
 import ServicioAnimales from "../servicios/servicioAnimales";
