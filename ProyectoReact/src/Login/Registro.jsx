@@ -4,6 +4,7 @@ import { useAuth } from './AuthProvider';
 import ServicioUsuario from '../servicios/servicioUsuarios';
 import bcrypt from 'bcryptjs';
 import axios from 'axios';
+import { Link } from 'react-router-dom';
 const Registro = () => {
     const [nombre, setNombre] = useState('');
     const [apellido1, setApellido1] = useState('');
@@ -122,117 +123,137 @@ const Registro = () => {
     };
     return (
         <div>
-          <h2>Registro</h2>
-          <form onSubmit={controlaRegistro}>
-          <div>
-              <label><strong>Nombre: </strong></label>
-              <input
-                type="text"
-                value={nombre}
-                name="nombre"
-                onChange={(e) => setNombre(e.target.value)}
-                required
-              />
+          <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-teal-500">
+            <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+              <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Registro</h2>
+          
+              <form onSubmit={controlaRegistro}>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Nombre: </strong></label>
+                  <input
+                    type="text"
+                    value={nombre}
+                    name="nombre"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setNombre(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Apellido 1: </strong></label>
+                  <input
+                    type="text"
+                    value={apellido1}
+                    name="apellido1"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setApellido1(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Apellido 2: </strong></label>
+                  <input
+                    type="text"
+                    value={apellido2}
+                    name="apellido2"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setApellido2(e.target.value)}
+                    required
+                  />
+                </div>
+                
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Password: </strong></label>
+                  
+                  <input
+                    type="password"
+                    value={contrasena}
+                    name="contrasena"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setContrasena(e.target.value)}
+                    required
+                  />
+                  
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Nombre usuario: </strong></label>
+                  <input
+                    type="text"
+                    value={nombreUsuario}
+                    name="nombreUsuario"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setNombreUsuario(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Roles: </strong></label>
+                  <input
+                    type="textarea"
+                    value={roles}
+                    name="roles"
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setRoles(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>DNI: </strong></label>
+                  <input
+                    type="text"
+                    value={dni}
+                    name='dni'
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setDni(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Teléfono: </strong></label>
+                  <input
+                    type="text"
+                    value={telefono}
+                    name='telefono'
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setTelefono(e.target.value)}
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Email: </strong></label>
+                  <input
+                    type="email"
+                    value={email}
+                    name='email'
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    onChange={(e) => setEmail(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Direccion: </strong></label>
+                  <input
+                    type="text"
+                    value={direccion}
+                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
+                    name='direccion'
+                    onChange={(e) => setDireccion(e.target.value)}
+                    required
+                  />
+                </div>
+                <div  className="mb-4">
+                  <label className="block text-sm font-medium text-gray-600"><strong>Foto: </strong></label>{/* Esto hay que cambiarlo por un tipo file*/}
+                  <input type="file" accept="image/*" onChange={handleImageChange} />
+                </div>
+                {error && <p style={{ color: 'red' }}>{error}</p>}
+                {mensaje && <p>{mensaje}</p>}
+                <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600">
+                  Registrar
+                </button>
+                <Link to="/login">
+                  <button type="button" className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600">Volver login</button>
+                </Link>
+              </form>
             </div>
-            <div>
-              <label><strong>Apellido 1: </strong></label>
-              <input
-                type="text"
-                value={apellido1}
-                name="apellido1"
-                onChange={(e) => setApellido1(e.target.value)}
-                required
-              />
             </div>
-            <div>
-              <label><strong>Apellido 2: </strong></label>
-              <input
-                type="text"
-                value={apellido2}
-                name="apellido2"
-                onChange={(e) => setApellido2(e.target.value)}
-                required
-              />
-            </div>
-            
-            <div>
-              <label><strong>Password: </strong></label>
-              
-              <input
-                type="password"
-                value={contrasena}
-                name="contrasena"
-                onChange={(e) => setContrasena(e.target.value)}
-                required
-              />
-              
-            </div>
-            <div>
-              <label><strong>Nombre usuario: </strong></label>
-              <input
-                type="text"
-                value={nombreUsuario}
-                name="nombreUsuario"
-                onChange={(e) => setNombreUsuario(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label><strong>Roles: </strong></label>
-              <input
-                type="textarea"
-                value={roles}
-                name="roles"
-                onChange={(e) => setRoles(e.target.value)}
-              />
-            </div>
-            <div>
-              <label><strong>DNI: </strong></label>
-              <input
-                type="text"
-                value={dni}
-                name='dni'
-                onChange={(e) => setDni(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label><strong>Teléfono: </strong></label>
-              <input
-                type="text"
-                value={telefono}
-                name='telefono'
-                onChange={(e) => setTelefono(e.target.value)}
-              />
-            </div>
-            <div>
-              <label><strong>Email: </strong></label>
-              <input
-                type="email"
-                value={email}
-                name='email'
-                onChange={(e) => setEmail(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label><strong>Direccion: </strong></label>
-              <input
-                type="text"
-                value={direccion}
-                name='direccion'
-                onChange={(e) => setDireccion(e.target.value)}
-                required
-              />
-            </div>
-            <div>
-              <label><strong>Foto: </strong></label>{/* Esto hay que cambiarlo por un tipo file*/}
-              <input type="file" accept="image/*" onChange={handleImageChange} />
-            </div>
-            {error && <p style={{ color: 'red' }}>{error}</p>}
-            {mensaje && <p>{mensaje}</p>}
-            <button type="submit">Login</button>
-          </form>
         </div>
       );
 };
