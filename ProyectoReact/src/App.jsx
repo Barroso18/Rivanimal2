@@ -21,7 +21,7 @@ function App() {
   const [paseos, setPaseos] = useStateStorage("paseos", []);
   const [usuarios, setUsuarios] = useStateStorage("usuarios", []);
 
-  useEffect(() => {
+ /* useEffect(() => {
     ServicioAnimales.getAll()
       .then(response => setAnimales(response.data))
       .catch(() => {
@@ -31,7 +31,16 @@ function App() {
           icon: "question"
         });
       });
+  }, []);*/
+
+  useEffect(() => {
+    let funcion= "animalestodos";
+    fetch(`http://localhost/Rivanimal2/FuncionesPHP/consultas.php?funcion=${funcion}`) // Asegúrate de que la URL es correcta
+      .then((response) => response.json())
+      .then((data) => setAnimales(data))
+      .catch((error) => console.error("Error al obtener los animales:", error));
   }, []);
+
 
   useEffect(() => {
     ServicioPaseos.getAll()

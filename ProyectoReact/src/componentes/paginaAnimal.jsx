@@ -27,7 +27,7 @@ const PaginaAnimal = ({animales,setAnimales}) => {
     <div className="animal">
     <div className="ficha-container">
         <div className="foto">
-            <img src={animalInformacion.url} alt="Perro en adopción"/>
+            <img src={animalInformacion.foto} alt="Perro en adopción"/>
         </div>
         <div className="info">
             <h1 className="titulo">Ficha de <span className="nombre">{animalInformacion.nombre}</span></h1>

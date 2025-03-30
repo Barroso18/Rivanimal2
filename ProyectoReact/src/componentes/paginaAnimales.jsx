@@ -18,7 +18,7 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
    const [estadoSeleccionado, setEstadoSeleccionado] = useState("");
   // Creamos un usuario de forma temporal
   const usuario = user.data.usuario ;
-console.log("Usuario: ",user);
+//console.log("Usuario: ",user);
   const [modals, setModals] = useState({
     crear: false,
     consultar: false,
@@ -174,7 +174,7 @@ console.log("Usuario: ",user);
               animalesFiltrado.map((animal,indice)=>{
                   return <li key={indice}>
                       <div>
-                          <img src={animal.url} alt={`imagen ${animal.nombre}`} />
+                          <img src={animal.foto} alt={`imagen ${animal.nombre}`} />
                           <p>
                               Nombre: {animal.nombre}<br/>
                               Raza: {animal.raza}<br/>
