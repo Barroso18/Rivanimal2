@@ -35,7 +35,7 @@ function App() {
 
   useEffect(() => {
     let funcion= "animalestodos";
-    fetch(`http://localhost/Rivanimal2/FuncionesPHP/consultas.php?funcion=${funcion}`) // Asegúrate de que la URL es correcta
+    fetch(`http://localhost/Rivanimal2/FuncionesPHP/animales.php?funcion=${funcion}`) // Asegúrate de que la URL es correcta
       .then((response) => response.json())
       .then((data) => setAnimales(data))
       .catch((error) => console.error("Error al obtener los animales:", error));

@@ -4,6 +4,8 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 const Calendario = () => {
   const [fechaBase, setFechaBase] = useState(new Date());
+  //Aqui se inicializa la variable para los reportes
+  const [reportesDia, setReportesDia] = useState([]);
 
   const obtenerSemana = (fecha) => {
     const diaSemana = fecha.getDay(); // 0 (Dom) - 6 (Sáb)
@@ -52,7 +54,7 @@ const Calendario = () => {
     <div className="p-4 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-4">
         <button
-          onClick={() =>  cambiarSemana(-7)}
+          onClick={() => cambiarSemana(-7)}
           className="flex items-center text-gray-600"
         >
           <ArrowLeft className="mr-2" /> Anterior
@@ -73,45 +75,32 @@ const Calendario = () => {
         <thead>
           <tr>
             <th className="p-2 border">Turnos</th>
-            <th className="p-2 border">Personal</th>
-            {semanaActual.map(({ diaSemana, diaMes,mesnum }, index) => (
-              <th key={index} className="p-2 border text-gray-800">
+            <th className="p-2 border w-24">Personal</th>
+            {semanaActual.map(({ diaSemana, diaMes, mesnum }, index) => (
+              <th key={index} className={`p-2 border text-gray-800 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}>
                 {diaSemana} <br /> <span className="font-bold">{diaMes}/{mesnum}</span>
               </th>
             ))}
           </tr>
         </thead>
         <tbody>
-          <tr>
-            <td className="border p-2" rowSpan={2}>
-              MAÑANA
-            </td>
-            <td className="border p-2">Voluntarios</td>
-            {semanaActual.map((_, index) => (
-              <td key={index} className="border p-2"></td>
-            ))}
-          </tr>
-          <tr>
-            <td className="border p-2">Padrinos y adoptantes</td>
-            {semanaActual.map((_, index) => (
-              <td key={index} className="border p-2"></td>
-            ))}
-          </tr>
-          <tr>
-            <td className="border p-2" rowSpan={2}>
-              TARDE
-            </td>
-            <td className="border p-2">Voluntarios</td>
-            {semanaActual.map((_, index) => (
-              <td key={index} className="border p-2"></td>
-            ))}
-          </tr>
-          <tr>
-            <td className="border p-2">Padrinos y adoptantes</td>
-            {semanaActual.map((_, index) => (
-              <td key={index} className="border p-2"></td>
-            ))}
-          </tr>
+          {["MAÑANA", "TARDE"].map((turno, i) => (
+            <>
+              <tr key={`${turno}-1`}>
+                <td className="border p-2 h-16" rowSpan={2}>{turno}</td>
+                <td className="border p-2 h-16 w-24">Voluntarios</td>
+                {semanaActual.map((_, index) => (
+                  <td key={index} className={`border p-2 h-16 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}></td>
+                ))}
+              </tr>
+              <tr key={`${turno}-2`}>
+                <td className="border p-2 h-16 w-24">Padrinos y adoptantes</td>
+                {semanaActual.map((_, index) => (
+                  <td key={index} className={`border p-2 h-16 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}></td>
+                ))}
+              </tr>
+            </>
+          ))}
         </tbody>
       </table>
       <div className="flex justify-center mt-4">

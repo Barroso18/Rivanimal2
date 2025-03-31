@@ -7,7 +7,16 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 require_once 'vendor/autoload.php';
 use \Firebase\JWT\JWT;
     include("ConexionBBDD.php");
-
+    function consigueIdUsuario($conn, $usuario){
+        $sql = "SELECT id FROM usuarios WHERE nombreUsuario = '$usuario'";
+        $resultado = mysqli_query($conn, $sql);
+        if ($resultado) {
+            $fila = mysqli_fetch_assoc($resultado);
+            return $fila['id_usuario'];
+        } else {
+            return null;
+        }
+    }
     //Consulta para comprobar si existe el nombre de usuario
     function comprobarNombreUsuario($nombreUsuario, $conexion){
         $consulta = "SELECT * FROM usuarios WHERE nombreUsuario = '$nombreUsuario'";
@@ -25,10 +34,5 @@ use \Firebase\JWT\JWT;
         $resultado = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
         return $resultado;
     }
-    // Manejo de la acción recibida por URL
-$funcion = $_GET['funcion'] ?? '';
-
-if ($funcion === 'animalestodos') {
-    echo json_encode(consultaAnimales($conn));
-} 
+    
 ?>
