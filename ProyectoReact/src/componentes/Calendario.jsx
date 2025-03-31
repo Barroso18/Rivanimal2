@@ -49,7 +49,16 @@ const Calendario = () => {
     useEffect(() => {
       setNumeroSemana(obtenerNumeroSemana(fechaBase));
      }, []);
-
+     /* SIN TERMINAR!!! */
+    const compruebaReporte = (dia) => {
+      const diaFormateado = `${dia.diaMes}/${dia.mesnum}/${dia.año}`;
+      return (
+        <td key={index} className={`border p-2 h-24 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}>
+          {reportesDia.some((reporte) => reporte.fecha === diaFormateado)/*SIN TERMINAR*/ }
+        </td>
+      );
+      //reportesDia.some((reporte) => reporte.fecha === diaFormateado);
+    }
   return (
     <div className="p-4 max-w-4xl mx-auto">
       <div className="flex justify-between items-center mb-4">
@@ -87,16 +96,16 @@ const Calendario = () => {
           {["MAÑANA", "TARDE"].map((turno, i) => (
             <>
               <tr key={`${turno}-1`}>
-                <td className="border p-2 h-16" rowSpan={2}>{turno}</td>
-                <td className="border p-2 h-16 w-24">Voluntarios</td>
+                <td className="border p-2 h-24" rowSpan={2}>{turno}</td>
+                <td className="border p-2 h-24 w-24">Voluntarios</td>
                 {semanaActual.map((_, index) => (
-                  <td key={index} className={`border p-2 h-16 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}></td>
+                  <td key={index} className={`border p-2 h-24 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}></td>
                 ))}
               </tr>
               <tr key={`${turno}-2`}>
-                <td className="border p-2 h-16 w-24">Padrinos y adoptantes</td>
+                <td className="border p-2 h-24 w-24">Padrinos y adoptantes</td>
                 {semanaActual.map((_, index) => (
-                  <td key={index} className={`border p-2 h-16 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}></td>
+                  <td key={index} className={`border p-2 h-24 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}></td>
                 ))}
               </tr>
             </>
