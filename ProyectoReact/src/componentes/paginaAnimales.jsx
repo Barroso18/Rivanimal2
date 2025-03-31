@@ -124,8 +124,8 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
     
   return (
     <>
-      <div className="Animales">
-        <div className="buscador">
+      <div className="p-6 max-w-6xl mx-auto">{/*  className="Animales" */}
+        <div className="flex justify-between items-center mb-6">{/*  className="buscador" */}
           <form onSubmit={enviaFormulario}>
             {/* Campo de texto para nombre animal */}
             <label htmlFor="nombre">Nombre del animal: </label>
@@ -143,6 +143,7 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
             <select
                 id="tipo"
                 name="tipo"
+                className="border p-2"
                 value={tipoSeleccionado}
                 onChange={handleChange}>
                 <option value="">-- Selecciona --</option>
@@ -155,6 +156,7 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
             <select
                 id="estado"
                 name="estado"
+                className="border p-2"
                 value={estadoSeleccionado}
                 onChange={handleChange}>
                 <option value="">-- Selecciona --</option>
@@ -169,37 +171,71 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
           <button onClick={eliminarFiltros}>Todos</button>
         </div>
         
-        <div className="lista">
-          <ul>
+        <div  className="grid grid-cols-3 gap-6">{/* className="lista"*/}
+          
               {
               animalesFiltrado.map((animal,indice)=>{
-                  return <li key={indice}>
+                  return <div key={indice} className="text-center">
                       <div>
-                          <img src={animal.foto} alt={`imagen ${animal.nombre}`} />
-                          <p>
-                              Nombre: {animal.nombre}<br/>
-                              Raza: {animal.raza}<br/>
-                              Nivel: {animal.nivel}
-                          </p>
+                          <img src={animal.foto} alt={`imagen ${animal.nombre}`} className="rounded-md w-40 h-40 object-cover mx-auto"/>
+                          <h3 className="font-bold mt-2">{animal.nombre}</h3>
+                          <p className="text-gray-600">{animal.raza}</p>
+                          <p className="text-gray-500">Estado: {animal.situacion}</p>
+                          <p className="text-gray-500">Nivel: {animal.nivel}</p>
+                          
                           <button className="add-aficion-btn" onClick={() => crearPaseo(animal.nombre)}>Paseo</button> 
                           <Link to={`/pagina-animal/${animal.nombre}`} >
                               <button className="add-aficion-btn">Mas info</button> 
                           </Link>
                       </div>
                       
-                  </li>
+                  </div>
               }
               
               )
               }
-          </ul>
+          
           </div>
       </div>
       <Modal isOpen={modals.crear} onClose={()=>gestionarModal("crear",false)}>      
           <PaseoCrear paseos={paseos} setPaseos={setPaseos} nombreAnimal={animalSeleccionado} voluntario={usuario} usuarios={usuarios} onClose={()=>gestionarModal("crear",false)} />
       </Modal>      
       
-      
+      <div className="p-6 max-w-6xl mx-auto">
+      <div className="flex justify-between items-center mb-6">
+        <select className="border p-2" onChange={(e) => setType(e.target.value)}>
+          <option value="Perro">Perro</option>
+          <option value="Gato">Gato</option>
+        </select>
+        <select className="border p-2" onChange={(e) => setStatus(e.target.value)}>
+          <option value="En chenil/jaula">En chenil/jaula</option>
+          <option value="De paseo">De paseo</option>
+        </select>
+        <div className="relative">
+          <input
+            type="text"
+            placeholder="nombre animal"
+            className="border p-2 pr-10"
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          {/*<Search className="absolute right-2 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />*/}
+        </div>
+      </div>
+
+      <div className="grid grid-cols-3 gap-6">
+        {/*filteredAnimals.map((animal, index) => (
+          <div key={index} className="text-center">
+            <img src={animal.image} alt={animal.name} className="rounded-md w-40 h-40 object-cover mx-auto" />
+            <h3 className="font-bold mt-2">{animal.name}</h3>
+            <p className="text-gray-600">{animal.type}</p>
+            <p className="text-gray-500">Estado: {animal.status}</p>
+            <button className="mt-2 border px-4 py-1 rounded text-gray-600 flex items-center justify-center mx-auto">
+              ➕ VER PERFIL
+            </button>
+          </div>
+        ))*/}
+      </div>
+    </div>
     </>
   );
 }
