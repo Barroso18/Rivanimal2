@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import Button from "./Button.jsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import Modal from "./Modal.jsx";
+import ReporteDiarioCrear from "./ReporteDiarioCrear.jsx";
 
 const Calendario = () => {
   const [fechaBase, setFechaBase] = useState(new Date());
@@ -24,7 +26,15 @@ const Calendario = () => {
       };
     });
   };
-
+  //Constantes para gestionar los modales
+  const [modals, setModals] = useState({
+      crear: false,
+      consultar: false,
+      editar: false,
+  });
+  const gestionarModal = (tipoModal, estadoAbierto) => {
+    setModals((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
+  };
   const cambiarSemana = (dias) => {
     setFechaBase((prevFecha) => {
       const nuevaFecha = new Date(prevFecha);
@@ -94,7 +104,7 @@ const Calendario = () => {
         </thead>
         <tbody>
           {["MAÑANA", "TARDE"].map((turno, i) => (
-            <>
+            <React.Fragment key={turno}>
               <tr key={`${turno}-1`}>
                 <td className="border p-2 h-24" rowSpan={2}>{turno}</td>
                 <td className="border p-2 h-24 w-24">Voluntarios</td>
@@ -108,7 +118,7 @@ const Calendario = () => {
                   <td key={index} className={`border p-2 h-24 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}></td>
                 ))}
               </tr>
-            </>
+            </React.Fragment>
           ))}
         </tbody>
       </table>
@@ -117,6 +127,9 @@ const Calendario = () => {
           APÚNTAME
         </Button>
       </div>
+      <Modal isOpen={modals.crear} onClose={()=>gestionarModal("crear",false)}>      
+          <ReporteDiarioCrear onClose={()=>gestionarModal("crear",false)} />
+      </Modal>    
     </div>
   );
 };
