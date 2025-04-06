@@ -7,21 +7,12 @@ import {Link} from "react-router-dom";
 
 
 const PaginaAnimal = ({animales,setAnimales}) => {
-  //Aqui se mete el codigo JS, en el return solo lo que va a renderizar
-  //console.log(productosJson)
+  
   const {nombre} = useParams()
-
+//esto hay que cambiarlo por la busqueda en BBDD
   let animalInformacion = buscarAnimal(nombre, animales);
   
 
-/*
-<div className="DetalleCarrito">
-      
-          <h1>{animalInformacion.nombre}</h1>
-          <img src={animalInformacion.url} alt={`imagen ${animalInformacion.nombre}`} />
-       
-    </div>
-*/
 
   return (
     <div className="animal">

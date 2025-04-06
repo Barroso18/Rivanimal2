@@ -32,7 +32,8 @@ if (isset($data['usuario']) && isset($data['contrasena'])) {
                 "exp" => $expiration_time,
                 "data" => array(
                     "id" => $row['id_usuario'],
-                    "usuario" => $row['nombre_usuario']
+                    "usuario" => $row['nombre_usuario'],
+                    "roles" => $row['roles']
                 )
             );
 

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useAuth } from '../Login/AuthProvider';
+import '../estilos/estilos.css';
 function ReporteDiarioCrear({onClose}){
     const { user, logout } = useAuth();
     // errores Almacena los errores del formulario

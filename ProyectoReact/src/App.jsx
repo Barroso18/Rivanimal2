@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route,useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import MenuSuperior from './componentes/menu';
 import Pagina404 from "./componentes/Pagina404";
@@ -14,26 +14,17 @@ import { AuthProvider } from './Login/AuthProvider';
 import Login from './Login/login';
 import Registro from './Login/Registro';
 import RutasProtegidas from './Login/RutasProtegidas';
+import RutaProtegidaPorRol from './Login/RutaProtegidaPorRol';
 import ServicioUsuarios from './servicios/servicioUsuarios';
 import PerfilUsuario from './componentes/PerfilUsuario';
 import PaginaVoluntarios from './componentes/PaginaVoluntarios';
+import PaginaGestion from './componentes/PaginaGestion';
 
 function App() {
   const [animales, setAnimales] = useStateStorage("animales", []);
   const [paseos, setPaseos] = useStateStorage("paseos", []);
   const [usuarios, setUsuarios] = useStateStorage("usuarios", []);
-
- /* useEffect(() => {
-    ServicioAnimales.getAll()
-      .then(response => setAnimales(response.data))
-      .catch(() => {
-        Swal.fire({
-          title: "¿Tienes Internet?",
-          text: "No consigo descargar los animales :(",
-          icon: "question"
-        });
-      });
-  }, []);*/
+  const location = useLocation(); // Hook para obtener la ruta actual
 
   useEffect(() => {
     let funcion= "animalestodos";
@@ -67,12 +58,19 @@ function App() {
         });
       });
   }, []);
-
+  // Función para mostrar el menú superior solo si no estamos en la página de login
+  const muestraMenu = () => {
+    if (location.pathname !== "/login") { // Ocultar el menú en la página de login
+      return <MenuSuperior />;
+    }
+    return null;
+  };
   return (
     <AuthProvider>
       <div className="App">
         <header className="App-header">
-          <MenuSuperior paseos={paseos} />
+          {/*<MenuSuperior paseos={paseos} />*/}
+          {muestraMenu()}
         </header>
         <main>
           <Routes>
@@ -117,6 +115,11 @@ function App() {
               <RutasProtegidas>
                 <PaginaVoluntarios/>
               </RutasProtegidas>
+            } />
+            <Route path='/pagina-gestion' element={
+              <RutaProtegidaPorRol rolesPermitidos={["admin"]}>
+                <PaginaGestion/>
+              </RutaProtegidaPorRol>
             } />
             <Route path="/login" element={<Login />} />
             <Route path="/registro" element={<Registro />} />

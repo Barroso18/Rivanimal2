@@ -3,15 +3,20 @@ import "../estilos/menu.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../Login/AuthProvider';
 
-const MenuSuperior = ({ paseos }) => {
-  const [paseosVisible, setPaseosVisible] = useState(false);
+const MenuSuperior = () => {
+  //Variable paseos tendrá que ser consultada a la BBDD
+  //const [paseos, setPaseos] = useState([]);
+  //const [paseosVisible, setPaseosVisible] = useState(false);
   const { user, logout } = useAuth();
   const navigate = useNavigate();
-
+  const rolesUsuario = typeof user?.data.roles === 'string' ? user.data.roles.split(',').map(role => role.trim()) // Convertir a array y eliminar espacios
+  : Array.isArray(user?.data.roles)? user.data.roles: [];
+  console.log("Roles del usuario:", rolesUsuario);
+/*
   const togglePaseos = () => {
     setPaseosVisible(!paseosVisible);
   };
-
+*/
   const handleLogout = async() => {
     await logout();
     navigate('/login');
@@ -32,8 +37,11 @@ const MenuSuperior = ({ paseos }) => {
       <Link to="/pagina-voluntarios">
         <button className="item-menu">Voluntarios</button>
       </Link>
-      
-      <button className="item-menu">Gestion</button>
+      {rolesUsuario.includes('admin') && (
+        <Link to="/pagina-gestion">
+          <button className="item-menu">Gestion</button>
+        </Link>
+      )}
       <Link to="/Semana">
         <button className="item-menu">Semana</button>
       </Link>
@@ -45,15 +53,15 @@ const MenuSuperior = ({ paseos }) => {
         <button className="item-menu">Todos los paseos</button>
       </Link>
 
-      <button className="toggle-carrito" onClick={togglePaseos}>
-        Paseos voluntario
-      </button>
-
       <button className="item-menu" onClick={handleLogout}>
         Salir
       </button>
-
-      {paseosVisible && (
+      {/* <button className="item-menu" onClick={togglePaseos}>
+        paseos voluntario
+      </button> */}
+      {/* Aqui pondremos en un futuro los paseos realizados en el reporte diario */}
+      {/*
+      paseosVisible && (
         <div className="lista-paseos">
           <h4>Paseos</h4>
           {paseos.length > 0 ? (
@@ -68,7 +76,7 @@ const MenuSuperior = ({ paseos }) => {
             <p>No hay paseos.</p>
           )}
         </div>
-      )}
+      )*/}
     </div>
   );
 };
