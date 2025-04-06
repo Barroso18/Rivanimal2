@@ -3,11 +3,13 @@ import Button from "./Button.jsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 import Modal from "./Modal.jsx";
 import ReporteDiarioCrear from "./ReporteDiarioCrear.jsx";
+import { useAuth } from '../Login/AuthProvider';
 const Calendario = () => {
+  const { user, logout } = useAuth();// user?.data.usuario
   const [fechaBase, setFechaBase] = useState(new Date());
   //Aqui se inicializa la variable para los reportes
   const [reportesDia, setReportesDia] = useState([]);
-
+//console.log("idUsuario ",user?.data.id);
   const obtenerSemana = (fecha) => {
     const diaSemana = fecha.getDay(); // 0 (Dom) - 6 (Sáb)
     const inicioSemana = new Date(fecha);
@@ -60,18 +62,20 @@ const Calendario = () => {
     });
   };
 
+  const crearReporteDiario = () => {
+    //setAnimalSeleccionado(animal)    
+    gestionarModal("crear",true)
+  };
   const semanaActual = obtenerSemana(fechaBase);
   const [numeroSemana, setNumeroSemana] = useState(0);
   //Cargamos los reportes de la semana actual
   const enviarDatos = async (semana) => {
     const funcion = "reportesdiario";
-
-  const datosEnviar = {
-    funcion,
-    fecha_inicial: `${semana[0].año}-${String(semana[0].mesnum).padStart(2, '0')}-${String(semana[0].diaMes).padStart(2, '0')}`, // Formato YYYY-MM-DD
-    fecha_final: `${semana[6].año}-${String(semana[6].mesnum).padStart(2, '0')}-${String(semana[6].diaMes).padStart(2, '0')}` // Formato YYYY-MM-DD
-  };
-  
+    const datosEnviar = {
+      funcion,
+      fecha_inicial: `${semana[0].año}-${String(semana[0].mesnum).padStart(2, '0')}-${String(semana[0].diaMes).padStart(2, '0')}`, // Formato YYYY-MM-DD
+      fecha_final: `${semana[6].año}-${String(semana[6].mesnum).padStart(2, '0')}-${String(semana[6].diaMes).padStart(2, '0')}` // Formato YYYY-MM-DD
+    };
     try {
       const response = await fetch('http://localhost/Rivanimal2/FuncionesPHP/calendario.php', {
         method: 'POST',
@@ -196,9 +200,9 @@ const Calendario = () => {
         </tbody>
       </table>
       <div className="flex justify-center mt-4">
-        <Button className="bg-purple-600 text-white px-4 py-2 rounded">
+        <button className="bg-purple-600 text-white px-4 py-2 rounded" onClick={() => crearReporteDiario()}>
           APÚNTAME
-        </Button>
+        </button>
       </div>
       <Modal isOpen={modals.crear} onClose={()=>gestionarModal("crear",false)}>      
           <ReporteDiarioCrear onClose={()=>gestionarModal("crear",false)} />
