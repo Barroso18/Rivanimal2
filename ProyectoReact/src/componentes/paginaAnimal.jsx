@@ -1,13 +1,12 @@
 import "../estilos/paginaAnimal.css";
 import { useState } from 'react';
 import { useParams } from "react-router-dom"
-//import { buscarProducto,incrementarCantidad,decrementarCantidad } from "../herramientas/buscarProducto";
 import {buscarAnimal} from "../herramientas/buscaAnimal";
 import {Link} from "react-router-dom";
 
 
 const PaginaAnimal = ({animales,setAnimales}) => {
-  
+  const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
   const {nombre} = useParams()
 //esto hay que cambiarlo por la busqueda en BBDD
   let animalInformacion = buscarAnimal(nombre, animales);
@@ -36,6 +35,96 @@ const PaginaAnimal = ({animales,setAnimales}) => {
             </div>
         </div>
     </div>
+    <div className="tabs-container">
+          {/* Tabs */}
+          <div className="tabs flex border-b border-gray-300">
+            <button
+              className={`tab px-4 py-2 ${
+                activeTab === "salud" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("salud")}
+            >
+              Salud
+            </button>
+            <button
+              className={`tab px-4 py-2 ${
+                activeTab === "higiene" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("higiene")}
+            >
+              Higiene
+            </button>
+            <button
+              className={`tab px-4 py-2 ${
+                activeTab === "paseos" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("paseos")}
+            >
+              Paseos
+            </button>
+            <button
+              className={`tab px-4 py-2 ${
+                activeTab === "alimentacion" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("alimentacion")}
+            >
+              Alimentacion
+            </button>
+            <button
+              className={`tab px-4 py-2 ${
+                activeTab === "socializacion" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("socializacion")}
+            >
+              Socialización
+            </button>
+            <button
+              className={`tab px-4 py-2 ${
+                activeTab === "otros" ? "border-b-2 border-blue-500 text-blue-500" : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab("otros")}
+            >
+              Otros
+            </button>
+          </div>
+          {/* Contenido de las tabs */}
+          <div className="tab-content mt-4">
+            {activeTab === "salud" && (
+              <div>
+                Informacion de la salud del animal.
+                
+              </div>
+            )}
+
+            {activeTab === "higiene" && (
+              <div className="higiene">
+                Informacion de la higiene del animal.
+              </div>
+            )}
+
+            {activeTab === "paseos" && (
+              <div>
+                Paseos del animal.Aqui ira la lista de paseos que se le han dado al animal.
+              </div>
+            )}
+
+            {activeTab === "alimentacion" && (
+              <div>
+                Alimentacion del animal.
+              </div>
+            )}
+            {activeTab === "socializacion" && (
+              <div>
+                Socializacion con personas y otros animales.
+              </div>
+            )}
+            {activeTab === "otros" && (
+              <div>
+                otros datos del animal.
+              </div>
+            )}
+          </div>
+        </div>
     </div>
   );
 }
