@@ -15,6 +15,8 @@ import Login from './Login/login';
 import Registro from './Login/Registro';
 import RutasProtegidas from './Login/RutasProtegidas';
 import ServicioUsuarios from './servicios/servicioUsuarios';
+import PerfilUsuario from './componentes/PerfilUsuario';
+import PaginaVoluntarios from './componentes/PaginaVoluntarios';
 
 function App() {
   const [animales, setAnimales] = useStateStorage("animales", []);
@@ -104,6 +106,16 @@ function App() {
             <Route path='/Semana' element={
               <RutasProtegidas>
                 <Calendario/>
+              </RutasProtegidas>
+            } />
+            <Route path='/tu-perfil' element={
+              <RutasProtegidas>
+                <PerfilUsuario/>
+              </RutasProtegidas>
+            } />
+            <Route path='/pagina-voluntarios' element={
+              <RutasProtegidas>
+                <PaginaVoluntarios/>
               </RutasProtegidas>
             } />
             <Route path="/login" element={<Login />} />

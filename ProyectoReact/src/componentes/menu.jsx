@@ -29,13 +29,18 @@ const MenuSuperior = ({ paseos }) => {
       <Link to="/">
         <button className="item-menu">Animales</button>
       </Link>
-      <button className="item-menu">Voluntarios</button>
+      <Link to="/pagina-voluntarios">
+        <button className="item-menu">Voluntarios</button>
+      </Link>
+      
       <button className="item-menu">Gestion</button>
       <Link to="/Semana">
         <button className="item-menu">Semana</button>
       </Link>
+      <Link to="/tu-perfil">
+        <button className="item-menu">Tu perfil</button>
+      </Link>
       
-      <button className="item-menu">Tu perfil</button>
       <Link to="/paseos">
         <button className="item-menu">Todos los paseos</button>
       </Link>
