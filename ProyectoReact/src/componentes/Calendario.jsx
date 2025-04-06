@@ -51,21 +51,26 @@ const Calendario = () => {
       const nuevaFecha = new Date(prevFecha);
       nuevaFecha.setDate(prevFecha.getDate() + dias);
       setNumeroSemana(obtenerNumeroSemana(nuevaFecha));
+  
+      // Calcular la nueva semana y cargar los reportes
+      const nuevaSemana = obtenerSemana(nuevaFecha);
+      enviarDatos(nuevaSemana);
+  
       return nuevaFecha;
     });
-    
   };
 
   const semanaActual = obtenerSemana(fechaBase);
   const [numeroSemana, setNumeroSemana] = useState(0);
   //Cargamos los reportes de la semana actual
-  const enviarDatos = async () => {
+  const enviarDatos = async (semana) => {
     const funcion = "reportesdiario";
-    const datosEnviar = {
-      funcion,
-      fecha_inicial: `${semanaActual[0].año}-${String(semanaActual[0].mesnum).padStart(2, '0')}-${String(semanaActual[0].diaMes).padStart(2, '0')}`, // Formato YYYY-MM-DD
-      fecha_final: `${semanaActual[6].año}-${String(semanaActual[6].mesnum).padStart(2, '0')}-${String(semanaActual[6].diaMes).padStart(2, '0')}` // Formato YYYY-MM-DD
-    };
+
+  const datosEnviar = {
+    funcion,
+    fecha_inicial: `${semana[0].año}-${String(semana[0].mesnum).padStart(2, '0')}-${String(semana[0].diaMes).padStart(2, '0')}`, // Formato YYYY-MM-DD
+    fecha_final: `${semana[6].año}-${String(semana[6].mesnum).padStart(2, '0')}-${String(semana[6].diaMes).padStart(2, '0')}` // Formato YYYY-MM-DD
+  };
   
     try {
       const response = await fetch('http://localhost/Rivanimal2/FuncionesPHP/calendario.php', {
@@ -93,19 +98,12 @@ const Calendario = () => {
       console.error("Error al enviar los datos:", error);
     }
   };
+  
   useEffect(() => {
-    enviarDatos(); // Llamar a la función dentro de useEffect
-    //console.log("reportesDia: ",reportesDia);
-  }, []);
-    /*
-    const obtenerNumeroSemana = (fecha) => {
-      const añoInicio = new Date(fecha.getFullYear(), 0, 1);
-      const primerJueves = new Date(fecha.getFullYear(), 0, 4); // Primer jueves del año
-      const diferencia = fecha - primerJueves;
-      const dias = Math.floor(diferencia / (1000 * 60 * 60 * 24));
-      return Math.ceil((dias + primerJueves.getDay() + 1) / 7);
-    };
-    */
+    const semana = obtenerSemana(fechaBase);
+    enviarDatos(semana);// Llamar a la función dentro de useEffect
+  }, [fechaBase]);
+    
     const obtenerNumeroSemana = (fecha) => {
       const inicioAño = new Date(fecha.getFullYear(), 0, 1); // 1 de enero del año dado
       // Días transcurridos desde el inicio del año
@@ -121,13 +119,12 @@ const Calendario = () => {
     const compruebaReporte = (diaMes, mesnum,año,turno,index) => {
       //console.log("reportesSemana: ",reportesDia);
       const diaFormateado = `${año}-${String(mesnum).padStart(2, '0')}-${String(diaMes).padStart(2, '0')}`;
-      console.log("diaFormateado: ",diaFormateado);
-      console.log(reportesDia.find((reporte) => reporte.fecha === diaFormateado  && reporte.horario === turno));
+      //console.log("diaFormateado: ",diaFormateado);
+      //console.log(reportesDia.find((reporte) => reporte.fecha === diaFormateado  && reporte.horario === turno));
       const reportesEncontrados = reportesDia.filter(
         (reporte) => reporte.fecha === diaFormateado && reporte.horario === turno
       );
-      //const usuarioEncontrado = buscarUsuarioPorId(reporteEncontrado.usuario? reporteEncontrado.usuario:0);
-      //console.log("usuarioEncontrado: ",usuarioEncontrado);
+      
       return (
         <td key={index} className={`border p-2 h-24 ${index >= 0 && index <= 8 ? 'w-32' : 'w-auto'}`}>
           {reportesEncontrados.length > 0 ? (
