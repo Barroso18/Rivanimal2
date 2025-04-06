@@ -34,5 +34,13 @@ use \Firebase\JWT\JWT;
         $resultado = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
         return $resultado;
     }
-    
+    function buscarUsuarioPorId($conn, $id_usuario) {
+        $sql = "SELECT nombre,apellido1,apellido2,nombre_usuario FROM usuarios WHERE id_usuario = '$id_usuario'";
+        $resultado = mysqli_query($conn, $sql);
+        if ($resultado && mysqli_num_rows($resultado) > 0) {
+            return mysqli_fetch_assoc($resultado);
+        } else {
+            return null;
+        }
+    }
 ?>
