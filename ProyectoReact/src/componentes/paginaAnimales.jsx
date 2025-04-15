@@ -52,7 +52,7 @@ const PaginaAnimales = () => {
   // Manejador del evento onChange
   const handleChange = (event) => {
     const {name,value} = event.target;
-    setSitioSeleccionado(event.target.value);
+    setTipoSeleccionado(event.target.value);
     console.log("Sitio seleccionado:", event.target.value);
     setForm({
         ...form,

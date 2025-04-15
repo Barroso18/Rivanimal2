@@ -6,6 +6,8 @@ import PaseoCrear from "./Modales/PaseoCrear.jsx";
 import ServicioAnimales from "../servicios/servicioAnimales";
 import { useAuth } from "../Login/AuthProvider";
 import {buscaTratamientoTipo} from "../herramientas/buscaTratamientoTipo";
+import { use } from "react";
+import servicioPaseos from "../servicios/servicioPaseos.js";
 
 const PaginaAnimal = () => {
   const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
@@ -14,6 +16,7 @@ const PaginaAnimal = () => {
   const { user } = useAuth();
   const usuario = user.data.usuario; // Usuario temporal
   const [tratamientos, setTratamientos] = useState([]);
+  const [paseos, setPaseos] = useState([]);
   // Inicializar con propiedades vacías para evitar errores
   const [animalInformacion, setAnimalInformacion] = useState({
     foto: "",
@@ -71,6 +74,19 @@ const PaginaAnimal = () => {
   const crearPaseo = (animal) => {
     gestionarModal("crear", true);
   };
+
+  useEffect(() => {
+    if (animalInformacion.id_animal) {
+      servicioPaseos.getPaseosPorAnimal(animalInformacion.id_animal)
+        .then((response) => {
+          console.log("paseos", response.data);
+          setPaseos(response.data); // Actualiza el estado con los tratamientos
+        })
+        .catch((error) => {
+          console.error("Error al obtener los tratamientos:", error);
+        });
+    }
+  }, [animalInformacion.id_animal]);
 
   return (
     <div className="animal">
@@ -200,6 +216,19 @@ const PaginaAnimal = () => {
             <div>
               Paseos del animal. Aquí irá la lista de paseos que se le han dado
               al animal.
+              {
+                paseos.map((paseo,indice) => {
+                  const duracion = Math.floor((new Date(paseo.fecha_hora_fin) - new Date(paseo.fecha_hora_inicio))/60000);
+                  return (
+                    <div key={indice}>
+                      <p>Duración: {duracion} min</p>
+                      <p>Lugar: {paseo.ubicaciones}</p>
+                      <p>Cacas: {paseo.caca_nivel}</p>
+                      <p>Descripcion: {paseo.descripcion}</p>
+                    </div>
+                  );
+                })
+              }
             </div>
           )}
 
