@@ -15,6 +15,26 @@ $funcion = $_GET['funcion'] ?? '';
 if ($funcion === 'animalestodos') {
     echo json_encode(consultaAnimales($conn));
 } 
+if ($funcion === 'animalporID') {
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['id'])) {
+        $id_animal = $input['id'];
+    } else {
 
+        echo json_encode(array("mensaje" => "ID de animal no proporcionado"));
+        exit;
+    }
+    echo json_encode(buscaAnimalPorID($conn, $id_animal));
+}
+if ($funcion === 'tratamientoPorAnimal') {
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['idanimal'])) {
+        $id_animal = $input['idanimal'];
+    } else {
+        echo json_encode(array("mensaje" => "ID de animal no proporcionado"));
+        exit;
+    }
+    echo json_encode(buscaTratamientoPorAnimal($conn, $id_animal));
+}
     
 ?>

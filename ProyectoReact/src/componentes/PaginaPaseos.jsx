@@ -2,13 +2,14 @@ import "../estilos/paginaPaseos.css";
 import { useState } from 'react';
 import {buscarAnimal} from "../herramientas/buscaAnimal";
 import {Link} from "react-router-dom";
-import Modal from "./Modal.jsx";
-import PaseoCrear from "./PaseoCrear.jsx";
-import PaseoEditar from "./PaseoEditar.jsx";
+import Modal from "./Modales/Modal.jsx";
+import PaseoCrear from "./Modales/PaseoCrear.jsx";
+import PaseoEditar from "./Modales/PaseoEditar.jsx";
 import PaseoEliminar from "./PaseoEliminar.js";
 import { useAuth } from '../Login/AuthProvider';
-const PaginaPaseos = ({paseos,setPaseos})=>{
+const PaginaPaseos = ()=>{
     const { user, logout } = useAuth();
+    const [paseos, setPaseos] = useState([]);//Hay que conectar a la BBDD
     const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
     const [paseoSeleccionado, setPaseoSeleccionado] = useState(null);
     const [modals, setModals] = useState({

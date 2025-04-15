@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from "react";
 import Button from "./Button.jsx";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import Modal from "./Modal.jsx";
-import ReporteDiarioCrear from "./ReporteDiarioCrear.jsx";
+import Modal from "./Modales/Modal.jsx";
+import ReporteDiarioCrear from "./Modales/ReporteDiarioCrear.jsx";
 import { useAuth } from '../Login/AuthProvider';
+
+
 const Calendario = () => {
   const { user, logout } = useAuth();// user?.data.usuario
   const [fechaBase, setFechaBase] = useState(new Date());

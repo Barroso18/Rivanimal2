@@ -5,20 +5,40 @@ import {buscarAnimal} from "../herramientas/buscaAnimal";
 import ServicioAnimales from "../servicios/servicioAnimales";
 import LocalStorageServicio from "../servicios/LocalStorageServicio";
 import {Link} from "react-router-dom";
-import Modal from "./Modal.jsx";
-import PaseoCrear from "./PaseoCrear.jsx";
+import Modal from "./Modales/Modal.jsx";
+import PaseoCrear from "./Modales/PaseoCrear.jsx";
 import { useAuth } from '../Login/AuthProvider';
 import { jwtDecode } from 'jwt-decode';
-const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
+import Swal from 'sweetalert2';
+
+const PaginaAnimales = () => {
   // errores Almacena los errores del formulario
   const [errores,setErrores] = useState({});
   const { user, logout } = useAuth();
-  const [animalesFiltrado,setAnimalesFiltrado] = useState(animales);
+  const [animales,setAnimales] = useState([]);
+  const [animalesFiltrado,setAnimalesFiltrado] = useState([]);
   const [animalSeleccionado, setAnimalSeleccionado] = useState(null);
    const [tipoSeleccionado, setTipoSeleccionado] = useState("");
    const [estadoSeleccionado, setEstadoSeleccionado] = useState("");
   // Creamos un usuario de forma temporal
   const usuario = user.data.usuario ;
+  useEffect(() => {
+    ServicioAnimales.getAll()
+      .then(response => {
+        console.log("Animales: ",response.data);
+        setAnimales(response.data);
+        setAnimalesFiltrado(response.data); 
+      })
+      .catch((error) => {
+        Swal.fire({
+          title: "¿Tienes Internet?",
+          text: "No consigo descargar los animales :("+error,
+          icon: "question"
+        });
+      });
+  }, []);
+  
+  
 //console.log("Usuario: ",user);
   const [modals, setModals] = useState({
     crear: false,
@@ -184,7 +204,7 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
                           <p className="text-gray-500">Nivel: {animal.nivel}</p>
                           
                           <button className="add-aficion-btn" onClick={() => crearPaseo(animal.nombre)}>Paseo</button> 
-                          <Link to={`/pagina-animal/${animal.nombre}`} >
+                          <Link to={`/pagina-animal/${animal.identificador}`} >
                               <button className="add-aficion-btn">Mas info</button> 
                           </Link>
                       </div>
@@ -197,9 +217,7 @@ const PaginaAnimales = ({animales,setAnimales,paseos,setPaseos,usuarios}) => {
           
           </div>
       </div>
-      <Modal isOpen={modals.crear} onClose={()=>gestionarModal("crear",false)}>      
-          <PaseoCrear paseos={paseos} setPaseos={setPaseos} nombreAnimal={animalSeleccionado} voluntario={usuario} usuarios={usuarios} onClose={()=>gestionarModal("crear",false)} />
-      </Modal>      
+          
       
       <div className="p-6 max-w-6xl mx-auto">
       <div className="flex justify-between items-center mb-6">

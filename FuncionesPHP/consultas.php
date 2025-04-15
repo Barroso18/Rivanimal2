@@ -35,10 +35,81 @@ use \Firebase\JWT\JWT;
         return $resultado;
     }
     function buscarUsuarioPorId($conn, $id_usuario) {
-        $sql = "SELECT nombre,apellido1,apellido2,nombre_usuario FROM usuarios WHERE id_usuario = '$id_usuario'";
-        $resultado = mysqli_query($conn, $sql);
-        if ($resultado && mysqli_num_rows($resultado) > 0) {
-            return mysqli_fetch_assoc($resultado);
+        $sql = "SELECT * FROM usuario WHERE id_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $id_usuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            $fila = $resultado->fetch_assoc();
+            return $fila['id'];
+        } else {
+            return null;
+        }
+    }
+    function buscaUsuarioPorNombreUsuario($conn, $nombre_usuario) {
+        $sql = "SELECT * FROM usuario WHERE nombre_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $nombre_usuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+
+    function buscaAnimalPorID($conn, $id_animal){
+        if (!is_numeric($id_animal)) {
+            return array("error" => "El ID del animal debe ser un número.");
+        }
+    
+        $sql = "SELECT * FROM animal WHERE identificador = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_animal);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_assoc();
+        } else {
+            return null;
+        }
+    
+    }
+
+    function buscaPaseosPorReporteDiario($conn, $id_reporte_diario){
+        $sql = "SELECT * FROM reporte_paseo WHERE reporte_diario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_reporte_diario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+    function buscaPaseosPorAnimal($conn, $id_animal){
+        $sql = "SELECT * FROM reporte_paseo WHERE animal = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_animal);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+    function buscaTratamientoPorAnimal($conn, $id_animal){
+        $sql = "SELECT * FROM tratamiento WHERE animal = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_animal);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
         } else {
             return null;
         }

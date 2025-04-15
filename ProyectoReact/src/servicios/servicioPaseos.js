@@ -1,10 +1,17 @@
 import http from "./http-axios.js";
-
+import https from "./https-axios.js";
 class ServicioPaseos {
   getAll() {
-    return http.get("/paseos");
+    //return http.get("/paseos");
+    return http.get("/paseos.php?funcion=paseostodos");
   }
-
+  getPaseosPorAnimal(idanimal) {
+    return https.post(`/paseos.php?funcion=paseosporanimal`, { idanimal });
+  }
+  getPaseosPorReporteDiario(idReporte) {
+    return https.post(`/paseos.php?funcion=paseosporreportediario`, { idReporte });
+    //return https.post(`/paseos.php?funcion=paseosporanimal`, { idanimal });
+  }
   get(id) {
     return http.get(`/paseos/${id}`);
   }

@@ -21,11 +21,11 @@ import PaginaVoluntarios from './componentes/PaginaVoluntarios';
 import PaginaGestion from './componentes/PaginaGestion';
 
 function App() {
-  const [animales, setAnimales] = useStateStorage("animales", []);
-  const [paseos, setPaseos] = useStateStorage("paseos", []);
-  const [usuarios, setUsuarios] = useStateStorage("usuarios", []);
+  //const [animales, setAnimales] = useStateStorage("animales", []);
+  //const [paseos, setPaseos] = useStateStorage("paseos", []);
+  //const [usuarios, setUsuarios] = useStateStorage("usuarios", []);
   const location = useLocation(); // Hook para obtener la ruta actual
-
+/*
   useEffect(() => {
     let funcion= "animalestodos";
     fetch(`http://localhost/Rivanimal2/FuncionesPHP/animales.php?funcion=${funcion}`) // Asegúrate de que la URL es correcta
@@ -33,8 +33,8 @@ function App() {
       .then((data) => setAnimales(data))
       .catch((error) => console.error("Error al obtener los animales:", error));
   }, []);
-
-
+*/
+/*
   useEffect(() => {
     ServicioPaseos.getAll()
       .then(response => setPaseos(response.data))
@@ -46,7 +46,8 @@ function App() {
         });
       });
   }, []);
-
+*/
+/*
   useEffect(() => {
     ServicioUsuarios.getAll()
       .then(response => setUsuarios(response.data))
@@ -58,6 +59,8 @@ function App() {
         });
       });
   }, []);
+
+  */
   // Función para mostrar el menú superior solo si no estamos en la página de login
   const muestraMenu = () => {
     if (location.pathname !== "/login") { // Ocultar el menú en la página de login
@@ -77,28 +80,22 @@ function App() {
             <Route path="*" element={<Pagina404 />} />
             <Route path="/" element={
               <RutasProtegidas>
-                <PaginaAnimales animales={animales} />
+                <PaginaAnimales/>
               </RutasProtegidas>
             } />
-            <Route path='/pagina-animal/:nombre' element={
+            <Route path='/pagina-animal/:idanimal' element={
               <RutasProtegidas>
-                <PaginaAnimal animales={animales} setAnimales={setAnimales} />
+                <PaginaAnimal/>
               </RutasProtegidas>
             } />
             <Route path='/paseos' element={
               <RutasProtegidas>
-                <PaginaPaseos paseos={paseos} setPaseos={setPaseos} />
+                <PaginaPaseos/>
               </RutasProtegidas>
             } />
             <Route path='/pagina-animales' element={
               <RutasProtegidas>
-                <PaginaAnimales
-                  animales={animales}
-                  setAnimales={setAnimales}
-                  paseos={paseos}
-                  setPaseos={setPaseos}
-                  usuarios={usuarios}
-                />
+                <PaginaAnimales/>
               </RutasProtegidas>
             } />
             <Route path='/Semana' element={
