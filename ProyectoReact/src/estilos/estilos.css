@@ -1,3 +1,192 @@
+@charset "UTF-8";
+.navbar {
+  background-color: black;
+  padding: 10px;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  margin: 10px;
+  font-weight: bold;
+}
+
+.navbar a:hover {
+  color: #FFD700;
+}
+
+.menu-superior {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background-color: #000; /* Fondo negro */
+  color: #fff; /* Texto blanco */
+  padding: 10px 20px;
+  position: relative; /* Clave para posicionar el carrito correctamente */
+}
+
+a {
+  text-decoration: none;
+}
+
+.carrito-texto {
+  display: inline-block;
+  background-color: #ff0000; /* Círculo rojo */
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: bold;
+  border-radius: 50%;
+  padding: 5px 10px;
+  text-align: center;
+  margin-left: 5px;
+  position: relative;
+  top: -3px; /* Ajuste para centrar verticalmente con el icono */
+}
+
+.toggle-carrito, .item-menu, div.item-menu {
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #fff; /* Icono del carrito en blanco */
+  position: relative;
+  display: flex;
+  align-items: center;
+  font-family: Arial, sans-serif;
+}
+
+/* Hover para el botón del carrito */
+.toggle-carrito:hover, .item-menu:hover {
+  color: #f0ad4e; /* Cambia a un color ámbar al pasar el ratón */
+}
+
+/* Contenedor del carrito de productos */
+.lista-paseos {
+  position: absolute;
+  top: 100%; /* Coloca el carrito justo debajo del botón */
+  right: 0; /* Alinea el carrito a la derecha */
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.25);
+  padding: 10px;
+  width: 250px;
+  z-index: 1;
+  text-align: left;
+  max-height: 300px; /* Limita la altura del carrito */
+  overflow-y: auto; /* Permite desplazamiento si hay más productos */
+}
+
+.lista-paseos h4 {
+  margin: 0 0 10px;
+  font-size: 1rem;
+  color: #333;
+}
+
+.lista-paseos ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.lista-paseos ul li {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+  color: #333; /* Color del texto en la lista */
+}
+
+.lista-paseos ul li:last-child {
+  border-bottom: none;
+}
+
+.lista-paseos p {
+  margin: 0;
+  text-align: center;
+  color: #999;
+}
+
 * {
   font-family: "Open Sans", verdana, Tahoma, arial, sans-serif;
+}
+
+.animal {
+  font-family: Arial, sans-serif;
+  background-color: #f5f5f5;
+  margin: 0;
+  padding: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+.ficha-container {
+  display: flex;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  width: 100%;
+}
+
+.foto {
+  flex: 1;
+  text-align: center;
+}
+
+.foto img {
+  width: 100%;
+  height: 100%;
+  border-radius: 10px;
+}
+
+.contador-fotos {
+  font-size: 14px;
+  color: #666;
+}
+
+.info {
+  flex: 1;
+  padding-left: 20px;
+}
+
+.titulo {
+  color: #E55A19;
+  margin-bottom: 5px;
+}
+
+.adopcion {
+  background: #90EE90;
+  padding: 5px 10px;
+  border-radius: 5px;
+  display: inline-block;
+  font-weight: bold;
+  margin-bottom: 15px;
+}
+
+.detalles p {
+  background: #f0f0f0;
+  padding: 8px;
+  border-radius: 5px;
+  font-size: 14px;
+  margin: 5px 0;
+}
+
+strong {
+  color: #333;
+}
+
+.add-info-btn {
+  background-color: #007BFF;
+  color: white;
+  padding: 8px 15px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.add-info-btn:hover {
+  background-color: #0056b3;
 }/*# sourceMappingURL=estilos.css.map */

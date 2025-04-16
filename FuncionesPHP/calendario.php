@@ -68,10 +68,10 @@ use \Firebase\JWT\JWT;
                     if ($reportes) {
                         echo json_encode($reportes, JSON_UNESCAPED_UNICODE | JSON_PRETTY_PRINT);
                     } else {
-                        echo json_encode(array("mensaje" => "No se encontraron reportes en la semana especificada"));
+                        echo json_encode(array("error"=>1,"mensaje" => "No se encontraron reportes en la semana especificada"));
                     }
                 } else {
-                    echo json_encode(array("mensaje" => "Datos incompletos: fecha_inicial o fecha_final no proporcionados"));
+                    echo json_encode(array("error"=>2,"mensaje" => "Datos incompletos: fecha_inicial o fecha_final no proporcionados"));
                 }
             } else {
                 echo json_encode(array("mensaje" => "Función no válida"));

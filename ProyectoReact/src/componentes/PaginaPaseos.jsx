@@ -1,4 +1,4 @@
-import "../estilos/paginaPaseos.css";
+//import "../estilos/paginaPaseos.css";
 import { useState } from 'react';
 import {buscarAnimal} from "../herramientas/buscaAnimal";
 import {Link} from "react-router-dom";

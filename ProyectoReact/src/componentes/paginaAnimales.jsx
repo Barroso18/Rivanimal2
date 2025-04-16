@@ -1,4 +1,4 @@
-import "../estilos/paginaAnimales.css";
+//import "../estilos/paginaAnimales.css";
 import "../estilos/estilos.css";
 import { useState,useEffect, React } from 'react';
 import {buscarAnimal} from "../herramientas/buscaAnimal";
@@ -25,7 +25,7 @@ const PaginaAnimales = () => {
   useEffect(() => {
     ServicioAnimales.getAll()
       .then(response => {
-        console.log("Animales: ",response.data);
+        //console.log("Animales: ",response.data);
         setAnimales(response.data);
         setAnimalesFiltrado(response.data); 
       })
@@ -186,9 +186,9 @@ const PaginaAnimales = () => {
             </select><br/>
             {errores.estado && <p className="error">{errores.estado}</p>}
             {/* Botón de envío */}
-            <button type="submit">Buscar</button>
+            <button type="submit" className="add-info-btn">Buscar</button>
           </form>
-          <button onClick={eliminarFiltros}>Todos</button>
+          <button onClick={eliminarFiltros} className="add-info-btn">Todos</button>
         </div>
         
         <div  className="grid grid-cols-3 gap-6">{/* className="lista"*/}
@@ -203,9 +203,9 @@ const PaginaAnimales = () => {
                           <p className="text-gray-500">Estado: {animal.situacion}</p>
                           <p className="text-gray-500">Nivel: {animal.nivel}</p>
                           
-                          <button className="add-aficion-btn" onClick={() => crearPaseo(animal.nombre)}>Paseo</button> 
+                          <button className="add-info-btn" onClick={() => crearPaseo(animal.nombre)}>Paseo</button> 
                           <Link to={`/pagina-animal/${animal.identificador}`} >
-                              <button className="add-aficion-btn">Mas info</button> 
+                              <button className="add-info-btn">Mas info</button> 
                           </Link>
                       </div>
                       

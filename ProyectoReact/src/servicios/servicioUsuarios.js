@@ -13,6 +13,13 @@ class ServicioUsuario {
    getAll() {
       return http.get("/usuarios");
     }
+    buscaPorId(idusuario){
+      return https.post(`/usuarios.php?funcion=buscaPorId`, { idusuario });
+   }
+   buscaPorIdCompleto(idusuario){
+      return https.post(`/usuarios.php?funcion=buscaPorIdCompleto`, { idusuario });
+   }
+
 }
 
 export default new ServicioUsuario();

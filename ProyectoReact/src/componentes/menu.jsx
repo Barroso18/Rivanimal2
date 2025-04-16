@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "../estilos/menu.css";
+import "../estilos/estilos.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../Login/AuthProvider';
 
@@ -11,7 +11,7 @@ const MenuSuperior = () => {
   const navigate = useNavigate();
   const rolesUsuario = typeof user?.data.roles === 'string' ? user.data.roles.split(',').map(role => role.trim()) // Convertir a array y eliminar espacios
   : Array.isArray(user?.data.roles)? user.data.roles: [];
-  console.log("Roles del usuario:", rolesUsuario);
+  //console.log("Roles del usuario:", rolesUsuario);
 /*
   const togglePaseos = () => {
     setPaseosVisible(!paseosVisible);

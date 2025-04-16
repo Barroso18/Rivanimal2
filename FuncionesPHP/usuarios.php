@@ -16,10 +16,29 @@ if($funcion === 'buscaPorNombre') {
     if (isset($input['usuario']) && !empty($input['usuario'])) {
         
         $usuario = $input['usuario'];
-        buscaUsuarioPorNombreUsuario($conn, $usuario);
+        echo json_encode(buscaUsuarioPorNombreUsuario($conn, $usuario));
     } else {
         echo json_encode(array("mensaje" => "Datos incompletos"));
     }
 } 
-
+if($funcion === 'buscaPorId') {
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['idusuario']) && !empty($input['idusuario'])) {
+        
+        $idusuario = $input['idusuario'];
+        echo json_encode(buscarUsuarioPorIdLimitado($conn, $idusuario));
+    } else {
+        echo json_encode(array("mensaje" => "Datos incompletos"));
+    }
+} 
+if($funcion === 'buscaPorIdCompleto') {
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['idusuario']) && !empty($input['idusuario'])) {
+        
+        $idusuario = $input['idusuario'];
+        echo json_encode(buscarUsuarioPorId($conn, $idusuario));
+    } else {
+        echo json_encode(array("mensaje" => "Datos incompletos"));
+    }
+} 
 ?>

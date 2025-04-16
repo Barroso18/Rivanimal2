@@ -93,12 +93,15 @@ const Calendario = () => {
       }
   
       const data = await response.json(); // Convertir la respuesta a JSON
-      console.log("Respuesta del servidor:", data);
+      //console.log("Respuesta del servidor:", data);
   
       if (Array.isArray(data)) {
         setReportesDia(data); // Actualizar el estado con los datos recibidos
       } else {
-        console.error("La respuesta no tiene el formato esperado:", data);
+        if(data.error != 1 && data.error != 2){ 
+          console.error("La respuesta no tiene el formato esperado:", data);
+        }
+        
       }
     } catch (error) {
       console.error("Error al enviar los datos:", error);

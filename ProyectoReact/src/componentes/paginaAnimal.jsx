@@ -1,9 +1,11 @@
-import "../estilos/paginaAnimal.css";
+//import "../estilos/paginaAnimal.css";
+import "../estilos/estilos.css";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "./Modales/Modal.jsx";
 import PaseoCrear from "./Modales/PaseoCrear.jsx";
 import ServicioAnimales from "../servicios/servicioAnimales";
+import ServicioUsuarios from "../servicios/servicioUsuarios";
 import { useAuth } from "../Login/AuthProvider";
 import {buscaTratamientoTipo} from "../herramientas/buscaTratamientoTipo";
 import { use } from "react";
@@ -12,7 +14,7 @@ import servicioPaseos from "../servicios/servicioPaseos.js";
 const PaginaAnimal = () => {
   const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
   const { idanimal } = useParams();
-  console.log("idanimal recibido:", idanimal);
+  //console.log("idanimal recibido:", idanimal);
   const { user } = useAuth();
   const usuario = user.data.usuario; // Usuario temporal
   const [tratamientos, setTratamientos] = useState([]);
@@ -63,7 +65,7 @@ const PaginaAnimal = () => {
     if (animalInformacion.id_animal) {
       ServicioAnimales.buscaTratamientoPorAnimal(animalInformacion.id_animal)
         .then((response) => {
-          console.log("tratamientos", response.data);
+          //console.log("tratamientos", response.data);
           setTratamientos(response.data); // Actualiza el estado con los tratamientos
         })
         .catch((error) => {
@@ -79,7 +81,7 @@ const PaginaAnimal = () => {
     if (animalInformacion.id_animal) {
       servicioPaseos.getPaseosPorAnimal(animalInformacion.id_animal)
         .then((response) => {
-          console.log("paseos", response.data);
+          //console.log("paseos", response.data);
           setPaseos(response.data); // Actualiza el estado con los tratamientos
         })
         .catch((error) => {
@@ -87,7 +89,75 @@ const PaginaAnimal = () => {
         });
     }
   }, [animalInformacion.id_animal]);
+ function filtrarInfo(filtro){
+  if(tratamientos != null){
+    return buscaTratamientoTipo(filtro,tratamientos).descripcion;
+  }
+  return "";
+ }
+ /*const nombreUsuario=(id_usuario)=>{
+    let usuario = {};
+    ServicioUsuarios.buscaPorId(parseInt(id_usuario)).then((response) => {
+      console.log("Usuario:", response.data);
+      usuario = response.data;
+    }).catch((error) => {
+      console.error("Error al obtener el usuario:", error);
+    });
+    return usuario;
+ }*/
+ function muestraPaseos(){ 
+  if(paseos == null || paseos.length == 0){
+    return <p>No hay paseos registrados</p>;
 
+  }else{
+    
+    /*
+    return paseos.map((paseo,indice) => {
+      const duracion = Math.floor((new Date(paseo.fecha_hora_fin) - new Date(paseo.fecha_hora_inicio))/60000);
+      return (
+        <div key={indice}>
+          <p>Duración: {duracion} min</p>
+          <p>Lugar: {paseo.ubicaciones}</p>
+          <p>Cacas: {paseo.caca_nivel}</p>
+          <p>Descripcion: {paseo.descripcion}</p>
+        </div>
+      );
+    })*/
+    return  <div className="bg-gray-100 p-8 min-h-screen flex items-center justify-center">
+      <div className="bg-purple-50 p-6 rounded-2xl shadow-md w-full max-w-4xl">
+        <div className="flex items-center justify-between mb-4">
+          <button className="text-2xl">{'‹'}</button>
+          <h2 className="text-xl font-semibold">Paseos</h2>
+          <button className="text-2xl">{'›'}</button>
+        </div>
+
+        <ul className="space-y-4">
+          {paseos.map((paseo, index) => (
+            <li
+              key={index}
+              className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition"
+            >
+              <div className="text-sm text-gray-700">
+                <p className="font-semibold">
+                  {paseo.fecha_hora_fin} {paseo.nombre_usuario}
+                </p>
+                <p>
+                  Duracion {paseo.duracion} cacas {paseo.caca_nivel} Localizacion:{paseo.ubicaciones}
+                  {paseo.localizacion} Descripcion: {paseo.descripcion}
+                </p>
+              </div>
+
+              <button className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition">
+                <span className="text-lg">❕</span>
+                Ver más
+              </button>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  }
+ }
   return (
     <div className="animal">
       <div className="ficha-container">
@@ -99,8 +169,8 @@ const PaginaAnimal = () => {
             <p>Cargando imagen...</p>
           )}
         </div>
-        <div className="info">
-          <h1 className="titulo">
+        <div className="info text-gray-800 text-sm">
+          <h1 className="titulo text-lg font-semibold mb-2">
             Ficha de <span className="nombre">{animalInformacion.nombre}</span>
           </h1>
           <span className="adopcion">
@@ -110,6 +180,8 @@ const PaginaAnimal = () => {
           <div className="detalles">
             <p>
               <strong>Nombre:</strong> {animalInformacion.nombre}{" "}
+            </p>
+            <p>
               <strong>Clase:</strong> {animalInformacion.clase}
             </p>
             <p>
@@ -132,13 +204,11 @@ const PaginaAnimal = () => {
             <p>
               <strong>Situación:</strong> {animalInformacion.situacion}
             </p>
-            <p>
-              <strong>Comportamiento:</strong> {animalInformacion.comportamiento}
-            </p>
+            
           </div>
         </div>
       </div>
-      <div className="tabs-container">
+      <div className="tabs-container border border-gray-300 rounded-md overflow-hidden mb-4">
         {/* Tabs */}
         <div className="tabs flex border-b border-gray-300">
           <button
@@ -216,29 +286,23 @@ const PaginaAnimal = () => {
             <div>
               Paseos del animal. Aquí irá la lista de paseos que se le han dado
               al animal.
-              {
-                paseos.map((paseo,indice) => {
-                  const duracion = Math.floor((new Date(paseo.fecha_hora_fin) - new Date(paseo.fecha_hora_inicio))/60000);
-                  return (
-                    <div key={indice}>
-                      <p>Duración: {duracion} min</p>
-                      <p>Lugar: {paseo.ubicaciones}</p>
-                      <p>Cacas: {paseo.caca_nivel}</p>
-                      <p>Descripcion: {paseo.descripcion}</p>
-                    </div>
-                  );
-                })
+              { muestraPaseos()
+                
               }
             </div>
           )}
 
           {activeTab === "alimentacion" && (
-            <div>Alimentación del animal.{buscaTratamientoTipo("alimentacion",tratamientos).descripcion}</div>
+            <div>Alimentación del animal.{filtrarInfo("alimentacion")}</div>
           )}
           {activeTab === "socializacion" && (
             <div>Socialización con personas y otros animales.</div>
           )}
-          {activeTab === "otros" && <div>Otros datos del animal.</div>}
+          {activeTab === "otros" && <div>Otros datos del animal.
+            <p>
+              <strong>Comportamiento:</strong> {animalInformacion.comportamiento}
+            </p>
+            </div>}
         </div>
       </div>
       <Modal

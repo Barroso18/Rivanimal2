@@ -34,15 +34,26 @@ use \Firebase\JWT\JWT;
         $resultado = mysqli_fetch_all($resultado, MYSQLI_ASSOC);
         return $resultado;
     }
-    function buscarUsuarioPorId($conn, $id_usuario) {
-        $sql = "SELECT * FROM usuario WHERE id_usuario = ?";
+    function buscarUsuarioPorIdLimitado($conn, $id_usuario) {
+        $sql = "SELECT id_usuario,nombre,apellido1,apellido2,nombre_usuario,roles FROM usuario WHERE id_usuario = ?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("s", $id_usuario);
+        $stmt->bind_param("i", $id_usuario);
         $stmt->execute();
         $resultado = $stmt->get_result();
         if ($resultado && $resultado->num_rows > 0) {
-            $fila = $resultado->fetch_assoc();
-            return $fila['id'];
+            return $resultado->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
+    function buscarUsuarioPorId($conn, $id_usuario) {
+        $sql = "SELECT * FROM usuario WHERE id_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_usuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_assoc();
         } else {
             return null;
         }
@@ -91,7 +102,8 @@ use \Firebase\JWT\JWT;
         }
     }
     function buscaPaseosPorAnimal($conn, $id_animal){
-        $sql = "SELECT * FROM reporte_paseo WHERE animal = ?";
+        $sql = "SELECT rp.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario
+                FROM reporte_paseo rp INNER JOIN  usuario u ON rp.usuario = u.id_usuario WHERE rp.animal = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id_animal);
         $stmt->execute();
