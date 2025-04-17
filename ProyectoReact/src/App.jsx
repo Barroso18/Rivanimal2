@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route,useLocation } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import MenuSuperior from './componentes/menu';
+import MenuDesplegable from './componentes/MenuDesplegable';
 import Pagina404 from "./componentes/Pagina404";
 import PaginaAnimal from './componentes/paginaAnimal';
 import PaginaAnimales from './componentes/paginaAnimales';
@@ -72,8 +73,12 @@ function App() {
     <AuthProvider>
       <div className="App">
         <header className="App-header">
-          {/*<MenuSuperior paseos={paseos} />*/}
+          {/*
+          <MenuSuperior paseos={paseos} />
+          <MenuDesplegable/>
+          */}
           {muestraMenu()}
+          
         </header>
         <main>
           <Routes>

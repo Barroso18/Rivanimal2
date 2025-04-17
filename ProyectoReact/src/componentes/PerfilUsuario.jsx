@@ -1,3 +1,4 @@
+import "../estilos/estilos.css";
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../Login/AuthProvider';
 import ServicioUsuarios from "../servicios/servicioUsuarios";
@@ -6,7 +7,8 @@ const PerfilUsuario = () => {
     const { user, logout } = useAuth();// user?.data.usuario
     const [usuarioInformacion, setUsuarioInformacion] = useState({});
     const [reportesDiarios, setReportesDiarios] = useState([]);
-
+    const rolesUsuario = typeof user?.data.roles === 'string' ? user.data.roles.split(',').map(role => role.trim()) // Convertir a array y eliminar espacios
+  : Array.isArray(user?.data.roles)? user.data.roles: [];
     //Carga de datos del usuario
     useEffect(()=>{
         const idUsuario = user?.data.id;
@@ -18,11 +20,18 @@ const PerfilUsuario = () => {
     })
     function buscaFoto(){
         if(usuarioInformacion.foto === null || usuarioInformacion.foto === undefined || usuarioInformacion.foto === ""){
-            return (<>No hay foto</>);
+            return (
+                <div>
+                    <img src="../imagenes/imagenUsuario.jpg" alt="Foto perfil usuario" />
+                    <button className="add-info-btn">Cambiar foto</button>
+                </div>);
 
         }else{
             return (<>{usuarioInformacion.foto ? (
-                <img src={usuarioInformacion.foto} alt="Foto perfil usuario" />
+                <div>
+                    <img src={usuarioInformacion.foto} alt="Foto perfil usuario" />
+                    <button className="boton-foto add-info-btn">Cambiar foto</button>
+                </div>
               ) : (
                 <p>Cargando imagen...</p>
               )}</>);
@@ -35,6 +44,7 @@ const PerfilUsuario = () => {
                 <div className="foto">
                   {/* Verificación condicional para evitar errores */}
                   {buscaFoto()}
+                  
                 </div>
                 <div className="info text-gray-800 text-sm">
                     <h1 className="titulo text-lg font-semibold mb-2">
@@ -92,7 +102,7 @@ const PerfilUsuario = () => {
                     {/* Contenido de las tabs */}
                     <div className="tab-content mt-4">
                         {activeTab === "roles" && (
-                            <div>Información de la salud del animal.</div>
+                            <div>{user?.data.roles}</div>
                         )}
                     </div>
                 </div>

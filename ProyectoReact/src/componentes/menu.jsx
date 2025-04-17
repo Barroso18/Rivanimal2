@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import "../estilos/estilos.css";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from '../Login/AuthProvider';
-
+import { ChevronDown } from "lucide-react";
 const MenuSuperior = () => {
   //Variable paseos tendrá que ser consultada a la BBDD
   //const [paseos, setPaseos] = useState([]);
@@ -17,6 +17,8 @@ const MenuSuperior = () => {
     setPaseosVisible(!paseosVisible);
   };
 */
+  const [togleUsuario, setTogleUsuario] = useState(false);
+
   const handleLogout = async() => {
     await logout();
     navigate('/login');
@@ -24,38 +26,59 @@ const MenuSuperior = () => {
 
   return (
     <div className="menu-superior">
-      <img
-        src="/imagenes/logoRivanimal.jpg"
-        alt="Logo Rivanimal"
-        className="icono-supermercado"
-      />
-      <div className="item-menu">{user?.data.usuario}</div>
+  <img
+    src="/imagenes/logoRivanimal.jpg"
+    alt="Logo Rivanimal"
+    className="icono-supermercado"
+  />
+  
+  <Link to="/">
+    <button className="item-menu text-sm sm:text-base md:text-lg lg:text-xl">Animales</button>
+  </Link>
+  <Link to="/pagina-voluntarios">
+    <button className="item-menu text-sm sm:text-base md:text-lg lg:text-xl">Voluntarios</button>
+  </Link>
+  {rolesUsuario.includes('admin') && (
+    <Link to="/pagina-gestion">
+      <button className="item-menu text-sm sm:text-base md:text-lg lg:text-xl">Gestion</button>
+    </Link>
+  )}
+  <Link to="/Semana">
+    <button className="item-menu text-sm sm:text-base md:text-lg lg:text-xl">Semana</button>
+  </Link>
+  
+  {/* Desplegable usuario */}
+  <div className="relative inline-block text-left">
+    <button
+      onClick={() => setTogleUsuario(!togleUsuario)}
+      className="item-menu text-sm sm:text-base md:text-lg lg:text-xl"
+    >
+      {user?.data.usuario}
+      <ChevronDown className="ml-2 h-4 w-4" />
+    </button>
+    
+    {/* Contenido del dropdown */}
+    {togleUsuario && (
+      <div className="absolute z-10 mt-2 w-48 origin-top-right rounded-md shadow-lg bg-black ring-1 ring-black ring-opacity-5">
+        <div className="py-1">
+          <Link to="/tu-perfil">
+            <button className="item-menu block px-4 py-2 text-sm sm:text-base md:text-lg lg:text-xl">Tu perfil</button>
+          </Link>
+          <button className="item-menu block px-4 py-2 text-sm sm:text-base md:text-lg lg:text-xl" onClick={handleLogout}>
+            Salir
+          </button>
+        </div>
+      </div>
+    )}
+  </div>
 
-      <Link to="/">
-        <button className="item-menu">Animales</button>
-      </Link>
-      <Link to="/pagina-voluntarios">
-        <button className="item-menu">Voluntarios</button>
-      </Link>
-      {rolesUsuario.includes('admin') && (
-        <Link to="/pagina-gestion">
-          <button className="item-menu">Gestion</button>
-        </Link>
-      )}
-      <Link to="/Semana">
-        <button className="item-menu">Semana</button>
-      </Link>
-      <Link to="/tu-perfil">
-        <button className="item-menu">Tu perfil</button>
-      </Link>
-      
+
+      {/*
       <Link to="/paseos">
         <button className="item-menu">Todos los paseos</button>
       </Link>
-
-      <button className="item-menu" onClick={handleLogout}>
-        Salir
-      </button>
+         */}
+      
       {/* <button className="item-menu" onClick={togglePaseos}>
         paseos voluntario
       </button> */}

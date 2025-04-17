@@ -33,7 +33,7 @@ a {
   display: inline-block;
   background-color: #ff0000; /* Círculo rojo */
   color: #fff;
-  font-size: 0.9rem;
+  /*font-size: 0.9rem;*/
   font-weight: bold;
   border-radius: 50%;
   padding: 5px 10px;
@@ -46,7 +46,7 @@ a {
 .toggle-carrito, .item-menu, div.item-menu {
   background: none;
   border: none;
-  font-size: 1.5rem;
+  /*font-size: 1.5rem;*/
   cursor: pointer;
   color: #fff; /* Icono del carrito en blanco */
   position: relative;
