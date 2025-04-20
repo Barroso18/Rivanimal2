@@ -7,6 +7,15 @@ class ServicioUsuario {
       return http.get(`/usuarios?nombre=${usuario}`);
       //http://localhost:3000/usuarios?nombre=agustin&pass=123
    }*/
+   async login(datosLogin) {
+      return https.post(`/login.php`, { datosLogin });
+   }
+   async registro(datosRegistro) {
+      return https.post(`/registro.php`, datosRegistro ,{
+         headers: {
+           'Content-Type': 'multipart/form-data',
+         }});
+   }
    buscaPorNombre(usuario){
       return https.post(`/usuarios.php?funcion=buscaPorNombre`, { usuario });
    }

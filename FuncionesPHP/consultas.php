@@ -8,11 +8,13 @@ require_once 'vendor/autoload.php';
 use \Firebase\JWT\JWT;
     include("ConexionBBDD.php");
     function consigueIdUsuario($conn, $usuario){
-        $sql = "SELECT id FROM usuarios WHERE nombreUsuario = '$usuario'";
-        $resultado = mysqli_query($conn, $sql);
-        if ($resultado) {
-            $fila = mysqli_fetch_assoc($resultado);
-            return $fila['id_usuario'];
+        $sql = "SELECT id_usuario FROM usuario WHERE nombre_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $usuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_assoc();
         } else {
             return null;
         }
@@ -125,5 +127,24 @@ use \Firebase\JWT\JWT;
         } else {
             return null;
         }
+    }
+    function agregaReporteDiario($conn, $usuario, $rol, $fecha, $horario){
+        // Inserta en la base de datos
+        $sql = "INSERT INTO reporte_diario (usuario, rol, fecha, horario) 
+        VALUES (?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("isss", $usuario, $rol, $fecha, $horario);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            return json_encode(["message" => "Registro exitoso"]);
+        } else {
+            $stmt->close();
+            $conn->close();
+            return json_encode(["message" => "Error al registrar el usuario"]);
+        }
+
+        
     }
 ?>

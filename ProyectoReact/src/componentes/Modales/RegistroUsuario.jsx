@@ -1,11 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthProvider';
-import ServicioUsuario from '../servicios/servicioUsuarios';
+import { useAuth } from '../../Login/AuthProvider';
 import bcrypt from 'bcryptjs';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-const Registro = () => {
+import servicioUsuarios from '../../servicios/servicioUsuarios';
+
+const Registro = ({onClose}) => {
     const [nombre, setNombre] = useState('');
     const [apellido1, setApellido1] = useState('');
     const [apellido2, setApellido2] = useState('');
@@ -81,21 +82,24 @@ const Registro = () => {
             formData.append("file", foto); // Adjuntar la imagen
         }
 
-        //console.log("Datos:",datos);
-        /*
-        axios.post(url, formData,{headers: { 'Content-Type': 'multipart/form-data' }})
-          .then(response => {
-            if (response.data === "OK") {
-              setMensaje("Usuario registrado correctamente");
-            } else {
+       
+          await servicioUsuarios.registro(formData)
+            .then((response) => {
+              if (response.data.message === "Registro exitoso") {
+                setMensaje("Usuario registrado correctamente");
+                setError("");
+                navigate("/login"); // Redirigir a la página de login después del registro exitoso
+              } else if (response.data.errores) {
+                setError(Object.values(response.data.errores).join(", "));
+              } else {
+                setError("Error desconocido al registrar el usuario");
                 console.log("Datos:",response.data);
-              setError("Error al registrar el usuario1",response.data[0]);
-            }
-          })
-          .catch(error => {
-            setError("Error al registrar el usuario2");
-          });
-          */
+              }
+            }).catch((error) => {
+              setError("Error en la petición de registro.");
+              console.error("Error en axios:", error);
+            });
+          /*
           try {
             const response = await axios.post(
                 "http://localhost/Rivanimal2/FuncionesPHP/registro.php",
@@ -119,7 +123,7 @@ const Registro = () => {
             setError("Error en la petición de registro.");
             console.error("Error en axios:", error);
         }
-
+        */
     };
     return (
         <div>

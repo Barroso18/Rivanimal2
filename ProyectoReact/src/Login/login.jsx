@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
 import axios from 'axios';
 import "../estilos/estilos.css";
-
+import servicioUsuarios from '../servicios/servicioUsuarios';
 
 import { Lock, Mail } from "lucide-react";
 
@@ -16,23 +16,20 @@ const Login = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     const datosLogin = { usuario, contrasena };
-
-    try {
-      const response = await axios.post('http://localhost/Rivanimal2/FuncionesPHP/login.php', datosLogin, {
-        headers: { 'Content-Type': 'application/json' }
+    await servicioUsuarios.login(datosLogin)
+      .then((response) => {
+        if (response.data.jwt) {
+          login(response.data.jwt); // Guardar token y cargar usuario
+        } else {
+          setError(response.data.message);
+        }
+      })
+      .catch((error) => {
+        console.error('Error en el login:', error);
+        setError('Error en el login');
       });
 
-      if (response.data.jwt) {
-        login(response.data.jwt); // Guardar token y cargar usuario
-      } else {
-        setError(response.data.message);
-      }
-    } catch (error) {
-      console.error('Error en el login:', error);
-      setError('Error en el login');
-    }
   };
-
   return (
     <div>
       
@@ -71,9 +68,6 @@ const Login = () => {
           >
             Iniciar Sesión
           </button>
-          <Link to="/registro">
-            <button type="button" className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600">Registro</button>
-          </Link>
         </form>
       </div>
     </div>

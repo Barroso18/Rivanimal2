@@ -13,7 +13,7 @@ import PaginaPaseos from './componentes/PaginaPaseos';
 import Calendario from './componentes/Calendario';
 import { AuthProvider } from './Login/AuthProvider';
 import Login from './Login/login';
-import Registro from './Login/Registro';
+import Registro from './componentes/Modales/RegistroUsuario';
 import RutasProtegidas from './Login/RutasProtegidas';
 import RutaProtegidaPorRol from './Login/RutaProtegidaPorRol';
 import ServicioUsuarios from './servicios/servicioUsuarios';
@@ -124,7 +124,11 @@ function App() {
               </RutaProtegidaPorRol>
             } />
             <Route path="/login" element={<Login />} />
-            <Route path="/registro" element={<Registro />} />
+            <Route path="/registro" element={
+              <RutaProtegidaPorRol rolesPermitidos={["admin"]}>
+                <Registro/>
+              </RutaProtegidaPorRol>
+              } />
           </Routes>
         </main>
       </div>

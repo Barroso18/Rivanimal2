@@ -13,13 +13,18 @@ $expiration_time = $issued_at + 3600;  // El token expirará en 1 hora
 $issuer = "mi_aplicacion_php";
 $data = json_decode(file_get_contents("php://input"),true);
 
-if (isset($data['usuario']) && isset($data['contrasena'])) {
-    $usuario = $data['usuario'];
-    $contrasena = $data['contrasena'];
+//if (isset($input['usuario']) && isset($input['contrasena'])) {
+if (isset($data['datosLogin'])) {
+    $usuario = $data['datosLogin']['usuario'];
+    $contrasena = $data['datosLogin']['contrasena'];
 
     // Consulta para verificar si el usuario existe
-    $sql = "SELECT * FROM usuario WHERE nombre_usuario = '$usuario'";
-    $result = $conn->query($sql);
+    $sql = "SELECT * FROM usuario WHERE nombre_usuario = ?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("s", $usuario);
+    $stmt->execute();
+    $result = $stmt->get_result();
+    //$result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
