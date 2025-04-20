@@ -91,7 +91,7 @@ if ($funcion === 'registrar') {
         echo json_encode(["errores" => ["general" => "Error inesperado: " . $e->getMessage()]]);
         //http_response_code(500); // Código de error 500: Error interno del servidor
     }
-} elseif ($funcion === 'consultar') {
+} elseif ($funcion === 'buscarTodos') {//Consulta todos los reportes diarios
     try {
         // Aquí puedes implementar la lógica para consultar reportes diarios
         // Por ejemplo: consultarReportesDiarios($conn);
@@ -101,7 +101,19 @@ if ($funcion === 'registrar') {
         echo json_encode(["errores" => ["general" => "Error al consultar reportes diarios: " . $e->getMessage()]]);
         //http_response_code(500); // Código de error 500: Error interno del servidor
     }
-} else {
+}elseif($funcion === 'buscarPorUsuario'){//Consulta reportes diarios por usuario
+    try {
+        // Aquí puedes implementar la lógica para consultar reportes diarios
+        // Por ejemplo: consultarReportesDiarios($conn);
+        echo json_encode(["mensaje" => "Consulta de reportes diarios realizada correctamente"]);
+        http_response_code(200); // Código de éxito 200: OK
+    } catch (Exception $e) {
+        echo json_encode(["errores" => ["general" => "Error al consultar reportes diarios: " . $e->getMessage()]]);
+        //http_response_code(500); // Código de error 500: Error interno del servidor
+    }
+} 
+
+else {
     echo json_encode(["errores" => ["general" => "Función no válida"]]);
     //http_response_code(400); // Código de error 400: Solicitud incorrecta
 }

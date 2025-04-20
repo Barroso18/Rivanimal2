@@ -147,4 +147,11 @@ use \Firebase\JWT\JWT;
 
         
     }
+
+    function agregaAnimal($conn){//Sin terminar
+        $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        //$stmt->bind_param("isss", $usuario, $rol, $fecha, $horario);
+    }
 ?>

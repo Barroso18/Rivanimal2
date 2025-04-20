@@ -36,5 +36,11 @@ if ($funcion === 'tratamientoPorAnimal') {
     }
     echo json_encode(buscaTratamientoPorAnimal($conn, $id_animal));
 }
+    //Sin terminar
+if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
+    $input = json_decode(file_get_contents("php://input"), true);
     
+    agregaAnimal($conn);
+
+}
 ?>
