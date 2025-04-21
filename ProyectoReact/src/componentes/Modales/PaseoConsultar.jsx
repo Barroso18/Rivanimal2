@@ -1,0 +1,52 @@
+import React, { useState,useEffect} from 'react';
+import { useAuth } from '../../Login/AuthProvider';
+import '../../estilos/estilos.css';
+import servicioReporteDiario from '../../servicios/servicioReporteDiario';
+import servicioAnimales from '../../servicios/servicioAnimales';
+import { calculaDuracion } from '../../herramientas/calculaDuracion';
+import { use } from 'react';
+const PaseoConsultar = ({paseoInformacion,onClose})=>{
+    const duracion = calculaDuracion(paseoInformacion.fecha_hora_inicio, paseoInformacion.fecha_hora_fin);
+    const [animalInformacion,setAnimalInformacion] = useState({});
+    useEffect(() => {
+        servicioAnimales.buscaPorid_animal(parseInt(paseoInformacion.animal))
+            .then((response) => {  
+                setAnimalInformacion(response.data);
+            }).catch((error) => {
+                console.error("Error en la solicitud:", error);
+            });
+    }, [paseoInformacion.animal]);
+   
+    return(
+        <div>
+            <div className="text-sm text-gray-700">
+                <p className="font-semibold">
+                  Paseo de {animalInformacion.nombre}
+                </p>
+                <p>
+                  <strong>Paseador:</strong> {paseoInformacion.nombre_usuario}{/* Aqui ira un link al perfil de usuario publico */}
+                </p>
+                <p>
+                  <strong>Inicio:</strong> {paseoInformacion.fecha_hora_inicio} 
+                </p>
+                <p>
+                  <strong>Fin:</strong> {paseoInformacion.fecha_hora_fin}   
+                </p>
+                <p>
+                  <strong>Duración:</strong> {duracion} min 
+                </p>
+                <p>
+                  <strong>cacas: </strong> {paseoInformacion.caca_nivel} 
+                </p>
+                <p>
+                  <strong>Localizacion: </strong> {paseoInformacion.ubicaciones}
+                </p>
+                <p>
+                    <strong>Descripcion:</strong> {paseoInformacion.descripcion}
+                </p>
+              </div>
+        </div>
+    );
+};
+
+export default PaseoConsultar;

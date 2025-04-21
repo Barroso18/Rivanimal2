@@ -43,8 +43,8 @@ class ServicioAnimales {
     const funcion = "tratamientoPorAnimal";
     return https.post(`/animales.php?funcion=${funcion}`, { idanimal });
    }
-  get(id) {
-    return http.get(`/animales/${id}`);
+  buscaPorid_animal(id_animal) {
+    return https.post(`/animales.php?funcion=buscaAnimalPorid_animal`, { id_animal });
   }
 
   create(data) {

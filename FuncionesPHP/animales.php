@@ -43,4 +43,17 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     agregaAnimal($conn);
 
 }
+if($funcion === 'buscaAnimalPorid_animal'){//Modifica un animal a la base de datos
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['id_animal'])) {
+        $id_animal = $input['id_animal'];
+    } else {
+
+        echo json_encode(array("mensaje" => "ID de animal no proporcionado"));
+        exit;
+    }
+    echo json_encode(buscaAnimalPorid_animal($conn, $id_animal));
+    
+
+}
 ?>

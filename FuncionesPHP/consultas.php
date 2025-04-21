@@ -90,6 +90,23 @@ use \Firebase\JWT\JWT;
         }
     
     }
+    function buscaAnimalPorid_animal($conn, $id_animal){
+        if (!is_numeric($id_animal)) {
+            return array("error" => "El ID del animal debe ser un número.");
+        }
+    
+        $sql = "SELECT * FROM animal WHERE id_animal = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_animal);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_assoc();
+        } else {
+            return null;
+        }
+    
+    }
 
     function buscaPaseosPorReporteDiario($conn, $id_reporte_diario){
         $sql = "SELECT * FROM reporte_paseo WHERE reporte_diario = ?";

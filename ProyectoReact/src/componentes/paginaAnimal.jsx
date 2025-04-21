@@ -10,7 +10,7 @@ import { useAuth } from "../Login/AuthProvider";
 import {buscaTratamientoTipo} from "../herramientas/buscaTratamientoTipo";
 import { use } from "react";
 import servicioPaseos from "../servicios/servicioPaseos.js";
-
+import PaseoConsultar from "./Modales/PaseoConsultar.jsx";
 const PaginaAnimal = () => {
   const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
   const { idanimal } = useParams();
@@ -19,6 +19,7 @@ const PaginaAnimal = () => {
   const usuario = user.data.usuario; // Usuario temporal
   const [tratamientos, setTratamientos] = useState([]);
   const [paseos, setPaseos] = useState([]);
+  const [paseoSeleccionado, setPaseoSeleccionado] = useState(null); // Estado para almacenar el paseo seleccionado
   // Inicializar con propiedades vacías para evitar errores
   const [animalInformacion, setAnimalInformacion] = useState({
     foto: "",
@@ -105,6 +106,10 @@ const PaginaAnimal = () => {
     });
     return usuario;
  }*/
+  const consultarPaseo = (paseo) => {
+    setPaseoSeleccionado(paseo); // Almacena el paseo seleccionado en el estado
+    gestionarModal("consultar", true); // Abre el modal de consulta
+  };
  function muestraPaseos(){ 
   if(paseos == null || paseos.length == 0){
     return <p>No hay paseos registrados</p>;
@@ -143,13 +148,14 @@ const PaginaAnimal = () => {
                 </p>
                 <p>
                   Duracion {paseo.duracion} cacas {paseo.caca_nivel} Localizacion:{paseo.ubicaciones}
-                  {paseo.localizacion} Descripcion: {paseo.descripcion}
+                  {paseo.localizacion}
                 </p>
               </div>
 
-              <button className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition">
-                <span className="text-lg">❕</span>
-                Ver más
+              <button onClick={() => consultarPaseo(paseo)}
+                className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition">
+                <span className="text-lg">I</span>
+                Mas info
               </button>
             </li>
           ))}
@@ -313,6 +319,15 @@ const PaginaAnimal = () => {
           nombreAnimal={animalInformacion.nombre}
           voluntario={usuario}
           onClose={() => gestionarModal("crear", false)}
+        />
+      </Modal>
+      <Modal
+        isOpen={modals.consultar}
+        onClose={() => gestionarModal("consultar", false)}
+      >
+        <PaseoConsultar
+          paseoInformacion={paseoSeleccionado}
+          onClose={() => gestionarModal("consultar", false)}
         />
       </Modal>
     </div>
