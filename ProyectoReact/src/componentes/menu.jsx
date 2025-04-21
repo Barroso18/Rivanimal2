@@ -28,15 +28,11 @@ const MenuSuperior = () => {
   return (
     <div className="menu-superior mx-auto px-4 py-2 flex items-center justify-between flex-wrap bg-white shadow-md">
       {/* Logo */}
-      <img
+      <Link to="/"><img
         src="/imagenes/logoRivanimal.jpg"
         alt="Logo Rivanimal"
-        className="icono-logo h-14"
-      />
-      <div className="menu-superior text-sm sm:text-xl font-bold text-gray-800">
-        Rivanimal-Gestion
-      </div>
-      
+        className="icono-logo h-10"
+      /></Link>
       {/* Botón hamburguesa - visible solo en móviles */}
       <button
         onClick={() => setMenuAbierto(!menuAbierto)}
@@ -46,7 +42,7 @@ const MenuSuperior = () => {
       </button>
 
       {/* Menú normal - visible en pantallas sm y mayores */}
-      <div className="hidden mx-auto sm:flex gap-16 items-center justify-between">
+      <div className="hidden mx-auto sm:flex gap-6 items-center justify-between">
         <Link to="/"><button className="item-menu text-sm sm:text-xl">Animales</button></Link>
         <Link to="/pagina-voluntarios"><button className="item-menu text-sm sm:text-xl">Voluntarios</button></Link>
         {rolesUsuario.includes("admin") && (
@@ -78,6 +74,7 @@ const MenuSuperior = () => {
       {/* Menú desplegable móvil */}
       {menuAbierto && (
         <div className="w-full flex flex-col gap-2 mt-2 sm:hidden">
+          <Link to="/"><button className="item-menu text-sm text-left">Inicio</button></Link>
           <Link to="/"><button className="item-menu text-sm text-left">Animales</button></Link>
           <Link to="/pagina-voluntarios"><button className="item-menu text-sm text-left">Voluntarios</button></Link>
           {rolesUsuario.includes("admin") && (
