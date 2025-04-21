@@ -122,7 +122,7 @@ use \Firebase\JWT\JWT;
     }
     function buscaPaseosPorAnimal($conn, $id_animal){
         $sql = "SELECT rp.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario
-                FROM reporte_paseo rp INNER JOIN  usuario u ON rp.usuario = u.id_usuario WHERE rp.animal = ?";
+                FROM reporte_paseo rp INNER JOIN  usuario u ON rp.usuario = u.id_usuario WHERE rp.animal = ? ORDER BY rp.fecha_hora_inicio DESC";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id_animal);
         $stmt->execute();

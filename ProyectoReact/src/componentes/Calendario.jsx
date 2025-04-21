@@ -121,6 +121,12 @@ const Calendario = () => {
     return mapa[dia] || dia.charAt(0); // fallback por si acaso
   };
 
+  const recargaDatos = () =>{
+    const semana = obtenerSemana(fechaBase);
+    enviarDatos(semana);
+    gestionarModal("crear", false);
+  }
+
   useEffect(() => {
     const semana = obtenerSemana(fechaBase);
     enviarDatos(semana);// Llamar a la función dentro de useEffect
@@ -253,8 +259,8 @@ const Calendario = () => {
   </div>
 
   {/* Modal */}
-  <Modal isOpen={modals.crear} onClose={() => gestionarModal("crear", false)}>
-    <ReporteDiarioCrear onClose={() => gestionarModal("crear", false)} />
+  <Modal isOpen={modals.crear} onClose={() => recargaDatos()}>
+    <ReporteDiarioCrear onClose={() => recargaDatos()} />
   </Modal>
 </div>
 

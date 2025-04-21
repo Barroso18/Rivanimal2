@@ -1,16 +1,18 @@
 //import "../estilos/paginaAnimal.css";
 import "../estilos/estilos.css";
-import { useEffect, useState } from "react";
+import { useEffect, useState,useRef  } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "./Modales/Modal.jsx";
 import PaseoCrear from "./Modales/PaseoCrear.jsx";
 import ServicioAnimales from "../servicios/servicioAnimales";
 import ServicioUsuarios from "../servicios/servicioUsuarios";
 import { useAuth } from "../Login/AuthProvider";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 import {buscaTratamientoTipo} from "../herramientas/buscaTratamientoTipo";
 import { use } from "react";
 import servicioPaseos from "../servicios/servicioPaseos.js";
 import PaseoConsultar from "./Modales/PaseoConsultar.jsx";
+import { calculaDuracion } from '../herramientas/calculaDuracion';
 const PaginaAnimal = () => {
   const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
   const { idanimal } = useParams();
@@ -20,6 +22,9 @@ const PaginaAnimal = () => {
   const [tratamientos, setTratamientos] = useState([]);
   const [paseos, setPaseos] = useState([]);
   const [paseoSeleccionado, setPaseoSeleccionado] = useState(null); // Estado para almacenar el paseo seleccionado
+  //Variables para la paginacion de los paseos
+  const [paginaActual, setPaginaActual] = useState(0);
+  const elementosPorPagina = 4;
   // Inicializar con propiedades vacías para evitar errores
   const [animalInformacion, setAnimalInformacion] = useState({
     foto: "",
@@ -34,7 +39,16 @@ const PaginaAnimal = () => {
     situacion: "",
     comportamiento: "",
   });
-
+  //Variables para crear las tabs
+  const tabs = [
+    { id: "salud", label: "Salud" },
+    { id: "higiene", label: "Higiene" },
+    { id: "paseos", label: "Paseos" },
+    { id: "alimentacion", label: "Alimentación" },
+    { id: "socializacion", label: "Socialización" },
+    { id: "otros", label: "Otros" },
+  ];
+  const tabRefs = useRef({});
   const [modals, setModals] = useState({
     crear: false,
     consultar: false,
@@ -74,6 +88,17 @@ const PaginaAnimal = () => {
         });
     }
   },[animalInformacion.id_animal]);
+  // Cuando una tab se activa la centramos con scrollIntoView
+  useEffect(() => {
+    if (tabRefs.current[activeTab]) {
+      tabRefs.current[activeTab].scrollIntoView({
+        behavior: "smooth",
+        block: "nearest",
+        inline: "center",
+      });
+    }
+  }, [activeTab]);
+
   const crearPaseo = (animal) => {
     gestionarModal("crear", true);
   };
@@ -110,85 +135,100 @@ const PaginaAnimal = () => {
     setPaseoSeleccionado(paseo); // Almacena el paseo seleccionado en el estado
     gestionarModal("consultar", true); // Abre el modal de consulta
   };
- function muestraPaseos(){ 
-  if(paseos == null || paseos.length == 0){
-    return <p>No hay paseos registrados</p>;
+  const  muestraPaseos = ()=>{ 
+    if(paseos == null || paseos.length == 0){
+      return <p>No hay paseos registrados</p>;
 
-  }else{
-    
-    /*
-    return paseos.map((paseo,indice) => {
-      const duracion = Math.floor((new Date(paseo.fecha_hora_fin) - new Date(paseo.fecha_hora_inicio))/60000);
+    }else{
+      const totalPaginas = Math.ceil(paseos.length / elementosPorPagina);
+
+      const paseosPaginados = paseos.slice(
+        paginaActual * elementosPorPagina,
+        (paginaActual + 1) * elementosPorPagina
+      );
+
+      const siguientePagina = () => {
+        if (paginaActual < totalPaginas - 1) {
+          setPaginaActual(paginaActual + 1);
+        }
+      };
+
+      const anteriorPagina = () => {
+        if (paginaActual > 0) {
+          setPaginaActual(paginaActual - 1);
+        }
+      };
       return (
-        <div key={indice}>
-          <p>Duración: {duracion} min</p>
-          <p>Lugar: {paseo.ubicaciones}</p>
-          <p>Cacas: {paseo.caca_nivel}</p>
-          <p>Descripcion: {paseo.descripcion}</p>
+        <div className="bg-gray-100 w-full">
+          <div className="p-4 rounded-2xl shadow-md w-full">
+            <div className="flex items-center justify-between mb-4">
+              <button className="text-2xl" onClick={siguientePagina} disabled={paginaActual === totalPaginas - 1}>
+                <ArrowLeft className="mr-2" />
+              </button>
+      
+              <h2 className="text-xl font-semibold">Paseos</h2>
+      
+              <button className="text-2xl"  onClick={anteriorPagina} disabled={paginaActual === 0}>
+                <ArrowRight className="ml-2" />
+              </button>
+            </div>
+      
+            <ul className="space-y-4">
+              {paseosPaginados.map((paseo, index) => (
+                <li
+                  key={index}
+                  className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition"
+                >
+                  <div className="text-sm text-gray-700">
+                    <p className="font-semibold">
+                      {paseo.fecha_hora_fin} {paseo.nombre_usuario}
+                    </p>
+                    <p>
+                      <strong>Duración:</strong> {calculaDuracion(paseo.fecha_hora_inicio, paseo.fecha_hora_fin)} min <strong>Cacas:</strong> {paseo.caca_nivel}
+                    </p>
+                  </div>
+      
+                  <button
+                    onClick={() => consultarPaseo(paseo)}
+                    className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition"
+                  >
+                    <span className="text-lg">I</span>
+                    Mas info
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
         </div>
       );
-    })*/
-    return  <div className="bg-gray-100 p-8 min-h-screen flex items-center justify-center">
-      <div className="bg-purple-50 p-6 rounded-2xl shadow-md w-full max-w-4xl">
-        <div className="flex items-center justify-between mb-4">
-          <button className="text-2xl">{'‹'}</button>
-          <h2 className="text-xl font-semibold">Paseos</h2>
-          <button className="text-2xl">{'›'}</button>
-        </div>
-
-        <ul className="space-y-4">
-          {paseos.map((paseo, index) => (
-            <li
-              key={index}
-              className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition"
-            >
-              <div className="text-sm text-gray-700">
-                <p className="font-semibold">
-                  {paseo.fecha_hora_fin} {paseo.nombre_usuario}
-                </p>
-                <p>
-                  Duracion {paseo.duracion} cacas {paseo.caca_nivel} Localizacion:{paseo.ubicaciones}
-                  {paseo.localizacion}
-                </p>
-              </div>
-
-              <button onClick={() => consultarPaseo(paseo)}
-                className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition">
-                <span className="text-lg">I</span>
-                Mas info
-              </button>
-            </li>
-          ))}
-        </ul>
-      </div>
-    </div>
-  }
+    }
  }
   return (
-    <div className="animal">
-      <div className="ficha-container">
-        <div className="foto">
+    <div className="animal px-4 py-6">
+      <div className="ficha-container bg-white shadow-md rounded-xl p-4 flex flex-col md:flex-row gap-6 max-w-3xl mx-auto">
+        <div className="foto flex-shrink-0 w-full md:w-1/2 flex justify-center">
           {/* Verificación condicional para evitar errores */}
           {animalInformacion.foto ? (
-            <img src={animalInformacion.foto} alt="Perro en adopción" />
+            <img src={animalInformacion.foto} alt="Perro en adopción" 
+            className="rounded-lg w-full h-auto object-cover max-h-[400px]"/>
           ) : (
             <p>Cargando imagen...</p>
           )}
         </div>
-        <div className="info text-gray-800 text-sm">
-          <h1 className="titulo text-lg font-semibold mb-2">
+        <div className="info text-gray-800 text-sm w-full md:w-1/2">
+          <h1 className="titulo text-xl font-semibold text-red-700 mb-2">
             Ficha de <span className="nombre">{animalInformacion.nombre}</span>
           </h1>
-          <span className="adopcion">
+          <span className="adopcion inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded mb-4">
             <i>💚 En adopción</i>
           </span>
 
-          <div className="detalles">
+          <div className="detalles space-y-2 bg-gray-100 p-4 rounded-md">
             <p>
               <strong>Nombre:</strong> {animalInformacion.nombre}{" "}
             </p>
             <p>
-              <strong>Clase:</strong> {animalInformacion.clase}
+              <strong>Clase:</strong> {animalInformacion.clase} <strong>Nivel:</strong> {animalInformacion.nivel}
             </p>
             <p>
               <strong>Sexo:</strong> {animalInformacion.sexo}
@@ -214,69 +254,23 @@ const PaginaAnimal = () => {
           </div>
         </div>
       </div>
-      <div className="tabs-container border border-gray-300 rounded-md overflow-hidden mb-4">
+      <div className="tabs-container border border-gray-300 rounded-md overflow-hidden mb-4 max-w-[800px] w-full">
         {/* Tabs */}
-        <div className="tabs flex border-b border-gray-300">
-          <button
-            className={`tab px-4 py-2 ${
-              activeTab === "salud"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("salud")}
-          >
-            Salud
-          </button>
-          <button
-            className={`tab px-4 py-2 ${
-              activeTab === "higiene"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("higiene")}
-          >
-            Higiene
-          </button>
-          <button
-            className={`tab px-4 py-2 ${
-              activeTab === "paseos"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("paseos")}
-          >
-            Paseos
-          </button>
-          <button
-            className={`tab px-4 py-2 ${
-              activeTab === "alimentacion"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("alimentacion")}
-          >
-            Alimentación
-          </button>
-          <button
-            className={`tab px-4 py-2 ${
-              activeTab === "socializacion"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("socializacion")}
-          >
-            Socialización
-          </button>
-          <button
-            className={`tab px-4 py-2 ${
-              activeTab === "otros"
-                ? "border-b-2 border-blue-500 text-blue-500"
-                : "text-gray-500"
-            }`}
-            onClick={() => setActiveTab("otros")}
-          >
-            Otros
-          </button>
+        <div className="tabs flex border-b border-gray-300 overflow-x-auto whitespace-nowrap no-scrollbar">
+          {tabs.map((tab) => (
+            <button
+              key={tab.id}
+              ref={(el) => (tabRefs.current[tab.id] = el)}
+              className={`tab px-4 py-2 shrink-0 ${
+                activeTab === tab.id
+                  ? "border-b-2 border-blue-500 text-blue-500"
+                  : "text-gray-500"
+              }`}
+              onClick={() => setActiveTab(tab.id)}
+            >
+              {tab.label}
+            </button>
+          ))}
         </div>
         {/* Contenido de las tabs */}
         <div className="tab-content mt-4">
@@ -289,13 +283,8 @@ const PaginaAnimal = () => {
           )}
 
           {activeTab === "paseos" && (
-            <div>
-              Paseos del animal. Aquí irá la lista de paseos que se le han dado
-              al animal.
-              { muestraPaseos()
-                
-              }
-            </div>
+            muestraPaseos()
+            
           )}
 
           {activeTab === "alimentacion" && (
