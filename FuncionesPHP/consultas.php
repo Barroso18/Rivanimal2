@@ -171,4 +171,28 @@ use \Firebase\JWT\JWT;
         $stmt = $conn->prepare($sql);
         //$stmt->bind_param("isss", $usuario, $rol, $fecha, $horario);
     }
+    function buscaEstadoAnimal($conn, $id_animal){
+        $sql = "SELECT codigo FROM estado WHERE id_estado = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_animal);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+    function buscaReportesDiariosPorUsuario($conn, $idusuario){
+        $sql = "SELECT * FROM reporte_diario WHERE usuario = ?  ORDER BY fecha DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idusuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
 ?>

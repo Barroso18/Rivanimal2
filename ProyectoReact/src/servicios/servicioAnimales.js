@@ -46,7 +46,12 @@ class ServicioAnimales {
   buscaPorid_animal(id_animal) {
     return https.post(`/animales.php?funcion=buscaAnimalPorid_animal`, { id_animal });
   }
+  buscaEstadoAnimal(id_animal) {
+    return https.post(`/animales.php?funcion=buscaEstadoAnimal`, { id_animal });
+  }
 
+
+  
   create(data) {
     return http.post("/animales", data);
   }
@@ -58,6 +63,7 @@ class ServicioAnimales {
   delete(id) {
     return http.delete(`/animales/${id}`);
   }
+  
 }
 
 export default new ServicioAnimales();

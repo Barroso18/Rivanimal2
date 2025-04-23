@@ -41,6 +41,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     $input = json_decode(file_get_contents("php://input"), true);
     
     agregaAnimal($conn);
+    //Agregar tambien el estado 
 
 }
 if($funcion === 'buscaAnimalPorid_animal'){//Modifica un animal a la base de datos
@@ -54,6 +55,12 @@ if($funcion === 'buscaAnimalPorid_animal'){//Modifica un animal a la base de dat
     }
     echo json_encode(buscaAnimalPorid_animal($conn, $id_animal));
     
+
+}
+if($funcion === 'buscaEstadoAnimal'){//Modifica un animal a la base de datos
+    $input = json_decode(file_get_contents("php://input"), true);
+    buscaEstadoAnimal($conn, $input['id_animal']);
+    //Agregar tambien el estado 
 
 }
 ?>

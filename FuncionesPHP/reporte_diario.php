@@ -105,8 +105,17 @@ if ($funcion === 'registrar') {
     try {
         // Aquí puedes implementar la lógica para consultar reportes diarios
         // Por ejemplo: consultarReportesDiarios($conn);
-        echo json_encode(["mensaje" => "Consulta de reportes diarios realizada correctamente"]);
-        http_response_code(200); // Código de éxito 200: OK
+        $input = json_decode(file_get_contents("php://input"), true);
+        if (isset($input['idusuario'])) {
+            $idusuario = $input['idusuario'];
+        } else {
+            echo json_encode(array("mensaje" => "ID de usuario no proporcionado"));
+            exit;
+        }
+        echo json_encode(buscaReportesDiariosPorUsuario($conn, $idusuario));
+     
+       // echo json_encode(["mensaje" => "Consulta de reportes diarios realizada correctamente"]);
+        //http_response_code(200); // Código de éxito 200: OK
     } catch (Exception $e) {
         echo json_encode(["errores" => ["general" => "Error al consultar reportes diarios: " . $e->getMessage()]]);
         //http_response_code(500); // Código de error 500: Error interno del servidor

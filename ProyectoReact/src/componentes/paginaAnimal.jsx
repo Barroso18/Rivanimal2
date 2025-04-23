@@ -1,6 +1,6 @@
 //import "../estilos/paginaAnimal.css";
 import "../estilos/estilos.css";
-import { useEffect, useState,useRef  } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams } from "react-router-dom";
 import Modal from "./Modales/Modal.jsx";
 import PaseoCrear from "./Modales/PaseoCrear.jsx";
@@ -8,17 +8,20 @@ import ServicioAnimales from "../servicios/servicioAnimales";
 import ServicioUsuarios from "../servicios/servicioUsuarios";
 import { useAuth } from "../Login/AuthProvider";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-import {buscaTratamientoTipo} from "../herramientas/buscaTratamientoTipo";
-import { use } from "react";
+import { buscaTratamientoTipo } from "../herramientas/buscaTratamientoTipo";
 import servicioPaseos from "../servicios/servicioPaseos.js";
 import PaseoConsultar from "./Modales/PaseoConsultar.jsx";
-import { calculaDuracion } from '../herramientas/calculaDuracion';
+import { calculaDuracion } from "../herramientas/calculaDuracion";
+import { buscaReportePorFecha } from "../herramientas/buscaReportePorFecha.js";
+import Swal from "sweetalert2";
+import servicioReporteDiario from "../servicios/servicioReporteDiario.js";
+
 const PaginaAnimal = () => {
   const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
   const { idanimal } = useParams();
-  //console.log("idanimal recibido:", idanimal);
   const { user } = useAuth();
   const usuario = user.data.usuario; // Usuario temporal
+  const idUsuario = user.data.id; // ID del usuario temporal
   const [tratamientos, setTratamientos] = useState([]);
   const [paseos, setPaseos] = useState([]);
   const [paseoSeleccionado, setPaseoSeleccionado] = useState(null); // Estado para almacenar el paseo seleccionado
@@ -39,6 +42,7 @@ const PaginaAnimal = () => {
     situacion: "",
     comportamiento: "",
   });
+  const [estadoAnimal, setEstadoAnimal] = useState({});
   //Variables para crear las tabs
   const tabs = [
     { id: "salud", label: "Salud" },
@@ -68,26 +72,36 @@ const PaginaAnimal = () => {
 
     ServicioAnimales.buscaPorID(parseInt(idanimal))
       .then((response) => {
-        //console.log("animalInformacion", response.data);
         setAnimalInformacion(response.data); // Actualiza el estado con los datos del animal
       })
       .catch((error) => {
         console.error("Error al obtener el animal:", error);
       });
   }, [idanimal]);
+  //Buscamos el estado del animal
+  useEffect(() => {
+    if (animalInformacion.id_animal) {
+      ServicioAnimales.buscaEstadoAnimal(parseInt(animalInformacion.id_animal))
+        .then((response) => {
+          setEstadoAnimal(response.data); // Actualiza el estado con los tratamientos
+        })
+        .catch((error) => {
+          console.error("Error al obtener el estado del animal:", error);
+        });
+    }
+  }, [animalInformacion.id_animal]);
 
   useEffect(() => {
     if (animalInformacion.id_animal) {
       ServicioAnimales.buscaTratamientoPorAnimal(animalInformacion.id_animal)
         .then((response) => {
-          //console.log("tratamientos", response.data);
           setTratamientos(response.data); // Actualiza el estado con los tratamientos
         })
         .catch((error) => {
           console.error("Error al obtener los tratamientos:", error);
         });
     }
-  },[animalInformacion.id_animal]);
+  }, [animalInformacion.id_animal]);
   // Cuando una tab se activa la centramos con scrollIntoView
   useEffect(() => {
     if (tabRefs.current[activeTab]) {
@@ -107,7 +121,6 @@ const PaginaAnimal = () => {
     if (animalInformacion.id_animal) {
       servicioPaseos.getPaseosPorAnimal(animalInformacion.id_animal)
         .then((response) => {
-          //console.log("paseos", response.data);
           setPaseos(response.data); // Actualiza el estado con los tratamientos
         })
         .catch((error) => {
@@ -115,31 +128,39 @@ const PaginaAnimal = () => {
         });
     }
   }, [animalInformacion.id_animal]);
- function filtrarInfo(filtro){
-  if(tratamientos != null){
-    return buscaTratamientoTipo(filtro,tratamientos).descripcion;
+  function filtrarInfo(filtro) {
+    if (tratamientos != null) {
+      return buscaTratamientoTipo(filtro, tratamientos).descripcion;
+    }
+    return "";
   }
-  return "";
- }
- /*const nombreUsuario=(id_usuario)=>{
-    let usuario = {};
-    ServicioUsuarios.buscaPorId(parseInt(id_usuario)).then((response) => {
-      console.log("Usuario:", response.data);
-      usuario = response.data;
-    }).catch((error) => {
-      console.error("Error al obtener el usuario:", error);
-    });
-    return usuario;
- }*/
+  //Funcion para cambiar el estado del animal
+  function cambiaEstadoAnimal() {}
+
+  //Funcion para buscar los reportes diarios por usuario
+  async function filtraReportesPorUsuario(usuario) {
+    try {
+      const response = await servicioReporteDiario.buscarReportesDiariosPorUsuario(usuario);
+      const reportesDiarios = response.data;
+
+      // Buscar el reporte diario por la fecha actual
+      const fechaActual = new Date().toISOString().split("T")[0]; // Formato YYYY-MM-DD
+      const reporteActual = buscaReportePorFecha(fechaActual, reportesDiarios);
+      return reporteActual || null;
+    } catch (error) {
+      console.error("Error al buscar los reportes de paseos:", error);
+      return null;
+    }
+  }
+
   const consultarPaseo = (paseo) => {
     setPaseoSeleccionado(paseo); // Almacena el paseo seleccionado en el estado
     gestionarModal("consultar", true); // Abre el modal de consulta
   };
-  const  muestraPaseos = ()=>{ 
-    if(paseos == null || paseos.length == 0){
+  const muestraPaseos = () => {
+    if (paseos == null || paseos.length == 0) {
       return <p>No hay paseos registrados</p>;
-
-    }else{
+    } else {
       const totalPaginas = Math.ceil(paseos.length / elementosPorPagina);
 
       const paseosPaginados = paseos.slice(
@@ -162,17 +183,25 @@ const PaginaAnimal = () => {
         <div className="bg-gray-100 w-full">
           <div className="p-4 rounded-2xl shadow-md w-full">
             <div className="flex items-center justify-between mb-4">
-              <button className="text-2xl" onClick={siguientePagina} disabled={paginaActual === totalPaginas - 1}>
+              <button
+                className="text-2xl"
+                onClick={siguientePagina}
+                disabled={paginaActual === totalPaginas - 1}
+              >
                 <ArrowLeft className="mr-2" />
               </button>
-      
+
               <h2 className="text-xl font-semibold">Paseos</h2>
-      
-              <button className="text-2xl"  onClick={anteriorPagina} disabled={paginaActual === 0}>
+
+              <button
+                className="text-2xl"
+                onClick={anteriorPagina}
+                disabled={paginaActual === 0}
+              >
                 <ArrowRight className="ml-2" />
               </button>
             </div>
-      
+
             <ul className="space-y-4">
               {paseosPaginados.map((paseo, index) => (
                 <li
@@ -184,10 +213,15 @@ const PaginaAnimal = () => {
                       {paseo.fecha_hora_fin} {paseo.nombre_usuario}
                     </p>
                     <p>
-                      <strong>Duración:</strong> {calculaDuracion(paseo.fecha_hora_inicio, paseo.fecha_hora_fin)} min <strong>Cacas:</strong> {paseo.caca_nivel}
+                      <strong>Duración:</strong>{" "}
+                      {calculaDuracion(
+                        paseo.fecha_hora_inicio,
+                        paseo.fecha_hora_fin
+                      )}{" "}
+                      min <strong>Cacas:</strong> {paseo.caca_nivel}
                     </p>
                   </div>
-      
+
                   <button
                     onClick={() => consultarPaseo(paseo)}
                     className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition"
@@ -202,15 +236,18 @@ const PaginaAnimal = () => {
         </div>
       );
     }
- }
+  };
   return (
     <div className="animal px-4 py-6">
       <div className="ficha-container bg-white shadow-md rounded-xl p-4 flex flex-col md:flex-row gap-6 max-w-3xl mx-auto">
         <div className="foto flex-shrink-0 w-full md:w-1/2 flex justify-center">
           {/* Verificación condicional para evitar errores */}
           {animalInformacion.foto ? (
-            <img src={animalInformacion.foto} alt="Perro en adopción" 
-            className="rounded-lg w-full h-auto object-cover max-h-[400px]"/>
+            <img
+              src={animalInformacion.foto}
+              alt="Perro en adopción"
+              className="rounded-lg w-full h-auto object-cover max-h-[400px]"
+            />
           ) : (
             <p>Cargando imagen...</p>
           )}
@@ -228,7 +265,8 @@ const PaginaAnimal = () => {
               <strong>Nombre:</strong> {animalInformacion.nombre}{" "}
             </p>
             <p>
-              <strong>Clase:</strong> {animalInformacion.clase} <strong>Nivel:</strong> {animalInformacion.nivel}
+              <strong>Clase:</strong> {animalInformacion.clase}{" "}
+              <strong>Nivel:</strong> {animalInformacion.nivel}
             </p>
             <p>
               <strong>Sexo:</strong> {animalInformacion.sexo}
@@ -250,7 +288,6 @@ const PaginaAnimal = () => {
             <p>
               <strong>Situación:</strong> {animalInformacion.situacion}
             </p>
-            
           </div>
         </div>
       </div>
@@ -282,10 +319,7 @@ const PaginaAnimal = () => {
             <div className="higiene">Información de la higiene del animal.</div>
           )}
 
-          {activeTab === "paseos" && (
-            muestraPaseos()
-            
-          )}
+          {activeTab === "paseos" && muestraPaseos()}
 
           {activeTab === "alimentacion" && (
             <div>Alimentación del animal.{filtrarInfo("alimentacion")}</div>
@@ -293,20 +327,35 @@ const PaginaAnimal = () => {
           {activeTab === "socializacion" && (
             <div>Socialización con personas y otros animales.</div>
           )}
-          {activeTab === "otros" && <div>Otros datos del animal.
-            <p>
-              <strong>Comportamiento:</strong> {animalInformacion.comportamiento}
-            </p>
-            </div>}
+          {activeTab === "otros" && (
+            <div>
+              Otros datos del animal.
+              <p>
+                <strong>Comportamiento:</strong>{" "}
+                {animalInformacion.comportamiento}
+              </p>
+            </div>
+          )}
         </div>
       </div>
+      {/* Aqui deberiamos poner una funcion que segun el estado del animal muestre un boton u otro */}
+      <button
+        className="add-info-btn"
+        onClick={() => crearPaseo(animalInformacion.nombre)}
+      >
+        Iniciar paseo
+      </button>
+      {/* Pero el boto de guardar paseo solo lo debe de tener el usuario que ha iniciado ese paseo y un administrador tambien 
+      puede guardarlo */}
+      <button className="add-info-btn">Guardar paseo</button>
+
       <Modal
         isOpen={modals.crear}
         onClose={() => gestionarModal("crear", false)}
       >
         <PaseoCrear
           nombreAnimal={animalInformacion.nombre}
-          voluntario={usuario}
+          voluntario={idUsuario}
           onClose={() => gestionarModal("crear", false)}
         />
       </Modal>
