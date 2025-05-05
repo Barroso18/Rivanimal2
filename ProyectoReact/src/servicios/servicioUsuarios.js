@@ -28,7 +28,9 @@ class ServicioUsuario {
    buscaPorIdCompleto(idusuario){
       return https.post(`/usuarios.php?funcion=buscaPorIdCompleto`, { idusuario });
    }
-
+   buscaTodosUsuarios(){
+      return https.post(`/usuarios.php?funcion=buscaTodos`);
+   }
 }
 
 export default new ServicioUsuario();

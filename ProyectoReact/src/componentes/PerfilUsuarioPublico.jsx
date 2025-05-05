@@ -1,5 +1,6 @@
 import "../estilos/estilos.css";
 import React, { useState, useEffect } from 'react';
+import { useParams } from "react-router-dom";
 import { useAuth } from '../Login/AuthProvider';
 import ServicioUsuarios from "../servicios/servicioUsuarios";
 import ServicioReporteDiario from "../servicios/servicioReporteDiario";
@@ -9,11 +10,14 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 
 
 
-const PerfilUsuario = () => {
+const PerfilUsuarioPublico = () => {
+  const { nombre_usuario } = useParams();
     const [activeTab, setActiveTab] = useState("roles");
+    //No es el usuario que ha iniciado sesion, es el que se busca por nombre de usuario
     const { user, logout } = useAuth();// user?.data.usuario
     const [usuarioInformacion, setUsuarioInformacion] = useState({});
     const [reportesDiarios, setReportesDiarios] = useState([]);
+    //No pueden ser los mismos que el usuario que ha iniciado sesion
     const rolesUsuario = typeof user?.data.roles === 'string' ? user.data.roles.split(',').map(role => role.trim()) // Convertir a array y eliminar espacios
   : Array.isArray(user?.data.roles)? user.data.roles: [];
   //Variables para la paginacion de los reportes diarios
@@ -22,26 +26,24 @@ const PerfilUsuario = () => {
     //Carga de datos del usuario
     useEffect(()=>{
         const idUsuario = user?.data.id;
-        ServicioUsuarios.buscaPorIdCompleto(idUsuario)
+        ServicioUsuarios.buscaPorNombre(nombre_usuario)
         .then((response) => {
             setUsuarioInformacion(response.data);
             cargaReportesDiarios(idUsuario);
         })
         .catch((error) => console.error("Error al obtener los datos del usuario:", error));
-    }, [user?.data.id])
+    }, [nombre_usuario])
     function buscaFoto(){
         if(usuarioInformacion.foto === null || usuarioInformacion.foto === undefined || usuarioInformacion.foto === ""){
             return (
                 <div>
                     <img src="../imagenes/imagenUsuario.jpg" alt="Foto perfil usuario" />
-                    <button className="add-info-btn">Cambiar foto</button>
                 </div>);
 
         }else{
             return (<>{usuarioInformacion.foto ? (
                 <div>
                     <img src={usuarioInformacion.foto} alt="Foto perfil usuario" />
-                    <button className="boton-foto add-info-btn">Cambiar foto</button>
                 </div>
               ) : (
                 <p>Cargando imagen...</p>
@@ -176,15 +178,6 @@ const PerfilUsuario = () => {
                         <p>
                             <strong>Nombre de usuario:</strong> {usuarioInformacion.nombre_usuario}
                         </p>
-                        <p>
-                            <strong>Direccion:</strong> {usuarioInformacion.direccion}
-                        </p>
-                        <p>
-                            <strong>DNI:</strong> {usuarioInformacion.dni}
-                        </p>
-                        <p>
-                            <strong>Cambio de contraseña:</strong> Link
-                        </p>
                     </div>
                 </div>
             </div>
@@ -233,4 +226,4 @@ const PerfilUsuario = () => {
         </div>
     );
 }
-export default PerfilUsuario;
+export default PerfilUsuarioPublico;

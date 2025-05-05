@@ -6,6 +6,7 @@ import MenuDesplegable from './componentes/MenuDesplegable';
 import Pagina404 from "./componentes/Pagina404";
 import PaginaAnimal from './componentes/paginaAnimal';
 import PaginaAnimales from './componentes/paginaAnimales';
+import PerfilUsuarioPublico from './componentes/PerfilUsuarioPublico';
 import ServicioAnimales from './servicios/servicioAnimales';
 import ServicioPaseos from './servicios/servicioPaseos';
 import useStateStorage from './servicios/UseStateStorage';
@@ -116,6 +117,11 @@ function App() {
             <Route path='/pagina-voluntarios' element={
               <RutasProtegidas>
                 <PaginaVoluntarios/>
+              </RutasProtegidas>
+            } />
+            <Route path='/perfil-publico/:nombre_usuario' element={
+              <RutasProtegidas>
+                <PerfilUsuarioPublico/>
               </RutasProtegidas>
             } />
             <Route path='/pagina-gestion' element={

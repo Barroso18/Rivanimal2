@@ -4,9 +4,11 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Modal from "./Modales/Modal.jsx";
 import ReporteDiarioCrear from "./Modales/ReporteDiarioCrear.jsx";
 import { useAuth } from '../Login/AuthProvider';
+import ReporteDiarioConsultar from "./Modales/ReporteDiarioConsultar.jsx";
 
 
 const Calendario = () => {
+  const [reporteSeleccionado, setReporteSeleccionado] = useState(null);
   const { user, logout } = useAuth();// user?.data.usuario
   const [fechaBase, setFechaBase] = useState(new Date());
   //Aqui se inicializa la variable para los reportes
@@ -65,8 +67,13 @@ const Calendario = () => {
   };
 
   const crearReporteDiario = () => {
-    //setAnimalSeleccionado(animal)    
+    //setAnimalSeleccionado(animal) 
+
     gestionarModal("crear",true)
+  };
+  const consultarReporteDiario = (reporte) => {
+    setReporteSeleccionado(reporte);
+    gestionarModal("consultar",true)
   };
   const semanaActual = obtenerSemana(fechaBase);
   const [numeroSemana, setNumeroSemana] = useState(0);
@@ -159,7 +166,10 @@ const Calendario = () => {
               // Renderiza todos los reportes encontrados
               reportesEncontrados.map((reporte, i) => (
                 <div key={i}className="p-2 truncate text-center" >
-                  {reporte.nombre_usuario}
+                  <button
+                    className="text-black-500 hover:underline hover:text-orange-500 font-semibold"
+                    onClick={() => consultarReporteDiario(reporte)}
+                  >{reporte.nombre_usuario}</button>
                 </div>
               ))
               ) : (
@@ -261,6 +271,9 @@ const Calendario = () => {
   {/* Modal */}
   <Modal isOpen={modals.crear} onClose={() => recargaDatos()}>
     <ReporteDiarioCrear onClose={() => recargaDatos()} />
+  </Modal>
+  <Modal isOpen={modals.consultar} onClose={() => gestionarModal("consultar", false)}>
+    <ReporteDiarioConsultar reporte={reporteSeleccionado}/>
   </Modal>
 </div>
 

@@ -41,4 +41,7 @@ if($funcion === 'buscaPorIdCompleto') {
         echo json_encode(array("mensaje" => "Datos incompletos"));
     }
 } 
+if($funcion === 'buscaTodos'){
+    echo json_encode(buscarTodosUsuarios($conn));
+}
 ?>
