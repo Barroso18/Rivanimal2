@@ -5,7 +5,7 @@ import bcrypt from 'bcryptjs';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import servicioUsuarios from '../../servicios/servicioUsuarios';
-
+import Roles from '../Roles';
 const Registro = ({onClose}) => {
     const [nombre, setNombre] = useState('');
     const [apellido1, setApellido1] = useState('');
@@ -126,139 +126,166 @@ const Registro = ({onClose}) => {
         */
     };
     return (
-        <div>
-          <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-teal-500">
-            <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+          <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
+            <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
+              {/* Botón de cierre */}
+              <button
+                onClick={onClose}
+                className="close-btn absolute top-2 right-2 bg-white text-gray-500 hover:text-gray-800 rounded-full shadow-lg p-2"
+                aria-label="Cerrar"
+              >
+                ✖
+              </button>
               <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Registro</h2>
           
-              <form onSubmit={controlaRegistro}>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Nombre: </strong></label>
-                  <input
-                    type="text"
-                    value={nombre}
-                    name="nombre"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setNombre(e.target.value)}
-                    required
-                  />
+              <form onSubmit={controlaRegistro} className="space-y-6">
+
+                {/* Grupo 1: Nombre y Apellidos */}
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Nombre:</label>
+                    <input
+                      type="text"
+                      value={nombre}
+                      name="nombre"
+                      onChange={(e) => setNombre(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Apellido 1:</label>
+                    <input
+                      type="text"
+                      value={apellido1}
+                      name="apellido1"
+                      onChange={(e) => setApellido1(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Apellido 2:</label>
+                    <input
+                      type="text"
+                      value={apellido2}
+                      name="apellido2"
+                      onChange={(e) => setApellido2(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
                 </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Apellido 1: </strong></label>
-                  <input
-                    type="text"
-                    value={apellido1}
-                    name="apellido1"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setApellido1(e.target.value)}
-                    required
-                  />
+
+                {/* Grupo 2: Email, Usuario y Contraseña */}
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Email:</label>
+                    <input
+                      type="email"
+                      value={email}
+                      name="email"
+                      onChange={(e) => setEmail(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Usuario:</label>
+                    <input
+                      type="text"
+                      value={nombreUsuario}
+                      name="nombreUsuario"
+                      onChange={(e) => setNombreUsuario(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Contraseña:</label>
+                    <input
+                      type="password"
+                      value={contrasena}
+                      name="contrasena"
+                      onChange={(e) => setContrasena(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
                 </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Apellido 2: </strong></label>
-                  <input
-                    type="text"
-                    value={apellido2}
-                    name="apellido2"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setApellido2(e.target.value)}
-                    required
-                  />
-                </div>
-                
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Password: </strong></label>
+
+                {/* Grupo 3: Dirección, DNI y Foto */}
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Dirección:</label>
+                    <input
+                      type="text"
+                      value={direccion}
+                      name="direccion"
+                      onChange={(e) => setDireccion(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
+                  <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">DNI:</label>
+                    <input
+                      type="text"
+                      value={dni}
+                      name="dni"
+                      onChange={(e) => setDni(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
                   
-                  <input
-                    type="password"
-                    value={contrasena}
-                    name="contrasena"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setContrasena(e.target.value)}
-                    required
-                  />
-                  
                 </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Nombre usuario: </strong></label>
-                  <input
-                    type="text"
-                    value={nombreUsuario}
-                    name="nombreUsuario"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setNombreUsuario(e.target.value)}
-                    required
-                  />
+
+                {/* Grupo 4: Roles */}
+                <div className="mb-4 flex-1 min-w-[150px]">
+                  <label className="block text-sm font-medium text-gray-600 mb-2"><strong>Roles:</strong></label>
+                  <div className="flex flex-wrap gap-4">
+                    {Roles.map((rol) => (
+                      <label key={rol} className="flex items-center space-x-2">
+                        <input
+                          type="checkbox"
+                          value={rol}
+                          checked={roles.includes(rol)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setRoles([...roles, rol]);
+                            } else {
+                              setRoles(roles.filter(r => r !== rol));
+                            }
+                          }}
+                        />
+                        <span className="text-sm capitalize">{rol}</span>
+                      </label>
+                    ))}
+                  </div>
                 </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Roles: </strong></label>
-                  <input
-                    type="textarea"
-                    value={roles}
-                    name="roles"
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setRoles(e.target.value)}
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>DNI: </strong></label>
-                  <input
-                    type="text"
-                    value={dni}
-                    name='dni'
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setDni(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Teléfono: </strong></label>
-                  <input
-                    type="text"
-                    value={telefono}
-                    name='telefono'
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setTelefono(e.target.value)}
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Email: </strong></label>
-                  <input
-                    type="email"
-                    value={email}
-                    name='email'
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Direccion: </strong></label>
-                  <input
-                    type="text"
-                    value={direccion}
-                    className="w-full p-3 border border-gray-300 rounded-md mt-2"
-                    name='direccion'
-                    onChange={(e) => setDireccion(e.target.value)}
-                    required
-                  />
-                </div>
-                <div  className="mb-4">
-                  <label className="block text-sm font-medium text-gray-600"><strong>Foto: </strong></label>{/* Esto hay que cambiarlo por un tipo file*/}
-                  <input type="file" accept="image/*" onChange={handleImageChange} />
-                </div>
-                {error && <p style={{ color: 'red' }}>{error}</p>}
-                {mensaje && <p>{mensaje}</p>}
-                <button type="submit" className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600">
-                  Registrar
-                </button>
+                <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Foto:</label>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="w-full mt-1 text-sm"
+                    />
+                    {preview && <img src={preview} alt="Preview" className="mt-2 h-16 rounded border object-cover" />}
+                  </div>
+                {/* Mensajes */}
+                {error && <p className="text-red-500">{error}</p>}
+                {mensaje && <p className="text-green-600">{mensaje}</p>}
+
+                {/* Botones */}
+                <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Registrar</button>
                 <Link to="/login">
-                  <button type="button" className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600">Volver login</button>
+                  <button type="button" className="w-full bg-green-500 text-white p-2 text-sm rounded mt-2 hover:bg-green-600">Volver login</button>
                 </Link>
               </form>
             </div>
-            </div>
-        </div>
+          </div>
       );
 };
 

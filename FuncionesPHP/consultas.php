@@ -195,9 +195,35 @@ use \Firebase\JWT\JWT;
         }
     }
     function buscaReportesDiariosPorUsuario($conn, $idusuario){
-        $sql = "SELECT * FROM reporte_diario WHERE usuario = ?  ORDER BY fecha DESC";
+        $sql = "SELECT rd.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario FROM reporte_diario AS rd INNER JOIN  usuario u ON rd.usuario = u.id_usuario WHERE usuario = ?  ORDER BY fecha DESC";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $idusuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+
+    function buscarRepGatPoridanimal($conn, $idanimal){
+        $sql = "SELECT rg.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario FROM reporte_gatos rg INNER JOIN  usuario u ON rg.usuario = u.id_usuario WHERE rg.animal = ? ORDER BY rg.fecha_hora DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idanimal);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+
+    function buscarRepGatRD($conn, $idrepDiario){
+        $sql = "SELECT rg.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario FROM reporte_gatos rg INNER JOIN  usuario u ON rg.usuario = u.id_usuario WHERE rg.reporte_diario = ? ORDER BY rg.fecha_hora DESC";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $idrepDiario);
         $stmt->execute();
         $resultado = $stmt->get_result();
         if ($resultado && $resultado->num_rows > 0) {

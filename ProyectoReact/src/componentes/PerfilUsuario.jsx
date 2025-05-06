@@ -6,10 +6,12 @@ import ServicioReporteDiario from "../servicios/servicioReporteDiario";
 import { use } from "react";
 import servicioReporteDiario from "../servicios/servicioReporteDiario";
 import { ArrowLeft, ArrowRight } from "lucide-react";
-
+import Modal from "./Modales/Modal.jsx";
+import ReporteDiarioConsultar from "./Modales/ReporteDiarioConsultar.jsx";
 
 
 const PerfilUsuario = () => {
+  const [reporteSeleccionado, setReporteSeleccionado] = useState(null);
     const [activeTab, setActiveTab] = useState("roles");
     const { user, logout } = useAuth();// user?.data.usuario
     const [usuarioInformacion, setUsuarioInformacion] = useState({});
@@ -19,6 +21,19 @@ const PerfilUsuario = () => {
   //Variables para la paginacion de los reportes diarios
   const [paginaActual, setPaginaActual] = useState(0);
   const elementosPorPagina = 4;
+  //Constantes para gestionar los modales
+    const [modals, setModals] = useState({
+        crear: false,
+        consultar: false,
+        editar: false,
+    });
+    const gestionarModal = (tipoModal, estadoAbierto) => {
+      setModals((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
+    };
+    const consultarReporteDiario = (reporte) => {
+      setReporteSeleccionado(reporte);
+      gestionarModal("consultar",true)
+    };
     //Carga de datos del usuario
     useEffect(()=>{
         const idUsuario = user?.data.id;
@@ -125,7 +140,7 @@ const PerfilUsuario = () => {
                       </div>
                     {/*  onClick={() => consultarPaseo(reporte)}*/}
                       <button
-                       
+                        onClick={() => consultarReporteDiario(reporte)}
                         className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition"
                       >
                         <span className="text-lg">I</span>
@@ -229,7 +244,10 @@ const PerfilUsuario = () => {
 
                 </div>
             </div> 
-              
+            {/* Modales */}
+            <Modal isOpen={modals.consultar} onClose={() => gestionarModal("consultar", false)}>
+              <ReporteDiarioConsultar reporte={reporteSeleccionado}/>
+            </Modal>
         </div>
     );
 }
