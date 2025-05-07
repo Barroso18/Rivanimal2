@@ -69,8 +69,8 @@ await servicioReporteDiario.creaReporte(form).then((response) => {
 
     return (
         <div>
-            <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-teal-500">
-                <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+            <div className="flex items-center justify-center">
+                <div className="bg-white p-8 rounded-lg w-96">
                     <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Apuntame</h2>
                     <form onSubmit={enviarFormulario}>
                         <div className="mb-4">
