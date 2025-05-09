@@ -9,7 +9,7 @@ import ReporteGatoConsultar from "./Modales/ReporteGatoConsultar.jsx";
 import ServicioAnimales from "../servicios/servicioAnimales";
 import ServicioUsuarios from "../servicios/servicioUsuarios";
 import { useAuth } from "../Login/AuthProvider";
-import { ArrowLeft, ArrowRight } from "lucide-react";
+import { ArrowLeft, ArrowRight, List } from "lucide-react";
 import { buscaTratamientoTipo } from "../herramientas/buscaTratamientoTipo";
 import servicioPaseos from "../servicios/servicioPaseos.js";
 import ServicioReporteGatos from "../servicios/servicioReporteGatos.js";
@@ -18,6 +18,8 @@ import { calculaDuracion } from "../herramientas/calculaDuracion";
 import { buscaReportePorFecha } from "../herramientas/buscaReportePorFecha.js";
 import Swal from "sweetalert2";
 import servicioReporteDiario from "../servicios/servicioReporteDiario.js";
+import ListaReportesGatos from "./ListaReportesGatos.jsx";
+import ListaReportesPaseos from "./ListaReportesPaseos.jsx";
 
 const PaginaAnimal = () => {
   const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
@@ -141,6 +143,7 @@ const PaginaAnimal = () => {
       if(animalInformacion.clase == "perro"){
       servicioPaseos.getPaseosPorAnimal(animalInformacion.id_animal)
         .then((response) => {
+          console.log("Paseos del animal:", response.data);
           setPaseos(response.data); // Actualiza el estado con los tratamientos
         })
         .catch((error) => {
@@ -150,6 +153,7 @@ const PaginaAnimal = () => {
       if(animalInformacion.clase == "gato"){ 
         ServicioReporteGatos.getReportesPorAnimal(animalInformacion.id_animal)
         .then((response) => {
+          console.log("Reportes de gatos del animal:", response.data);
           setPaseos(response.data); // Actualiza el estado con los tratamientos
         })
         .catch((error) => {
@@ -193,159 +197,16 @@ const PaginaAnimal = () => {
     gestionarModalGato("consultar", true); // Abre el modal de consulta
   };
   const muestraPaseos = () => {
-    if (paseos == null || paseos.length == 0) {
-      return <p>No hay paseos registrados</p>;
-    } else {
-      const totalPaginas = Math.ceil(paseos.length / elementosPorPagina);
-
-      const paseosPaginados = paseos.slice(
-        paginaActual * elementosPorPagina,
-        (paginaActual + 1) * elementosPorPagina
-      );
-
-      const siguientePagina = () => {
-        if (paginaActual < totalPaginas - 1) {
-          setPaginaActual(paginaActual + 1);
-        }
-      };
-
-      const anteriorPagina = () => {
-        if (paginaActual > 0) {
-          setPaginaActual(paginaActual - 1);
-        }
-      };
-      return (
-        <div className="bg-gray-100 w-full">
-          <div className="p-4 rounded-2xl shadow-md w-full">
-            <div className="flex items-center justify-between mb-4">
-              <button className="text-2xl"
-                onClick={siguientePagina}
-                disabled={paginaActual === totalPaginas - 1}>
-                <ArrowLeft className="mr-2" />
-              </button>
-
-              <h2 className="text-xl font-semibold">Paseos</h2>
-
-              <button className="text-2xl"
-                onClick={anteriorPagina}
-                disabled={paginaActual === 0}>
-                <ArrowRight className="ml-2" />
-              </button>
-            </div>
-
-            <ul className="space-y-4">
-              {paseosPaginados.map((paseo, index) => (
-                <li key={index}
-                  className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition">
-                  <div className="text-sm text-gray-700">
-                    <p className="font-semibold">
-                      {paseo.fecha_hora_fin} {paseo.nombre_usuario}
-                    </p>
-                    <p>
-                      <strong>Duración:</strong>{" "}
-                      {calculaDuracion(
-                        paseo.fecha_hora_inicio,
-                        paseo.fecha_hora_fin
-                      )}{" "}
-                      min <strong>Cacas:</strong> {paseo.caca_nivel}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => consultarPaseo(paseo)}
-                    className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition"
-                  >
-                    <span className="text-lg">I</span>
-                    Mas info
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      );
-    }
+    return (
+      <ListaReportesPaseos reportes={paseos}/>
+    );
   };
 
 
   const muestraReportesGatos = () => {
-    if (paseos == null || paseos.length == 0) {
-      return <p>No hay paseos registrados</p>;
-    } else {
-      const totalPaginas = Math.ceil(paseos.length / elementosPorPagina);
-
-      const paseosPaginados = paseos.slice(
-        paginaActual * elementosPorPagina,
-        (paginaActual + 1) * elementosPorPagina
-      );
-
-      const siguientePagina = () => {
-        if (paginaActual < totalPaginas - 1) {
-          setPaginaActual(paginaActual + 1);
-        }
-      };
-
-      const anteriorPagina = () => {
-        if (paginaActual > 0) {
-          setPaginaActual(paginaActual - 1);
-        }
-      };
-      return (
-        <div className="bg-gray-100 w-full">
-          <div className="p-4 rounded-2xl shadow-md w-full">
-            <div className="flex items-center justify-between mb-4">
-              <button
-                className="text-2xl"
-                onClick={siguientePagina}
-                disabled={paginaActual === totalPaginas - 1}>
-                <ArrowLeft className="mr-2" />
-              </button>
-
-              <h2 className="text-xl font-semibold">Paseos</h2>
-
-              <button
-                className="text-2xl"
-                onClick={anteriorPagina}
-                disabled={paginaActual === 0}
-              >
-                <ArrowRight className="ml-2" />
-              </button>
-            </div>
-
-            <ul className="space-y-4">
-              {paseosPaginados.map((reporteGato, index) => (
-                <li
-                  key={index}
-                  className="flex justify-between items-center bg-white p-4 rounded-xl shadow-sm hover:shadow-md transition"
-                >
-                  <div className="text-sm text-gray-700">
-                    <p className="font-semibold">
-                      {reporteGato.fecha_hora_fin} {reporteGato.nombre_usuario}
-                    </p>
-                    <p>
-                      <strong>Duración:</strong>{" "}
-                      {calculaDuracion(
-                        reporteGato.fecha_hora_inicio,
-                        reporteGato.fecha_hora_fin
-                      )}{" "}
-                      min <strong>Cacas:</strong> {reporteGato.caca_nivel}
-                    </p>
-                  </div>
-
-                  <button
-                    onClick={() => consultarReporteGato(reporteGato)}
-                    className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition"
-                  >
-                    <span className="text-lg">I</span>
-                    Mas info
-                  </button>
-                </li>
-              ))}
-            </ul>
-          </div>
-        </div>
-      );
-    }
+    return(
+      <ListaReportesGatos reportes={paseos}/>
+    );
   };
 
   function esPerro(){

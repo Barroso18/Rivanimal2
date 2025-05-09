@@ -120,7 +120,7 @@ use \Firebase\JWT\JWT;
     }
 
     function buscaPaseosPorReporteDiario($conn, $id_reporte_diario){
-        $sql = "SELECT * FROM reporte_paseo WHERE reporte_diario = ?";
+        $sql = "SELECT rp.*, a.nombre AS nombre_animal, u.nombre_usuario AS nombre_usuario FROM reporte_paseo AS rp INNER JOIN  animal a ON rp.animal = a.id_animal INNER JOIN usuario u ON rp.usuario = u.id_usuario WHERE reporte_diario = ?";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id_reporte_diario);
         $stmt->execute();
@@ -132,8 +132,8 @@ use \Firebase\JWT\JWT;
         }
     }
     function buscaPaseosPorAnimal($conn, $id_animal){
-        $sql = "SELECT rp.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario
-                FROM reporte_paseo rp INNER JOIN  usuario u ON rp.usuario = u.id_usuario WHERE rp.animal = ? ORDER BY rp.fecha_hora_inicio DESC";
+        $sql = "SELECT rp.*, a.nombre AS nombre_animal, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario
+                FROM reporte_paseo rp INNER JOIN  animal a ON rp.animal = a.id_animal INNER JOIN  usuario u ON rp.usuario = u.id_usuario WHERE rp.animal = ? ORDER BY rp.fecha_hora_inicio DESC";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $id_animal);
         $stmt->execute();
@@ -208,7 +208,7 @@ use \Firebase\JWT\JWT;
     }
 
     function buscarRepGatPoridanimal($conn, $idanimal){
-        $sql = "SELECT rg.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario FROM reporte_gatos rg INNER JOIN  usuario u ON rg.usuario = u.id_usuario WHERE rg.animal = ? ORDER BY rg.fecha_hora DESC";
+        $sql = "SELECT rg.*, a.nombre AS nombre_animal, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario FROM reporte_gatos rg INNER JOIN  animal a ON rg.gato = a.id_animal INNER JOIN  usuario u ON rg.usuario = u.id_usuario WHERE rg.gato = ? ORDER BY rg.fecha_hora_fin DESC";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $idanimal);
         $stmt->execute();
@@ -221,7 +221,7 @@ use \Firebase\JWT\JWT;
     }
 
     function buscarRepGatRD($conn, $idrepDiario){
-        $sql = "SELECT rg.*, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario FROM reporte_gatos rg INNER JOIN  usuario u ON rg.usuario = u.id_usuario WHERE rg.reporte_diario = ? ORDER BY rg.fecha_hora DESC";
+        $sql = "SELECT rg.*, a.nombre AS nombre_animal, u.nombre AS usuario_nombre, u.nombre_usuario AS nombre_usuario FROM reporte_gatos rg INNER JOIN  animal a ON rg.gato = a.id_animal INNER JOIN  usuario u ON rg.usuario = u.id_usuario WHERE rg.reporte_diario = ? ORDER BY rg.fecha_hora_fin DESC";
         $stmt = $conn->prepare($sql);
         $stmt->bind_param("i", $idrepDiario);
         $stmt->execute();

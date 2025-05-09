@@ -23,9 +23,9 @@ if ($funcion === 'buscarPorAnimal') {
 }
 if($funcion === 'buscarPorReporteDiario') {
     $input = json_decode(file_get_contents("php://input"), true);
-    if (isset($input['idanimal']) && !empty($input['idanimal'])) {
-        $idanimal = $input['idanimal'];
-        echo json_encode(buscarRepGatRD($conn, $idrepDiario));
+    if (isset($input['idreporteDiario']) && !empty($input['idreporteDiario'])) {
+        $idreporteDiario = $input['idreporteDiario'];
+        echo json_encode(buscarRepGatRD($conn, $idreporteDiario));
     } else {
         echo json_encode(array("mensaje" => "Datos incompletos"));
     }
