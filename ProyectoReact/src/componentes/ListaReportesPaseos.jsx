@@ -82,13 +82,13 @@ const ListaReportesPaseos = ({ reportes }) => {
                         reporte.fecha_hora_inicio,
                         reporte.fecha_hora_fin
                         )}{" "}
-                        min <strong>Cacas:</strong> {reporte.caca_nivel}
+                        min <strong>Nivel cacas:</strong> {reporte.caca_nivel}
                     </p>
                     </div>
 
                     <button
                     onClick={() => consultarPaseo(reporte)}
-                    className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition"
+                    className="flex items-center gap-2 bg-orange-300 text-black px-4 py-2 rounded-xl shadow-md hover:bg-orange-400 transition"
                     >
                     <span className="text-lg">I</span>
                     Mas info

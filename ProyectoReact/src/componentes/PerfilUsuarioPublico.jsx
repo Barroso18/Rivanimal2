@@ -34,6 +34,7 @@ const PerfilUsuarioPublico = () => {
         .catch((error) => console.error("Error al obtener los datos del usuario:", error));
     }, [nombre_usuario])
     function buscaFoto(){
+      const imagenPredeterminada = "../imagenes/imagenUsuario.jpg";
         if(usuarioInformacion.foto === null || usuarioInformacion.foto === undefined || usuarioInformacion.foto === ""){
             return (
                 <div>
@@ -43,7 +44,10 @@ const PerfilUsuarioPublico = () => {
         }else{
             return (<>{usuarioInformacion.foto ? (
                 <div>
-                    <img src={usuarioInformacion.foto} alt="Foto perfil usuario" />
+                    <img src={usuarioInformacion.foto || imagenPredeterminada} alt="Foto perfil usuario" onError={(e) => {
+                    e.target.onerror = null; // Evitar bucles infinitos
+                    e.target.src = imagenPredeterminada; // Mostrar la imagen predeterminada si ocurre un error
+                }}/>
                 </div>
               ) : (
                 <p>Cargando imagen...</p>

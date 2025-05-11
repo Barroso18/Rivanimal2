@@ -1,2 +1,6 @@
-const Roles = ['admin','voluntario','gespad','educadora']; 
+const Roles = {
+    "todos":['admin','voluntario','gespad','educadora'],
+    "soloAdmin":['admin']
+    //{nombre:"soloAdmin",roles:['admin']}
+}; 
 export default Roles;

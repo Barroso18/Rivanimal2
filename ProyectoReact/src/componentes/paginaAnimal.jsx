@@ -20,9 +20,10 @@ import Swal from "sweetalert2";
 import servicioReporteDiario from "../servicios/servicioReporteDiario.js";
 import ListaReportesGatos from "./ListaReportesGatos.jsx";
 import ListaReportesPaseos from "./ListaReportesPaseos.jsx";
+import Roles from "./Roles.jsx";
 
 const PaginaAnimal = () => {
-  const [activeTab, setActiveTab] = useState("salud"); // Estado para controlar la pestaña activa
+  const [activeTab, setActiveTab] = useState("reportes"); // Estado para controlar la pestaña activa
   const { idanimal } = useParams();
   const { user } = useAuth();
   const usuario = user.data.usuario; // Usuario temporal
@@ -50,12 +51,12 @@ const PaginaAnimal = () => {
   const [estadoAnimal, setEstadoAnimal] = useState({});
   //Variables para crear las tabs
   const tabs = [
-    { id: "salud", label: "Salud" },
-    { id: "higiene", label: "Higiene" },
-    { id: "reportes", label: "Reportes" },
-    { id: "alimentacion", label: "Alimentación" },
-    { id: "socializacion", label: "Socialización" },
-    { id: "otros", label: "Otros" },
+    { id: "salud", label: "Salud",roles:Roles.soloAdmin },
+    { id: "higiene", label: "Higiene",roles:Roles.todos },
+    { id: "reportes", label: "Reportes",roles:Roles.todos },
+    { id: "alimentacion", label: "Alimentación",roles:Roles.todos },
+    { id: "socializacion", label: "Socialización",roles:Roles.todos },
+    { id: "otros", label: "Otros",roles:Roles.todos },
   ];
   const tabRefs = useRef({});
   const [modalsPaseo, setModalsPaseo] = useState({
@@ -251,6 +252,36 @@ const PaginaAnimal = () => {
       return (<></>);
     }
   }
+
+  //Funcion para comprobar si el usuario tiene acceso a la pestaña
+  // y renderizarla si tiene acceso
+  const  muestraTabs = (tab) =>{
+    //console.log("Roles permitidos: ", tab.roles);
+    // Comprobar si los roles del usuario coinciden con los roles permitidos de la pestaña
+    const rolesUsuario = user.data.roles; // Asumiendo que los roles del usuario están en `user.data.roles`
+    const tieneAcceso = tab.roles.some((rol) => rolesUsuario.includes(rol));
+
+    // Si el usuario tiene acceso, renderizar la pestaña
+    if (tieneAcceso) {
+      return (
+        <button
+          key={tab.id}
+          ref={(el) => (tabRefs.current[tab.id] = el)}
+          className={`tab px-4 py-2 shrink-0 ${
+            activeTab === tab.id
+              ? "border-b-2 border-blue-500 text-blue-500"
+              : "text-gray-500"
+          }`}
+          onClick={() => setActiveTab(tab.id)}
+        >
+          {tab.label}
+        </button>
+      );
+    }
+    // Si no tiene acceso, no renderizar nada
+    return null;
+  }
+
   return (
     <div className="animal px-4 py-6">
       <div className="ficha-container bg-white shadow-md rounded-xl p-4 flex flex-col md:flex-row gap-6 max-w-3xl mx-auto">
@@ -310,17 +341,7 @@ const PaginaAnimal = () => {
         {/* Tabs */}
         <div className="tabs flex border-b border-gray-300 overflow-x-auto whitespace-nowrap no-scrollbar">
           {tabs.map((tab) => (
-            <button
-              key={tab.id}
-              ref={(el) => (tabRefs.current[tab.id] = el)}
-              className={`tab px-4 py-2 shrink-0 ${
-                activeTab === tab.id
-                  ? "border-b-2 border-blue-500 text-blue-500"
-                  : "text-gray-500"
-              }`}
-              onClick={() => setActiveTab(tab.id)}>
-              {tab.label}
-            </button>
+            muestraTabs(tab)
           ))}
         </div>
         {/* Contenido de las tabs */}

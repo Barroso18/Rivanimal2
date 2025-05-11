@@ -9,7 +9,7 @@ function ReporteDiarioCrear({onClose}){
 const [roles, setRoles] = useState([]);
     const [horario, setHorario] = useState([]);
     const rolesUsuario = user?.data.roles;
-    console.log("Roles del usuario:", rolesUsuario);
+    //console.log("Roles del usuario:", rolesUsuario);
     const opcionesPermitidas = rolesUsuario.split(',');
     const [error, setError] = useState('');
     const [form, setForm] = useState({
@@ -52,7 +52,7 @@ const usuarioid = user.data.id ;
         //Comprobamos el horario
 await servicioReporteDiario.creaReporte(form).then((response) => {
             if (response.data.mensaje === "Reporte diario registrado exitosamente") {
-
+                console.log("response: ",response)
                 setErrores("");
                 onClose(); // Cerrar el modal después de enviar el formulario
             } else if (response.data.errores) {
@@ -60,6 +60,7 @@ await servicioReporteDiario.creaReporte(form).then((response) => {
             } else {
                 setError('Error desconocido al registrar el reporte diario.');
             }
+            console.log("response: ",response)
         }). catch ((error) =>{
             setError('Error en la petición de registro.');
             console.error('Error en axios:', error);
@@ -143,7 +144,7 @@ await servicioReporteDiario.creaReporte(form).then((response) => {
                             {errores.horario && <p className="text-red-500 text-sm">{errores.horario}</p>}
                         </div>
                         {error && <p className="text-red-500 text-sm">{error}</p>}
-
+                        {errores.duplicado && <p className="text-red-500 text-sm">{errores.duplicado}</p>}
                         <button
                             type="submit"
                             className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600"

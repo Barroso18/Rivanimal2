@@ -19,6 +19,19 @@ use \Firebase\JWT\JWT;
             return null;
         }
     }
+    //Comprueba duplicidades de reporte diario en un dia de un usuario
+    function compruebaDuplicados($conn,$usuario,$fecha,$horario){
+        $checkSql = "SELECT usuario, fecha, horario FROM reporte_diario WHERE usuario = ? AND fecha = ? AND horario = ?";
+        $stmt = $conn->prepare($checkSql);
+        $stmt->bind_param("iss", $usuario, $fecha, $horario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_assoc();
+        } else {
+            return null;
+        }
+    }
     //Consulta para comprobar si existe el nombre de usuario
     function comprobarNombreUsuario($nombreUsuario, $conexion){
         $consulta = "SELECT * FROM usuarios WHERE nombreUsuario = '$nombreUsuario'";
@@ -176,12 +189,14 @@ use \Firebase\JWT\JWT;
         
     }
 
+    /*
     function agregaAnimal($conn){//Sin terminar
-        $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
         $stmt = $conn->prepare($sql);
         //$stmt->bind_param("isss", $usuario, $rol, $fecha, $horario);
     }
+        */
     function buscaEstadoAnimal($conn, $id_animal){
         $sql = "SELECT codigo FROM estado WHERE id_estado = ?";
         $stmt = $conn->prepare($sql);

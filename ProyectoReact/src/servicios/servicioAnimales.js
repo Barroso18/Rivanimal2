@@ -49,7 +49,12 @@ class ServicioAnimales {
   buscaEstadoAnimal(id_animal) {
     return https.post(`/animales.php?funcion=buscaEstadoAnimal`, { id_animal });
   }
-
+  async registro(datosRegistro) {
+      return https.post(`/animales.php?funcion=agregaAnimal`, datosRegistro ,{
+         headers: {
+           'Content-Type': 'multipart/form-data',
+         }});
+   }
 
   
   create(data) {

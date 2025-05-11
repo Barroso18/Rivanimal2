@@ -1,39 +1,137 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import "../estilos/estilos.css";
 import Modal from "./Modales/Modal.jsx";
 import Registro from "./Modales/RegistroUsuario.jsx";
+import servicioUsuarios from "../servicios/servicioUsuarios.js";
+import UserCard from './UserCard';
+import AgregarAnimal from './Modales/AgregarAnimal.jsx';
 const PaginaGestion = () => {
-
-    //Constantes para gestionar los modales
-    const [modals, setModals] = useState({
+    const [usuarios, setUsuarios] = useState([]);
+    const tabs = [
+        { id: "usuarios", label: "Usuarios" },
+        { id: "animales", label: "Animales" },
+        { id: "reportesdiarios", label: "Reportes diarios" }
+    ];
+    const tabRefs = useRef({});
+    const [activeTab, setActiveTab] = useState("usuarios");
+    const [modalsUsuarios, setModalsUsuarios] = useState({
         crear: false,
         consultar: false,
         editar: false,
     });
-    const gestionarModal = (tipoModal, estadoAbierto) => {
-        setModals((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
+    const [modalsAnimales, setModalsAnimales] = useState({
+        crear: false,
+        consultar: false,
+        editar: false,
+    });
+    const gestionarModalUsuarios = (tipoModal, estadoAbierto) => {
+        setModalsUsuarios((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
+        // Si el modal se cierra, recargar la lista de usuarios
+        if (!estadoAbierto && tipoModal === "crear") {
+            cargaTabUsuarios();
+        }
+    };
+    const gestionarModalAnimales = (tipoModal, estadoAbierto) => {
+        setModalsAnimales((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
+    };
+    const crearRegistroUsuario = () => {
+        gestionarModalUsuarios("crear", true);
     };
 
-    const crearRegistroUsuario = () => {  
-        gestionarModal("crear",true)
-      };
+
+    const crearRegistroAnimal = () => {
+        gestionarModalAnimales("crear", true);
+    }
+
+    // Función para cargar la lista de usuarios
+    const cargaTabUsuarios = () => {
+        servicioUsuarios
+            .buscaTodosUsuarios()
+            .then((response) => {
+                setUsuarios(response.data);
+                console.log("Lista de usuarios:", response.data);
+            })
+            .catch((error) => {
+                console.error("Error al cargar la lista de usuarios:", error);
+            });
+    };
+
+    // Cargar datos al cambiar de pestaña
+    useEffect(() => {
+        if (activeTab === "usuarios") {
+            cargaTabUsuarios();
+        }
+    }, [activeTab]);
+
     return (
         <div>
             <h1>Pagina de Gestion</h1>
             <p>Esta es la pagina de gestion de la aplicacion.</p>
-            
-            <button type="button" 
-                className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
-                onClick={() => crearRegistroUsuario()}>
-                    Registro Usuario
-            </button>
-            
+
+            {/* Tabs */}
+            <div className="tabs flex border-b border-gray-300 overflow-x-auto whitespace-nowrap no-scrollbar">
+                {tabs.map((tab) => (
+                    <button key={tab.id}
+                        ref={(el) => (tabRefs.current[tab.id] = el)}
+                        className={`tab px-4 py-2 shrink-0 ${
+                            activeTab === tab.id
+                                ? "border-b-2 border-blue-500 text-blue-500"
+                                : "text-gray-500"
+                        }`}
+                        onClick={() => setActiveTab(tab.id)}>
+                        {tab.label}
+                    </button>
+                ))}
+            </div>
+
+            {/* Contenido de las tabs */}
+            <div className="tab-content mt-4">
+                {activeTab === "usuarios" && (
+                    <div>
+                        <button type="button" 
+                            className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            onClick={() => crearRegistroUsuario()}>
+                                Registro Usuario
+                        </button>
+                        <h2 className="mt-4 text-lg font-bold">Lista de Usuarios</h2>
+                        <p>Esta es la lista de usuarios registrados en la aplicación:</p>
+                        <ul className="list-disc pl-5">
+                            {usuarios.map((usuario) => (
+                                <UserCard key={usuario.id_usuario} usuario={usuario} />
+                            ))}
+                        </ul>
+                    </div>
+                )}
+                {activeTab === "animales" && (
+                    <div>
+                        <button type="button" 
+                            className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            onClick={() => crearRegistroAnimal()}>
+                                Registro Animal
+                        </button>
+                        <h2 className="mt-4 text-lg font-bold">Gestión de Animales</h2>
+                        <p>Contenido relacionado con la gestión de animales.</p>
+                    </div>
+                )}
+                {activeTab === "reportesdiarios" && (
+                    <div>
+                        <h2 className="mt-4 text-lg font-bold">Reportes Diarios</h2>
+                        <p>Contenido relacionado con los reportes diarios.</p>
+                    </div>
+                )}
+            </div>
+
             {/* Modal */}
-            <Modal isOpen={modals.crear} onClose={() => gestionarModal("crear", false)}>
-                <Registro onClose={() => gestionarModal("crear", false)} />
+            <Modal isOpen={modalsUsuarios.crear} onClose={() => gestionarModalUsuarios("crear", false)}>
+                <Registro onClose={() => gestionarModalUsuarios("crear", false)} />
+            </Modal>
+
+            <Modal isOpen={modalsAnimales.crear} onClose={() => gestionarModalAnimales("crear", false)}>
+                <AgregarAnimal onClose={() => gestionarModalAnimales("crear", false)} />
             </Modal>
         </div>
     );
 };
+
 export default PaginaGestion;

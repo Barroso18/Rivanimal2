@@ -39,6 +39,7 @@ if ($funcion === 'registrar') {
         if (!empty($errores)) {
             echo json_encode(["errores" => $errores]);
             //http_response_code(400); // Código de error 400: Solicitud incorrecta
+            $conn->close();
             exit();
         }
 
@@ -57,6 +58,13 @@ if ($funcion === 'registrar') {
         $fecha_obj = DateTime::createFromFormat('Y-m-d', $fecha);
         if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $fecha) {
             $errores['fecha'] = "Formato de fecha inválido";
+        }
+
+        //Comprobar que un mismo usuario no se pueda anotar varias veces el mismo dia en el mismo turno
+        $compruebaDuplicados = compruebaDuplicados($conn,$id_usuario,$fecha,$horario);
+        if($compruebaDuplicados){
+            
+            $errores['duplicado'] = "ya existe un reporte de este usuario en este horario";
         }
 
         // Validar el horario

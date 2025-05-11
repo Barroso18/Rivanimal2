@@ -46,7 +46,7 @@ const MenuSuperior = () => {
         <Link to="/"><button className="item-menu text-sm sm:text-xl">Animales</button></Link>
         <Link to="/pagina-voluntarios"><button className="item-menu text-sm sm:text-xl">Voluntarios</button></Link>
         {rolesUsuario.includes("admin") && (
-          <Link to="/pagina-gestion"><button className="item-menu text-sm sm:text-xl">Gestion</button></Link>
+          <Link to="/pagina-gestion"><button className="item-menu text-sm sm:text-xl">Gestión</button></Link>
         )}
         <Link to="/Semana"><button className="item-menu text-sm sm:text-xl">Semana</button></Link>
         {/* Desplegable usuario */}
@@ -78,7 +78,7 @@ const MenuSuperior = () => {
           <Link to="/"><button className="item-menu text-sm text-left">Animales</button></Link>
           <Link to="/pagina-voluntarios"><button className="item-menu text-sm text-left">Voluntarios</button></Link>
           {rolesUsuario.includes("admin") && (
-            <Link to="/pagina-gestion"><button className="item-menu text-sm text-left">Gestion</button></Link>
+            <Link to="/pagina-gestion"><button className="item-menu text-sm text-left">Gestión</button></Link>
           )}
           <Link to="/Semana"><button className="item-menu text-sm text-left">Semana</button></Link>
           <Link to="/tu-perfil"><button className="item-menu text-sm text-left">Tu perfil</button></Link>

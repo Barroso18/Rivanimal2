@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import servicioUsuarios from '../../servicios/servicioUsuarios';
 import Roles from '../Roles';
+import Swal from "sweetalert2";
 const Registro = ({onClose}) => {
     const [nombre, setNombre] = useState('');
     const [apellido1, setApellido1] = useState('');
@@ -18,6 +19,7 @@ const Registro = ({onClose}) => {
     const [email, setEmail] = useState('');
     const [direccion, setDireccion] = useState('');
     const [foto, setFoto] = useState('');
+    const [licenciaPPP, setLicenciaPPP] = useState(false);
     const [mensaje, setMensaje] = useState('');
       const [error, setError] = useState('');
     const [errores, setErrores] = useState('');
@@ -49,81 +51,68 @@ const Registro = ({onClose}) => {
         setMessage("Error al subir la imagen.");
       }
     };*/
-
+    // Función para restablecer el formulario
+    const resetFormulario = () => {
+      setNombre('');
+      setApellido1('');
+      setApellido2('');
+      setContrasena('');
+      setNombreUsuario('');
+      setRoles([]);
+      setDni('');
+      setTelefono('');
+      setEmail('');
+      setDireccion('');
+      setFoto('');
+      setMensaje('');
+      setError('');
+      setPreview(null);
+      setLicenciaPPP(false);
+      setImage(null);
+    };
     const controlaRegistro = async (e) => {
-        e.preventDefault();
-        var url = "http://localhost/Rivanimal2/FuncionesPHP/registro.php";
-        /*var datos = {
-          nombre: nombre,
-          apellido1: apellido1,
-          apellido2: apellido2,
-          contrasena: contrasena,
-          nombreUsuario: nombreUsuario,
-          roles: roles,
-          dni: dni,
-          telefono: telefono,
-          email: email,
-          direccion: direccion, 
-          foto: image
-        };*/
-        // Crear un objeto FormData para enviar los datos
-        const formData = new FormData();
-        formData.append("nombre", nombre);
-        formData.append("apellido1", apellido1);
-        formData.append("apellido2", apellido2);
-        formData.append("contrasena", contrasena);
-        formData.append("nombreUsuario", nombreUsuario);
-        formData.append("roles", roles);
-        formData.append("dni", dni);
-        formData.append("telefono", telefono);
-        formData.append("email", email);
-        formData.append("direccion", direccion);
-        if (foto) {
-            formData.append("file", foto); // Adjuntar la imagen
-        }
-
-       
-          await servicioUsuarios.registro(formData)
-            .then((response) => {
-              if (response.data.message === "Registro exitoso") {
-                setMensaje("Usuario registrado correctamente");
-                setError("");
-                navigate("/login"); // Redirigir a la página de login después del registro exitoso
-              } else if (response.data.errores) {
-                setError(Object.values(response.data.errores).join(", "));
-              } else {
-                setError("Error desconocido al registrar el usuario");
-                console.log("Datos:",response.data);
-              }
-            }).catch((error) => {
-              setError("Error en la petición de registro.");
-              console.error("Error en axios:", error);
+      e.preventDefault();        
+      // Crear un objeto FormData para enviar los datos
+      const formData = new FormData();
+      formData.append("nombre", nombre);
+      formData.append("apellido1", apellido1);
+      formData.append("apellido2", apellido2);
+      formData.append("contrasena", contrasena);
+      formData.append("nombreUsuario", nombreUsuario);
+      formData.append("roles", roles);
+      formData.append("dni", dni);
+      formData.append("telefono", telefono);
+      formData.append("email", email);
+      formData.append("direccion", direccion);
+      formData.append("licenciaPPP", licenciaPPP ? 1 : 0); // Convertir a 1 o 0
+      if (foto) {
+          formData.append("file", foto); // Adjuntar la imagen
+      }
+      await servicioUsuarios.registro(formData)
+        .then((response) => {
+          if (response.data.message === "Registro exitoso") {
+            setMensaje("Usuario registrado correctamente");
+            setError("");
+            resetFormulario();
+            Swal.fire({
+              title: "¡Éxito!",
+              text: mensaje,
+              icon: "success",
+              confirmButtonText: "Aceptar",
             });
-          /*
-          try {
-            const response = await axios.post(
-                "http://localhost/Rivanimal2/FuncionesPHP/registro.php",
-                formData,
-                {
-                    headers: {
-                        "Content-Type": "multipart/form-data",
-                    },
-                }
-            );
-
-            if (response.data.message === "Registro exitoso") {
-                setMensaje("Usuario registrado correctamente");
-                setError("");
-            } else if (response.data.errores) {
-                setError(Object.values(response.data.errores).join(", "));
-            } else {
-                setError("Error desconocido al registrar el usuario");
-            }
-        } catch (error) {
-            setError("Error en la petición de registro.");
-            console.error("Error en axios:", error);
-        }
-        */
+            //navigate("/pagina-gestion"); // Redirigir a la página de login después del registro exitoso
+            //Cerramos el modal una vez el usuario se ha agregado
+            onClose();
+          } else if (response.data.errores) {
+            setError(Object.values(response.data.errores).join(", "));
+          } else {
+            setError("Error desconocido al registrar el usuario");
+            console.log("Datos:",response.data);
+          }
+        }).catch((error) => {
+          setError("Error en la petición de registro.");
+          console.error("Error en axios:", error);
+        });
     };
     return (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
@@ -214,8 +203,19 @@ const Registro = ({onClose}) => {
                   </div>
                 </div>
 
-                {/* Grupo 3: Dirección, DNI y Foto */}
+                {/* Grupo 3: Telefono, Dirección, DNI y Foto */}
                 <div className="flex flex-wrap gap-4">
+                   <div className="flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600">Teléfono:</label>
+                    <input
+                      type="text"
+                      value={telefono}
+                      name="telefono"
+                      onChange={(e) => setTelefono(e.target.value)}
+                      required
+                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                    />
+                  </div>
                   <div className="flex-1 min-w-[150px]">
                     <label className="block text-sm font-medium text-gray-600">Dirección:</label>
                     <input
@@ -245,7 +245,7 @@ const Registro = ({onClose}) => {
                 <div className="mb-4 flex-1 min-w-[150px]">
                   <label className="block text-sm font-medium text-gray-600 mb-2"><strong>Roles:</strong></label>
                   <div className="flex flex-wrap gap-4">
-                    {Roles.map((rol) => (
+                    {Roles.todos.map((rol) => (
                       <label key={rol} className="flex items-center space-x-2">
                         <input
                           type="checkbox"
@@ -264,6 +264,20 @@ const Registro = ({onClose}) => {
                     ))}
                   </div>
                 </div>
+                {/* Grupo 5: Licencia PPP */}
+                <div className="flex-1 min-w-[150px]">
+                  <label className="flex items-center space-x-2">
+                    <input
+                      type="checkbox"
+                      value={licenciaPPP}
+                      checked={licenciaPPP}
+                      onChange={(e) => setLicenciaPPP(e.target.checked)}
+                      className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                    />
+                    <span className="text-sm text-gray-600">Licencia PPP</span>
+                  </label>
+                </div>
+                {/* Grupo 6: Foto */}
                 <div className="flex-1 min-w-[150px]">
                     <label className="block text-sm font-medium text-gray-600">Foto:</label>
                     <input
@@ -273,16 +287,22 @@ const Registro = ({onClose}) => {
                       className="w-full mt-1 text-sm"
                     />
                     {preview && <img src={preview} alt="Preview" className="mt-2 h-16 rounded border object-cover" />}
-                  </div>
-                {/* Mensajes */}
+                </div>
+                {/* Grupo 7: Mensajes */}
                 {error && <p className="text-red-500">{error}</p>}
                 {mensaje && <p className="text-green-600">{mensaje}</p>}
 
-                {/* Botones */}
-                <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Registrar</button>
-                <Link to="/login">
-                  <button type="button" className="w-full bg-green-500 text-white p-2 text-sm rounded mt-2 hover:bg-green-600">Volver login</button>
-                </Link>
+                {/* Grupo 8: Botones */}
+                <div className="space-y-2">
+                  <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Registrar</button>
+                  <button type="button" onClick={resetFormulario} className="w-full bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar campos</button>
+                  {/*
+                  <Link to="/login">
+                    <button type="button" className="w-full bg-green-500 text-white p-2 text-sm rounded mt-2 hover:bg-green-600">Volver login</button>
+                  </Link>
+                  */}
+                </div>
+                
               </form>
             </div>
           </div>

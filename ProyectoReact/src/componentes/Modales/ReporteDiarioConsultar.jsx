@@ -138,6 +138,9 @@ function ReporteDiarioConsultar({ reporte, onClose }) {
       ) : (
         <p>Cargando reporte diario...</p>
       )}
+      {/* Solo si eres admin o el usuario que lo creo */}
+      <button>Borrar</button>
+      <button>Editar</button>
     </div>
   );
 }

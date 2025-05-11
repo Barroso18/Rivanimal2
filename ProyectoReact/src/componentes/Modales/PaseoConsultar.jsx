@@ -1,6 +1,7 @@
 import React, { useState,useEffect} from 'react';
 import { useAuth } from '../../Login/AuthProvider';
 import '../../estilos/estilos.css';
+import { Link } from "react-router-dom";
 import servicioReporteDiario from '../../servicios/servicioReporteDiario';
 import servicioAnimales from '../../servicios/servicioAnimales';
 import { calculaDuracion } from '../../herramientas/calculaDuracion';
@@ -21,10 +22,18 @@ const PaseoConsultar = ({paseoInformacion,onClose})=>{
         <div>
             <div className="text-sm text-gray-700">
                 <p className="font-semibold">
-                  Paseo de {animalInformacion.nombre}
+                  Paseo de <Link
+                      to={`/pagina-animal/${animalInformacion.identificador}`}
+                      className="text-black-500 hover:underline hover:text-orange-500 font-semibold"
+                    >{animalInformacion.nombre}</Link>
                 </p>
                 <p>
-                  <strong>Paseador:</strong> {paseoInformacion.nombre_usuario}{/* Aqui ira un link al perfil de usuario publico */}
+                  <strong>Paseador:</strong><Link
+                      to={`/perfil-publico/${paseoInformacion.nombre_usuario}`}
+                      className="text-black-500 hover:underline hover:text-orange-500 font-semibold"
+                    >
+                      {paseoInformacion.nombre_usuario}
+                    </Link>
                 </p>
                 <p>
                   <strong>Inicio:</strong> {paseoInformacion.fecha_hora_inicio} 
@@ -36,7 +45,7 @@ const PaseoConsultar = ({paseoInformacion,onClose})=>{
                   <strong>Duración:</strong> {duracion} min 
                 </p>
                 <p>
-                  <strong>cacas: </strong> {paseoInformacion.caca_nivel} 
+                  <strong>Nivel cacas: </strong> {paseoInformacion.caca_nivel} 
                 </p>
                 <p>
                   <strong>Localizacion: </strong> {paseoInformacion.ubicaciones}
