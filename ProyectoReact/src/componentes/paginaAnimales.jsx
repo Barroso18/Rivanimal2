@@ -203,8 +203,8 @@ const PaginaAnimales = () => {
                           <p className="text-gray-500">Estado: {animal.situacion}</p>
                           <p className="text-gray-500">Nivel: {animal.nivel}</p>
                           
-                          <button className="add-info-btn" onClick={() => crearPaseo(animal.nombre)}>Paseo</button> 
-                          <Link to={`/pagina-animal/${animal.identificador}`} >
+                           
+                          <Link to={`/pagina-animal/${animal.id_animal}`} >
                               <button className="add-info-btn">Mas info</button> 
                           </Link>
                       </div>

@@ -43,6 +43,9 @@ class ServicioAnimales {
     const funcion = "tratamientoPorAnimal";
     return https.post(`/animales.php?funcion=${funcion}`, { idanimal });
    }
+   buscaUsuariosPorAnimal(id_animal){
+      return https.post(`/animales.php?funcion=buscaUsuariosPorAnimal`, { id_animal });
+   }
   buscaPorid_animal(id_animal) {
     return https.post(`/animales.php?funcion=buscaAnimalPorid_animal`, { id_animal });
   }
@@ -51,6 +54,12 @@ class ServicioAnimales {
   }
   async registro(datosRegistro) {
       return https.post(`/animales.php?funcion=agregaAnimal`, datosRegistro ,{
+         headers: {
+           'Content-Type': 'multipart/form-data',
+         }});
+   }
+   async actualiza(datosRegistro) {
+      return https.post(`/animales.php?funcion=actualizaAnimal`, datosRegistro ,{
          headers: {
            'Content-Type': 'multipart/form-data',
          }});

@@ -23,7 +23,7 @@ const PaseoConsultar = ({paseoInformacion,onClose})=>{
             <div className="text-sm text-gray-700">
                 <p className="font-semibold">
                   Paseo de <Link
-                      to={`/pagina-animal/${animalInformacion.identificador}`}
+                      to={`/pagina-animal/${animalInformacion.id_animal}`}
                       className="text-black-500 hover:underline hover:text-orange-500 font-semibold"
                     >{animalInformacion.nombre}</Link>
                 </p>

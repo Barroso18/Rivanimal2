@@ -12,6 +12,9 @@ class ServicioPaseos {
     return https.post(`/paseos.php?funcion=paseosporreportediario`, { idReporte });
     //return https.post(`/paseos.php?funcion=paseosporanimal`, { idanimal });
   }
+  async buscaAnimalPorUsuario(usuario){
+    return https.post(`/paseos.php?funcion=buscaAnimalPorUsuario`, { usuario });
+  }
   get(id) {
     return http.get(`/paseos/${id}`);
   }

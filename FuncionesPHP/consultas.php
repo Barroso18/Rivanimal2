@@ -131,6 +131,42 @@ use \Firebase\JWT\JWT;
         }
     
     }
+    function buscaAnimalPorUsuario($conn, $usuario){
+        $sql = "SELECT DISTINCT a.* 
+            FROM animal a
+            LEFT JOIN reporte_paseo rp ON rp.animal = a.id_animal AND rp.usuario = ?
+            LEFT JOIN reporte_gatos rg ON rg.gato = a.id_animal AND rg.usuario = ?
+            WHERE rp.usuario IS NOT NULL OR rg.usuario IS NOT NULL";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $usuario, $usuario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+
+    function buscaUsuariosPorAnimal($conn, $id_animal){
+        $sql = "SELECT DISTINCT u.*,
+                    COALESCE(rdp.rol, rdg.rol) AS rol
+                FROM usuario u
+                LEFT JOIN reporte_paseo rp ON rp.usuario = u.id_usuario AND rp.animal = ?
+                LEFT JOIN reporte_diario rdp ON rp.reporte_diario = rdp.id_reporte_diario
+                LEFT JOIN reporte_gatos rg ON rg.usuario = u.id_usuario AND rg.gato = ?
+                LEFT JOIN reporte_diario rdg ON rg.reporte_diario = rdg.id_reporte_diario
+                WHERE rp.animal IS NOT NULL OR rg.gato IS NOT NULL";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $id_animal, $id_animal);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
 
     function buscaPaseosPorReporteDiario($conn, $id_reporte_diario){
         $sql = "SELECT rp.*, a.nombre AS nombre_animal, u.nombre_usuario AS nombre_usuario FROM reporte_paseo AS rp INNER JOIN  animal a ON rp.animal = a.id_animal INNER JOIN usuario u ON rp.usuario = u.id_usuario WHERE reporte_diario = ?";

@@ -33,5 +33,14 @@ if ($funcion === 'paseosporreportediario') {
     }
     echo json_encode(buscaPaseosPorReporteDiario($conn, $idReporte));
 }
-    
+if($funcion === 'buscaAnimalPorUsuario'){
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['usuario'])) {
+        $usuario = $input['usuario'];
+    } else {
+        echo json_encode(array("mensaje" => "ID de animal no proporcionado"));
+        exit;
+    }
+    echo json_encode(buscaAnimalPorUsuario($conn, $usuario));
+}
 ?>
