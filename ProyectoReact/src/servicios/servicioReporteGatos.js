@@ -7,6 +7,12 @@ class ServicioReporteGatos {
     getReportesGatosPorReporteDiario(idreporteDiario){
         return https.post(`/reporte_gato.php?funcion=buscarPorReporteDiario`, { idreporteDiario });
     }
+    async registro(datosRegistro) {
+      return https.post(`/reporte_gato.php?funcion=agregaReporteGato`, datosRegistro ,{
+         headers: {
+           'Content-Type': 'multipart/form-data',
+         }});
+   }
 }
 
 export default new ServicioReporteGatos();

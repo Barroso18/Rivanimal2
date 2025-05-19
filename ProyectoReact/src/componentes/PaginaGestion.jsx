@@ -3,11 +3,14 @@ import { Link } from 'react-router-dom';
 import "../estilos/estilos.css";
 import Modal from "./Modales/Modal.jsx";
 import Registro from "./Modales/RegistroUsuario.jsx";
-import servicioUsuarios from "../servicios/servicioUsuarios.js";
-import UserCard from './UserCard';
 import AgregarAnimal from './Modales/AgregarAnimal.jsx';
+import UserCard from './UserCard';
+import AnimalCard from './AnimalCard.jsx';
+import servicioAnimales from '../servicios/servicioAnimales.js';
+import servicioUsuarios from "../servicios/servicioUsuarios.js";
 const PaginaGestion = () => {
     const [usuarios, setUsuarios] = useState([]);
+    const [animales,setAnimales] = useState([]);
     const tabs = [
         { id: "usuarios", label: "Usuarios" },
         { id: "animales", label: "Animales" },
@@ -57,10 +60,24 @@ const PaginaGestion = () => {
             });
     };
 
+    const cargaTabAnimales = () =>{
+        servicioAnimales.getAll()
+        .then((response) => {
+                setAnimales(response.data);
+                console.log("Lista de animales:", response.data);
+        })
+        .catch((error) => {
+            console.error("Error al cargar la lista de animales:", error);
+        });
+    };
+
     // Cargar datos al cambiar de pestaña
     useEffect(() => {
         if (activeTab === "usuarios") {
             cargaTabUsuarios();
+        }
+        if(activeTab === "animales"){
+            cargaTabAnimales();
         }
     }, [activeTab]);
 
@@ -112,6 +129,11 @@ const PaginaGestion = () => {
                         </button>
                         <h2 className="mt-4 text-lg font-bold">Gestión de Animales</h2>
                         <p>Contenido relacionado con la gestión de animales.</p>
+                        <ul className="list-disc pl-5">
+                            {animales.map((animal) => (
+                                <AnimalCard key={animal.id_animal} animal={animal} />
+                            ))}
+                        </ul>
                     </div>
                 )}
                 {activeTab === "reportesdiarios" && (

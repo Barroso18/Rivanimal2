@@ -20,7 +20,7 @@ const PaginaVoluntarios = () => {
     cargaListaVoluntarios();
   }, []);
   return (
-    <div>
+    <div className='w-full flex justify-center items-center flex-col'>
       <h1>Pagina de Voluntarios</h1>
       <form>
 
@@ -28,9 +28,11 @@ const PaginaVoluntarios = () => {
       <p>Bienvenido a la pagina de voluntarios</p>
       <h2>Lista de voluntarios</h2>
       
-      <div className="max-w-md mx-auto p-4 space-y-4 bg-gray-50 min-h-screen">
+      <div className="w-full flex flex-col items-center space-y-4 bg-gray-50 min-h-screen">
         {usuarios.map((usuario, idx) => (
-          <UserCard key={idx} usuario={usuario} />
+          <div key={idx} className="w-[50%]">
+            <UserCard usuario={usuario} />
+          </div>
         ))}
       </div>
       

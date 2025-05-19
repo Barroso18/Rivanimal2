@@ -18,6 +18,7 @@ import servicioPaseos from "../servicios/servicioPaseos.js";
 import ServicioReporteGatos from "../servicios/servicioReporteGatos.js";
 import { buscaTratamientoTipo } from "../herramientas/buscaTratamientoTipo";
 import { calculaDuracion } from "../herramientas/calculaDuracion";
+import { formateaFecha } from "../herramientas/formateaFecha";
 import { buscaReportePorFecha } from "../herramientas/buscaReportePorFecha.js";
 import ListaReportesGatos from "./ListaReportesGatos.jsx";
 import ListaReportesPaseos from "./ListaReportesPaseos.jsx";
@@ -181,16 +182,7 @@ const PaginaAnimal = () => {
       });
     }
   }, [activeTab]);
-  // Asegúrate de que las fechas estén en formato YYYY-MM-DD para los inputs y para mostrar
-  function formateaFecha(fecha) {
-    if (!fecha) return '';
-    if (/^\d{4}-\d{2}-\d{2}$/.test(fecha)) return fecha;
-    const d = new Date(fecha);
-    if (isNaN(d)) return '';
-    const month = String(d.getMonth() + 1).padStart(2, '0');
-    const day = String(d.getDate()).padStart(2, '0');
-    return `${d.getFullYear()}-${month}-${day}`;
-  }
+
   const crearPaseo = (animal) => {
     gestionarModalPaseo("crear", true);
   };
@@ -198,7 +190,6 @@ const PaginaAnimal = () => {
   const crearReporteGato = (animal) => {
     gestionarModalGato("crear", true);
   };
-
 
   //Cargamos la información de los reportes de cada animal
   useEffect(() => {
@@ -226,6 +217,30 @@ const PaginaAnimal = () => {
       }
     }
   }, [animalInformacion]);
+  const recargaReportes = () =>{
+    if (animalInformacion.id_animal) {
+      if(animalInformacion.clase == "perro"){
+      servicioPaseos.getPaseosPorAnimal(animalInformacion.id_animal)
+        .then((response) => {
+          //console.log("Paseos del animal:", response.data);
+          setPaseos(response.data); 
+        })
+        .catch((error) => {
+          console.error("Error al obtener los reportes:", error);
+        });
+      }
+      if(animalInformacion.clase == "gato"){ 
+        ServicioReporteGatos.getReportesPorAnimal(animalInformacion.id_animal)
+        .then((response) => {
+          //console.log("Reportes de gatos del animal:", response.data);
+          setPaseos(response.data);
+        })
+        .catch((error) => {
+          console.error("Error al obtener los reportes:", error);
+        });
+      }
+    }
+  }
   function filtrarInfo(filtro) {
     if (tratamientos != null) {
       if(buscaTratamientoTipo(filtro, tratamientos) != null){
@@ -290,7 +305,7 @@ const PaginaAnimal = () => {
         await ServicioAnimales.buscaUsuariosPorAnimal(id_animal)
         .then((response) => {
           //Hay que controlar si no existen registros
-          console.log ("Usuarios: ", response.data);
+          //console.log ("Usuarios: ", response.data);
             setUsuarios(Array.isArray(response.data) ? response.data : []);
             //console.log("Reportes diarios:", response.data);
         })
@@ -559,10 +574,22 @@ const PaginaAnimal = () => {
       {agregarBotonesReportes()}
       
       <Modal isOpen={modalsPaseo.crear}
-        onClose={() => gestionarModalPaseo("crear", false)}>
-        <PaseoCrear nombreAnimal={animalInformacion.nombre}
+        onClose={() => {
+          gestionarModalPaseo("crear", false);
+          recargaReportes();
+          cargaUsuariosCuidadores(animalInformacion.id_animal);
+          navigate(`/pagina-animal/${animalInformacion.id_animal}`);
+        }}>
+        <PaseoCrear
+          animal={animalInformacion}
           voluntario={idUsuario}
-          onClose={() => gestionarModalPaseo("crear", false)}/>
+          onClose={() => {
+            gestionarModalPaseo("crear", false);
+            recargaReportes();
+            cargaUsuariosCuidadores(animalInformacion.id_animal);
+            navigate(`/pagina-animal/${animalInformacion.id_animal}`);
+          }}
+        />
       </Modal>
       <Modal isOpen={modalsPaseo.consultar}
         onClose={() => gestionarModalPaseo("consultar", false)}>
@@ -570,11 +597,21 @@ const PaginaAnimal = () => {
           onClose={() => gestionarModalPaseo("consultar", false)}/>
       </Modal>
       <Modal isOpen={modalsGato.crear}
-        onClose={() => gestionarModalGato("crear", false)}>
+        onClose={() => {
+            gestionarModalGato("crear", false);
+            recargaReportes();
+            cargaUsuariosCuidadores(animalInformacion.id_animal);
+            navigate(`/pagina-animal/${animalInformacion.id_animal}`);
+          }}>
         <ReporteGatoCrear
-          nombreAnimal={animalInformacion.nombre}
+          animal={animalInformacion}
           voluntario={idUsuario}
-          onClose={() => gestionarModalGato("crear", false)}/>
+          onClose={() => {
+            gestionarModalGato("crear", false);
+            recargaReportes();
+            cargaUsuariosCuidadores(animalInformacion.id_animal);
+            navigate(`/pagina-animal/${animalInformacion.id_animal}`);
+          }}/>
       </Modal>
       <Modal
         isOpen={modalsGato.consultar}

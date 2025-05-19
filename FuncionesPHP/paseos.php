@@ -66,17 +66,7 @@ if($funcion=== 'agregaPaseo'){
         echo json_encode(["errores" => $errores]);
         exit();
     }
-
-    // Buscar el id del voluntario por su nombre de usuario
-    /*
-    $idvoluntario = null;
-    if ($voluntario !== '') {
-        $idvoluntario = consigueIdUsuario($conn, $voluntario);
-        if ($idvoluntario === null || $idvoluntario === 0) {
-            $errores['voluntario'] = "El voluntario no existe";
-        }
-    }
-*/
+    
     // Comprobar que la fecha hora de inicio y la de fin son distintas
     if ($fecha_hora_inicio === $fecha_hora_fin) {
         $errores['fecha_hora_fin'] = "La fecha y hora de inicio y fin deben ser distintas";

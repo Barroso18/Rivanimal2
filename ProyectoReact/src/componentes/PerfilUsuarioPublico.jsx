@@ -1,11 +1,11 @@
 import "../estilos/estilos.css";
 import React, { useState, useEffect } from 'react';
-import { useParams } from "react-router-dom";
+import { useParams, Link } from "react-router-dom";
 import { useAuth } from '../Login/AuthProvider';
-import ServicioUsuarios from "../servicios/servicioUsuarios";
-import ServicioReporteDiario from "../servicios/servicioReporteDiario";
 import { use } from "react";
+import ServicioUsuarios from "../servicios/servicioUsuarios";
 import servicioReporteDiario from "../servicios/servicioReporteDiario";
+import servicioPaseos from "../servicios/servicioPaseos.js";
 import { ArrowLeft, ArrowRight } from "lucide-react";
 
 
@@ -17,6 +17,7 @@ const PerfilUsuarioPublico = () => {
     const { user, logout } = useAuth();// user?.data.usuario
     const [usuarioInformacion, setUsuarioInformacion] = useState({});
     const [reportesDiarios, setReportesDiarios] = useState([]);
+    const [animales,setAnimales] = useState([]);
     //No pueden ser los mismos que el usuario que ha iniciado sesion
     const rolesUsuario = typeof user?.data.roles === 'string' ? user.data.roles.split(',').map(role => role.trim()) // Convertir a array y eliminar espacios
   : Array.isArray(user?.data.roles)? user.data.roles: [];
@@ -55,6 +56,56 @@ const PerfilUsuarioPublico = () => {
         }
         
     }
+    async function cargaAnimalesCuidados(idUsuario){
+        await servicioPaseos.buscaAnimalPorUsuario(idUsuario)
+        .then((response) => {
+          //Hay que controlar si no existen registros
+          console.log ("animales: ", response.data);
+            setAnimales(response.data);
+            //console.log("Reportes diarios:", response.data);
+        })
+        .catch((error) => {
+            console.error("Error al buscar reportes diarios:", error);
+        });
+    }
+    useEffect(() => {
+      if (activeTab === "animales" && usuarioInformacion.id_usuario) {
+        cargaAnimalesCuidados(usuarioInformacion.id_usuario);
+      }
+      // eslint-disable-next-line
+    }, [activeTab, usuarioInformacion.id_usuario]);
+
+    const visualizaAnimalesCuidados = () => {
+      if (!animales || animales.length === 0) {
+        return <p>No hay animales cuidados.</p>;
+      }
+      return (
+        <div className="overflow-x-auto">
+          <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-left">
+            <thead className="bg-gray-100">
+              <tr>
+                <th className="border border-gray-300 px-4 py-2">Nombre</th>
+                <th className="border border-gray-300 px-4 py-2">Clase</th>
+                <th className="border border-gray-300 px-4 py-2">Raza</th>
+                <th className="border border-gray-300 px-4 py-2">PPP</th>
+              </tr>
+            </thead>
+            <tbody>
+              {animales.map((animal, index) => (
+                <tr key={index} className="hover:bg-gray-50">
+                  <td className="border border-gray-300 px-4 py-2"><Link to={`/pagina-animal/${animal.id_animal}`} className="underline text-blue-600 hover:text-blue-800">{animal.nombre}</Link></td>
+                  <td className="border border-gray-300 px-4 py-2">{animal.clase}</td>
+                  <td className="border border-gray-300 px-4 py-2">{animal.raza}</td>
+                  <td className="border border-gray-300 px-4 py-2">
+                    {animal.ppp === 1 ? "Sí" : "No"}
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      );
+    };
     //Carga de reportes diarios del usuario ordenados por fecha mas reciente
     async function  cargaReportesDiarios(idUsuario){
         await servicioReporteDiario.buscarReportesDiariosPorUsuario(idUsuario)
@@ -211,6 +262,16 @@ const PerfilUsuarioPublico = () => {
                         >
                             Reportes diarios
                         </button>
+                        <button
+                            className={`tab px-4 py-2 ${
+                            activeTab === "animales"
+                                ? "border-b-2 border-blue-500 text-blue-500"
+                                : "text-gray-500"
+                            }`}
+                            onClick={() => setActiveTab("animales")}
+                        >
+                            Animales cuidados
+                        </button>
                     </div>
                     {/* Contenido de las tabs */}
                     <div className="tab-content mt-4">
@@ -219,6 +280,9 @@ const PerfilUsuarioPublico = () => {
                         )}
                         {activeTab === "reportes" && (
                             visualizaReportesDiarios()
+                        )}
+                        {activeTab === "animales" && (
+                            visualizaAnimalesCuidados()
                         )}
                     </div>
                 </div>

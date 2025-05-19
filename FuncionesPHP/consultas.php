@@ -252,6 +252,22 @@ use \Firebase\JWT\JWT;
             return json_encode(["message" => "Error al registrar el reporte paseo"]);
         }
     }
+    function agregaReporteGato($conn, $voluntario, $animal, $reporte_diario, $caca_nivel, $descripcion, $fecha_hora_inicio, $fecha_hora_fin){
+        $sql = "INSERT INTO reporte_gatos (gato, usuario, reporte_diario, fecha_hora_inicio, fecha_hora_fin, descripcion, caca_nivel) 
+        VALUES (?, ?, ?, ?,?,?,?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iiisssi", $animal, $voluntario, $reporte_diario, $fecha_hora_inicio,$fecha_hora_fin,$descripcion,$caca_nivel);
+
+        if ($stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            return json_encode(["message" => "Registro exitoso"]);
+        } else {
+            $stmt->close();
+            $conn->close();
+            return json_encode(["message" => "Error al registrar el reporte gatos"]);
+        }
+    }
     /*
     function agregaAnimal($conn){//Sin terminar
         $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp) 

@@ -15,6 +15,12 @@ class ServicioPaseos {
   async buscaAnimalPorUsuario(usuario){
     return https.post(`/paseos.php?funcion=buscaAnimalPorUsuario`, { usuario });
   }
+  async registro(datosRegistro) {
+      return https.post(`/paseos.php?funcion=agregaPaseo`, datosRegistro ,{
+         headers: {
+           'Content-Type': 'multipart/form-data',
+         }});
+   }
   get(id) {
     return http.get(`/paseos/${id}`);
   }
