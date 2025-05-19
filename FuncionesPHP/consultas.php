@@ -219,12 +219,39 @@ use \Firebase\JWT\JWT;
         } else {
             $stmt->close();
             $conn->close();
-            return json_encode(["message" => "Error al registrar el usuario"]);
+            return json_encode(["message" => "Error al registrar el reporte diario"]);
         }
 
         
     }
+    function buscaReporteDiarioPorId($conn, $id_reporte_diario){
+        $sql = "SELECT * FROM reporte_diario WHERE id_reporte_diario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_reporte_diario);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
+    function agregaPaseo($conn, $voluntario,$animal,$reporte_diario, $ubicaciones,$caca_nivel,$descripcion,$fecha_hora_inicio,$fecha_hora_fin){
+        $sql = "INSERT INTO reporte_paseo (animal, usuario, reporte_diario, fecha_hora_inicio, fecha_hora_fin, descripcion, caca_nivel, ubicaciones) 
+        VALUES (?, ?, ?, ?,?,?,?,?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iiisssis", $animal, $voluntario, $reporte_diario, $fecha_hora_inicio,$fecha_hora_fin,$descripcion,$caca_nivel,$ubicaciones);
 
+        if ($stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            return json_encode(["message" => "Registro exitoso"]);
+        } else {
+            $stmt->close();
+            $conn->close();
+            return json_encode(["message" => "Error al registrar el reporte paseo"]);
+        }
+    }
     /*
     function agregaAnimal($conn){//Sin terminar
         $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp) 

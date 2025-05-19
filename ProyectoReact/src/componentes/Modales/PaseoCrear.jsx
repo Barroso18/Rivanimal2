@@ -14,18 +14,21 @@ function PaseoCrear({ animal, voluntario, onClose }) {
     const rolesUsuario = typeof user?.data.roles === 'string'
         ? user.data.roles.split(',').map(role => role.trim())
         : Array.isArray(user?.data.roles) ? user.data.roles : [];
+
     const [nombreVoluntario, setNombreVoluntario] = useState('');
     const [mostrarModalReporte, setMostrarModalReporte] = useState(false);
     const [errores, setErrores] = useState({});
     const [usuario, setUsuario] = useState({});
-    const [error,setError] = useState([]);
-    const [mensaje,setMensaje] = useState('');
+    const [error, setError] = useState([]);
+    const [mensaje, setMensaje] = useState('');
     const [reportesDiarios, setReportesDiarios] = useState([]);
     const [reporteDiarioSeleccionado, setReporteDiarioSeleccionado] = useState(null);
+    const [listaVoluntarios, setListaVoluntarios] = useState([]);
+
     const sitios = ["MONTARCO", "A3", "CASA MÚSICA", "POLIGONO", "RAYUELA"];
+
     const [form, setForm] = useState({
-        voluntario: "",
-        idVoluntario:0,
+        voluntario: 0,
         animal: animal.id_animal,
         lugarPaseo: "",
         caca_nivel: 0,
@@ -33,10 +36,11 @@ function PaseoCrear({ animal, voluntario, onClose }) {
         fecha_hora_inicio: "",
         fecha_hora_fin: "",
         descripcion: "",
-    localizaciones: [],        
-    nuevaLocalizacion: "",
+        localizaciones: [],
+        nuevaLocalizacion: "",
     });
-    const [modalsAnimal,setModalsAnimal] = useState({
+
+    const [modalsAnimal, setModalsAnimal] = useState({
         crear: false,
         consultar: false,
         editar: false,
@@ -50,18 +54,20 @@ function PaseoCrear({ animal, voluntario, onClose }) {
         gestionarModalAnimal("crear", true);
     };
 
-    // Cargar información del voluntario al montar el componente
     useEffect(() => {
         const cargarInformacionVoluntario = async () => {
             try {
                 const response = await servicioUsuarios.buscaPorId(parseInt(voluntario));
-                setUsuario(response.data);
-                setNombreVoluntario(response.data.nombre_usuario);
+                const datos = response.data;
+                setUsuario(datos);
+                setNombreVoluntario(datos.nombre_usuario);
+
                 setForm((prevForm) => ({
                     ...prevForm,
-                    voluntario: response.data.nombre_usuario,
-                    idVoluntario:response.data.id_usuario,
+                    voluntario: datos.id_usuario,
                 }));
+
+                filtraReportesPorUsuario(datos.id_usuario);
             } catch (error) {
                 console.error("Error al buscar el voluntario:", error);
                 setErrores((prevErrores) => ({
@@ -71,23 +77,34 @@ function PaseoCrear({ animal, voluntario, onClose }) {
             }
         };
 
-        cargarInformacionVoluntario();
+        if (voluntario) {
+            cargarInformacionVoluntario();
+        }
     }, [voluntario]);
 
-    // Función para gestionar los cambios en los campos del formulario
+    useEffect(() => {
+        const cargarListaVoluntarios = async () => {
+            try {
+                const res = await servicioUsuarios.buscaTodosUsuarios();
+                setListaVoluntarios(res.data || []);
+            } catch (error) {
+                console.error("Error cargando voluntarios:", error);
+            }
+        };
+        cargarListaVoluntarios();
+    }, []);
+
     const gestionarCambio = (e) => {
         const { name, value } = e.target;
         setForm({
             ...form,
             [name]: value,
         });
-        if (name === "voluntario") {
-            setNombreVoluntario(value);
-        }
     };
-    const resetFormulario = () =>{
-        const form2 = {
-            voluntario: "",
+
+    const resetFormulario = () => {
+        setForm({
+            voluntario: usuario.id_usuario || 0,
             animal: animal.id_animal,
             lugarPaseo: "",
             caca_nivel: 0,
@@ -95,12 +112,11 @@ function PaseoCrear({ animal, voluntario, onClose }) {
             fecha_hora_inicio: "",
             fecha_hora_fin: "",
             descripcion: "",
-            localizaciones: [],        
+            localizaciones: [],
             nuevaLocalizacion: "",
-        }
-        setForm(form2);
-    }
-   
+        });
+    };
+
     const muestraDuracion = () => {
         if (form.fecha_hora_inicio && form.fecha_hora_fin) {
             return <>{calculaDuracion(form.fecha_hora_inicio, form.fecha_hora_fin)} min</>;
@@ -108,15 +124,12 @@ function PaseoCrear({ animal, voluntario, onClose }) {
         return "";
     };
 
-    // Buscar reportes diarios por usuario
-    const filtraReportesPorUsuario = async (nombreUsuario) => {
+    const filtraReportesPorUsuario = async (idUsuario) => {
         try {
-            // 1. Buscar el usuario por nombre de usuario
-            const usuarioResp = await servicioUsuarios.buscaPorNombre(nombreUsuario);
-            if (!usuarioResp.data || !usuarioResp.data.id_usuario) {
+            if (!idUsuario || isNaN(idUsuario)) {
                 setErrores((prev) => ({
                     ...prev,
-                    voluntario: "No se encontró el usuario indicado",
+                    voluntario: "Id de voluntario no válido",
                 }));
                 setReportesDiarios([]);
                 setReporteDiarioSeleccionado(null);
@@ -126,15 +139,12 @@ function PaseoCrear({ animal, voluntario, onClose }) {
                 }));
                 return;
             }
-            setErrores([]);
-            
-            const idUsuario = usuarioResp.data.id_usuario;
-            // 2. Buscar los reportes diarios por id de usuario
-            const response = await servicioReporteDiario.buscarReportesDiariosPorUsuario(idUsuario);
-            setReportesDiarios(Array.isArray(response.data) ? response.data : []);
 
-            if (!response.data || response.data.length === 0) {
-                // Mostrar confirmación antes de abrir el modal
+            const response = await servicioReporteDiario.buscarReportesDiariosPorUsuario(idUsuario);
+            const data = Array.isArray(response.data) ? response.data : [];
+            setReportesDiarios(data);
+
+            if (!data.length) {
                 const confirmacion = await Swal.fire({
                     title: "No existen reportes diarios",
                     text: "Se va a crear un nuevo reporte diario. ¿Quieres continuar?",
@@ -143,9 +153,11 @@ function PaseoCrear({ animal, voluntario, onClose }) {
                     confirmButtonText: "Sí, continuar",
                     cancelButtonText: "Cancelar"
                 });
+
                 if (confirmacion.isConfirmed) {
-                    setMostrarModalReporte(true); // Mostrar modal de crear reporte diario
+                    setMostrarModalReporte(true);
                 }
+
                 setForm((prevForm) => ({
                     ...prevForm,
                     reporte_diario: ""
@@ -153,9 +165,9 @@ function PaseoCrear({ animal, voluntario, onClose }) {
                 return;
             }
 
-            // Buscar el reporte diario por la fecha actual
             const fechaActual = new Date().toISOString().split("T")[0];
-            const reporteActual = buscaReportePorFecha(fechaActual, response.data);
+            const reporteActual = buscaReportePorFecha(fechaActual, data);
+
             setReporteDiarioSeleccionado(reporteActual || null);
             setForm((prevForm) => ({
                 ...prevForm,
@@ -166,64 +178,55 @@ function PaseoCrear({ animal, voluntario, onClose }) {
         }
     };
 
-    // Si cambia el voluntario, recargar reportes diarios
-    useEffect(() => {
-        if (form.voluntario) {
-            filtraReportesPorUsuario(form.voluntario);
-        }
-    }, [form.voluntario]);
-
-    // Función para manejar el envío del formulario
     const enviaFormulario = async (e) => {
         e.preventDefault();
         setErrores({});
-        
+
         const formData = new FormData();
-        formData.append("voluntario", form.voluntario); // Ahora será el id
-        console.log("form.voluntario : ",form.voluntario);
+        formData.append("voluntario", form.voluntario);
         formData.append("animal", form.animal);
         formData.append("ubicaciones", form.localizaciones);
-        formData.append("reporte_diario",form.reporte_diario);
+        formData.append("reporte_diario", form.reporte_diario);
         formData.append("caca_nivel", parseInt(form.caca_nivel));
         formData.append("fecha_hora_inicio", form.fecha_hora_inicio);
         formData.append("fecha_hora_fin", form.fecha_hora_fin);
         formData.append("descripcion", form.descripcion);
-        for (let [key, value] of formData.entries()) {
-            console.log(key, value);
-        }
-        
+
         await servicioPaseos.registro(formData)
-        .then((response) => {
-            if (response.data.message === "Registro exitoso") {
-            setMensaje("Paseo registrado correctamente");
-            setError([]);
-            resetFormulario();
-            Swal.fire({
-                title: "¡Éxito!",
-                text: mensaje,
-                icon: "success",
-                confirmButtonText: "Aceptar",
+            .then((response) => {
+                if (response.data.message === "Registro exitoso") {
+                    setMensaje("Paseo registrado correctamente");
+                    setError([]);
+                    resetFormulario();
+                    Swal.fire({
+                        title: "¡Éxito!",
+                        text: "Paseo registrado correctamente",
+                        icon: "success",
+                        confirmButtonText: "Aceptar",
+                    });
+                    onClose();
+                } else if (response.data.errores) {
+                    const fallo = Object.values(response.data.errores).join(", ");
+                    Swal.fire({
+                        title: "Fallo!",
+                        text: fallo,
+                        icon: "success",
+                        confirmButtonText: "Aceptar",
+                    });
+                    setError(response.data.errores);
+                } else {
+                    setError("Error desconocido al registrar el paseo");
+                }
+            }).catch((error) => {
+                setError("Error en la petición de registro.");
+                console.error("Error en axios:", error);
             });
-            //Cerramos el modal una vez el paseo se ha agregado
-            onClose();
-            } else if (response.data.errores) {
-            //setError(Object.values(response.data.errores).join(", "));
-            setError(response.data.errores);
-            console.log("Error: ",error);
-            } else {
-            setError("Error desconocido al registrar el paseo");
-            console.log("Datos:",response.data);
-            }
-        }).catch((error) => {
-            setError("Error en la petición de registro.");
-            console.error("Error en axios:", error);
-        });
     };
 
     const gestionaReportesDiarios = (e) => {
-         const idSeleccionado = e.target.value;
+        const idSeleccionado = e.target.value;
         const reporteSeleccionado = reportesDiarios.find(
-            (reporte) => String(reporte.id_reporte_diario) === e.target.value
+            (reporte) => String(reporte.id_reporte_diario) === idSeleccionado
         );
         setReporteDiarioSeleccionado(reporteSeleccionado || null);
         setForm((prevForm) => ({
@@ -234,22 +237,19 @@ function PaseoCrear({ animal, voluntario, onClose }) {
 
     return (
         <>
-            {/* Modal para crear reporte diario si no existen */}
             {mostrarModalReporte && (
                 <ReporteDiarioCrear
-                    voluntario={voluntario}
-                    onClose={() => {
+                    voluntario={form.voluntario}
+                    onClose={async () => {
                         setMostrarModalReporte(false);
-                        filtraReportesPorUsuario(nombreVoluntario);
+                        filtraReportesPorUsuario(form.voluntario);
                     }}
                 />
             )}
 
-            {/* Modal de crear paseo */}
             {!mostrarModalReporte && (
                 <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
                     <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
-                        {/* Botón de cierre */}
                         <button
                             onClick={onClose}
                             className="close-btn absolute top-2 right-2 bg-white text-gray-500 hover:text-gray-800 rounded-full shadow-lg p-2"
@@ -259,23 +259,48 @@ function PaseoCrear({ animal, voluntario, onClose }) {
                         </button>
                         <h3 className="text-2xl font-bold text-center text-gray-800 mb-6">Paseo de {animal.nombre}</h3>
                         <form onSubmit={enviaFormulario} className="space-y-6">
-
-                            {/* Grupo 1: Voluntario y reporte diario */}
                             <div className="flex flex-wrap gap-4">
                                 <div className="flex-1 min-w-[150px]">
-                                    <label htmlFor="nombre" className="block text-sm font-medium text-gray-600">Voluntario:</label>
-                                    <input
-                                        id="nombre"
-                                        type="text"
-                                        name="voluntario"
-                                        value={form.voluntario}
-                                        onChange={gestionarCambio}
-                                        onBlur={(e) => filtraReportesPorUsuario(e.target.value)}
-                                        placeholder="Escribe el nombre del voluntario"
-                                        required
-                                        disabled={!rolesUsuario.includes("admin")}
-                                        className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
-                                    /><br />
+                                    <label htmlFor="voluntario" className="block text-sm font-medium text-gray-600">Voluntario:</label>
+                                    {rolesUsuario.includes("admin") ? (
+                                        <select
+                                            id="voluntario"
+                                            name="voluntario"
+                                            value={form.voluntario}
+                                            onChange={async (e) => {
+                                                const nuevoId = parseInt(e.target.value);
+                                                setForm((prevForm) => ({
+                                                    ...prevForm,
+                                                    voluntario: nuevoId,
+                                                }));
+                                                try {
+                                                    const res = await servicioUsuarios.buscaPorId(nuevoId);
+                                                    setUsuario(res.data);
+                                                    setNombreVoluntario(res.data.nombre_usuario);
+                                                    filtraReportesPorUsuario(nuevoId);
+                                                } catch (error) {
+                                                    console.error("Error cargando nuevo voluntario:", error);
+                                                }
+                                            }}
+                                            className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                                        >
+                                            <option value="">-- Selecciona un voluntario --</option>
+                                            {listaVoluntarios.map((v) => (
+                                                <option key={v.id_usuario} value={v.id_usuario}>
+                                                    {v.nombre_usuario}
+                                                </option>
+                                            ))}
+                                        </select>
+                                    ) : (
+                                        <input
+                                            id="nombre"
+                                            type="text"
+                                            name="voluntario"
+                                            value={nombreVoluntario}
+                                            readOnly
+                                            className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                                        />
+                                    )}
                                     {errores.voluntario && <p className="error">{errores.voluntario}</p>}
                                 </div>
                                 <div className="flex-1 min-w-[150px]">
@@ -464,12 +489,14 @@ function PaseoCrear({ animal, voluntario, onClose }) {
                 </div>
             )}
             <Modal isOpen={modalsAnimal.crear}
-                onClose={async() => {gestionarModalAnimal("crear", false);
-                filtraReportesPorUsuario(nombreVoluntario);}}>
+                onClose={async () => {
+                    gestionarModalAnimal("crear", false);
+                    filtraReportesPorUsuario(form.voluntario);
+                }}>
                 <ReporteDiarioCrear
-                    onClose={async() => {
+                    onClose={async () => {
                         gestionarModalAnimal("crear", false);
-                        filtraReportesPorUsuario(nombreVoluntario);
+                        filtraReportesPorUsuario(form.voluntario);
                     }}
                 />
             </Modal>
