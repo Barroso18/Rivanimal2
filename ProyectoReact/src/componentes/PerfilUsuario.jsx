@@ -11,6 +11,7 @@ import Modal from "./Modales/Modal.jsx";
 import ReporteDiarioConsultar from "./Modales/ReporteDiarioConsultar.jsx";
 import servicioPaseos from "../servicios/servicioPaseos.js";
 import CalendarioDinamico from "./CalendarioDinamico.jsx";
+import EditarUsuario from "./Modales/Editarusuario.jsx";
 
 
 const PerfilUsuario = () => {
@@ -31,12 +32,24 @@ const PerfilUsuario = () => {
         consultar: false,
         editar: false,
     });
+    const [modalsUsuario, setModalsUsuario] = useState({
+        crear: false,
+        consultar: false,
+        editar: false,
+    });
     const gestionarModal = (tipoModal, estadoAbierto) => {
       setModals((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
     };
     const consultarReporteDiario = (reporte) => {
       setReporteSeleccionado(reporte);
       gestionarModal("consultar",true)
+    };
+    const gestionarModalUsuario = (tipoModal, estadoAbierto) => {
+      setModalsUsuario((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
+    };
+    const editarUsuario = (reporte) => {
+      //setReporteSeleccionado(reporte);
+      gestionarModalUsuario("editar",true)
     };
     //Carga de datos del usuario
     useEffect(()=>{
@@ -224,7 +237,7 @@ const PerfilUsuario = () => {
               </h1>
               <button
                 className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded transition-colors ml-2"
-                onClick={() => editarAnimal()}
+                onClick={() => editarUsuario()}
               >
                 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                   <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
@@ -323,6 +336,9 @@ const PerfilUsuario = () => {
         {/* Modales */}
         <Modal isOpen={modals.consultar} onClose={() => gestionarModal("consultar", false)}>
           <ReporteDiarioConsultar reporte={reporteSeleccionado}/>
+        </Modal>
+        <Modal isOpen={modalsUsuario.editar} onClose={() => gestionarModalUsuario("editar", false)}>
+          <EditarUsuario usuario={usuarioInformacion} onClose={() => gestionarModalUsuario("editar", false)}/>
         </Modal>
       </div>
     );

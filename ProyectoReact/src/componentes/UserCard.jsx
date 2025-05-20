@@ -2,6 +2,8 @@ import { PlusCircle } from 'lucide-react';
 import { Link } from "react-router-dom";
 
 const UserCard = ({ usuario }) => {
+  const roles = Array.isArray(usuario.roles) ? usuario.roles : [];
+
   return (
     <div className="flex flex-col sm:flex-row items-center sm:items-start p-4 bg-white rounded-xl shadow-sm border w-full">
       {/* Imagen */}
@@ -21,7 +23,7 @@ const UserCard = ({ usuario }) => {
 
         {/* Roles como etiquetas */}
         <div className="flex flex-wrap gap-2 mt-2">
-          {usuario.roles.split(',').map((rol, index) => (
+          {roles.map((rol, index) => (
             <span
               key={index}
               className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"

@@ -279,6 +279,8 @@ const AgregarAnimal = ({onClose})=>{
                             type="number"
                             value={nivel}
                             name="nivel"
+                            min={0}
+                            max={5}
                             onChange={(e) => setNivel(e.target.value)}
                             required
                             className="w-full p-1 text-sm border border-gray-300 rounded mt-1"

@@ -5,10 +5,12 @@ import Modal from "./Modales/Modal.jsx";
 import Registro from "./Modales/RegistroUsuario.jsx";
 import AgregarAnimal from './Modales/AgregarAnimal.jsx';
 import UserCard from './UserCard';
+import UserCard2 from './UserCard2';
 import AnimalCard from './AnimalCard.jsx';
 import servicioAnimales from '../servicios/servicioAnimales.js';
 import servicioUsuarios from "../servicios/servicioUsuarios.js";
-import FiltroAnimales from "./FiltroAnimales"; // Asegúrate de importar el componente
+import FiltroAnimales from "./FiltroAnimales"; 
+import FiltroUsuarios from './FiltroUsuarios.jsx';
 
 const PaginaGestion = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -20,6 +22,12 @@ const PaginaGestion = () => {
         estado: ''
     });
     const [animalesFiltrado, setAnimalesFiltrado] = useState([]);
+    const [usuariosFiltrado, setUsuariosFiltrado] = useState([]);
+    const [errores, setErrores] = useState({});
+    const [filtros2, setFiltros2] = useState({
+        busqueda: '',
+        rol: ''
+    });
     const tabs = [
         { id: "usuarios", label: "Usuarios" },
         { id: "animales", label: "Animales" },
@@ -61,8 +69,20 @@ const PaginaGestion = () => {
         servicioUsuarios
             .buscaTodosUsuarios()
             .then((response) => {
-                setUsuarios(response.data);
-                console.log("Lista de usuarios:", response.data);
+                // Procesar usuarios: convertir roles a array si es string
+                const usuariosProcesados = response.data.map(usuario => {
+                    let rolesArray = usuario.roles;
+                    if (typeof rolesArray === "string") {
+                        rolesArray = rolesArray.split(',').map(r => r.trim());
+                    }
+                    return {
+                        ...usuario,
+                        roles: Array.isArray(rolesArray) ? rolesArray : []
+                    };
+                });
+                setUsuarios(usuariosProcesados);
+                setUsuariosFiltrado(usuariosProcesados);
+                console.log("Lista de usuarios:", usuariosProcesados);
             })
             .catch((error) => {
                 console.error("Error al cargar la lista de usuarios:", error);
@@ -110,7 +130,30 @@ const PaginaGestion = () => {
     const handleFiltrosChange = (nuevosFiltros) => {
         setFiltros(nuevosFiltros);
     };
+    useEffect(() => {
+        let filtrados = usuarios;
 
+        if (filtros2.busqueda && filtros2.busqueda.trim() !== '') {
+            const texto = filtros2.busqueda.toLowerCase();
+            filtrados = filtrados.filter(usuario =>
+                usuario.nombre.toLowerCase().includes(texto) ||
+                usuario.nombre_usuario.toLowerCase().includes(texto)
+            );
+        }
+        if (filtros2.rol) {
+            filtrados = filtrados.filter(usuario =>
+                Array.isArray(usuario.roles) &&
+                usuario.roles.some(
+                    rol => rol.toLowerCase() === filtros2.rol.toLowerCase()
+                )
+            );
+        }
+        setUsuariosFiltrado(filtrados);
+    }, [filtros2, usuarios]);
+
+    const handleFiltrosChange2 = (nuevosFiltros) => {
+        setFiltros2(nuevosFiltros);
+    };
     // Cargar datos al cambiar de pestaña
     useEffect(() => {
         if (activeTab === "usuarios") {
@@ -122,10 +165,8 @@ const PaginaGestion = () => {
     }, [activeTab]);
 
     return (
-        <div>
-            <h1>Pagina de Gestion</h1>
-            <p>Esta es la pagina de gestion de la aplicacion.</p>
-
+        <div className='p-[3%]'>
+           
             {/* Tabs */}
             <div className="tabs flex border-b border-gray-300 overflow-x-auto whitespace-nowrap no-scrollbar">
                 {tabs.map((tab) => (
@@ -147,15 +188,18 @@ const PaginaGestion = () => {
                 {activeTab === "usuarios" && (
                     <div>
                         <button type="button" 
-                            className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            className=" bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
                             onClick={() => crearRegistroUsuario()}>
-                                Registro Usuario
+                                Añadir Usuario
                         </button>
                         <h2 className="mt-4 text-lg font-bold">Lista de Usuarios</h2>
                         <p>Esta es la lista de usuarios registrados en la aplicación:</p>
+                        <div className="flex justify-center">
+                            <FiltroUsuarios filtros={filtros2} onFiltrosChange={handleFiltrosChange2} errores={errores} />
+                        </div>
                         <ul className="list-disc pl-5">
-                            {usuarios.map((usuario) => (
-                                <UserCard key={usuario.id_usuario} usuario={usuario} />
+                            {usuariosFiltrado.map((usuario) => (
+                                <UserCard2 key={usuario.id_usuario} usuario={usuario} />
                             ))}
                         </ul>
                     </div>
@@ -163,16 +207,25 @@ const PaginaGestion = () => {
                 {activeTab === "animales" && (
                     <div>
                         <button type="button" 
-                            className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
                             onClick={() => crearRegistroAnimal()}>
                                 Registro Animal
                         </button>
+                        <button type="button" 
+                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            >
+                                Agregar chenil
+                        </button>
+                        <button type="button" 
+                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            >
+                                Asignar chenil
+                        </button>
                         <h2 className="mt-4 text-lg font-bold">Gestión de Animales</h2>
                         <p>Contenido relacionado con la gestión de animales.</p>
-                        
-                        {/* FiltroAnimales aquí */}
-                        <FiltroAnimales filtros={filtros} onFiltrosChange={handleFiltrosChange} errores={{}} />
-
+                        <div className="flex justify-center">
+                            <FiltroAnimales filtros={filtros} onFiltrosChange={handleFiltrosChange} errores={{}} />
+                        </div>
                         <ul className="list-disc pl-5">
                             {(animalesFiltrado.length > 0 ? animalesFiltrado : animales).map((animal) => (
                                 <AnimalCard key={animal.id_animal} animal={animal} />
@@ -182,6 +235,11 @@ const PaginaGestion = () => {
                 )}
                 {activeTab === "reportesdiarios" && (
                     <div>
+                        <button type="button" 
+                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            >
+                                Agregar reporte
+                        </button>
                         <h2 className="mt-4 text-lg font-bold">Reportes Diarios</h2>
                         <p>Contenido relacionado con los reportes diarios.</p>
                     </div>

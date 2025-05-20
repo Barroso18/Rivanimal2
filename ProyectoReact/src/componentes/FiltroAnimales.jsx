@@ -71,12 +71,14 @@ const FiltroAnimales = ({ filtros, onFiltrosChange, errores }) => {
       <div>
         <label htmlFor="nivel">Nivel de animal: </label>
         <input
-          id="nivel"
-          type="number"
-          name="nivel"
-          value={filtros.nivel}
-          onChange={gestionarCambio}
-          className="border p-2"
+            id="nivel"
+            type="number"
+            name="nivel"
+            min={0}
+            max={5}
+            value={filtros.nivel}
+            onChange={gestionarCambio}
+            className="border p-2"
         />
         {errores?.nivel && <p className="error">{errores.nivel}</p>}
       </div>

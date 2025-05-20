@@ -50,16 +50,22 @@ const MenuSuperior = () => {
         )}
         <Link to="/Semana"><button className="item-menu text-sm sm:text-xl">Semana</button></Link>
         {/* Desplegable usuario */}
-        <div className="relative inline-block text-left">
+        <div
+          className="relative inline-block text-left"
+          onMouseEnter={() => setTogleUsuario(true)}
+        >
           <button
-            onClick={() => setTogleUsuario(!togleUsuario)}
             className="item-menu text-sm sm:text-xl"
+            // El onClick puede quedarse si quieres que funcione también en móvil
+            onClick={() => setTogleUsuario(true)}
+            type="button"
           >
             {user?.data.usuario}
             <ChevronDown className="ml-2 h-4 w-4 inline" />
           </button>
           {togleUsuario && (
-            <div className="absolute z-10 mt-2 w-48 origin-top-right rounded-md shadow-lg bg-black ring-1 ring-black ring-opacity-5">
+            <div className="absolute z-10 mt-2 w-48 origin-top-right rounded-md shadow-lg bg-black ring-1 ring-black ring-opacity-5" 
+              onMouseLeave={() => setTogleUsuario(false)}>
               <div className="py-1">
                 <Link to="/tu-perfil">
                   <button className="item-menu block px-4 py-2 text-xl">Tu perfil</button>
@@ -73,7 +79,7 @@ const MenuSuperior = () => {
 
       {/* Menú desplegable móvil */}
       {menuAbierto && (
-        <div className="w-full flex flex-col gap-2 mt-2 sm:hidden">
+        <div className="w-full flex flex-col gap-2 mt-2 sm:hidden" onMouseLeave={() => setMenuAbierto(!menuAbierto)}>
           <Link to="/"><button className="item-menu text-sm text-left">Inicio</button></Link>
           <Link to="/"><button className="item-menu text-sm text-left">Animales</button></Link>
           <Link to="/pagina-voluntarios"><button className="item-menu text-sm text-left">Voluntarios</button></Link>
