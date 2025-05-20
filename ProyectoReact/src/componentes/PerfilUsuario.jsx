@@ -10,6 +10,7 @@ import { ArrowLeft, ArrowRight } from "lucide-react";
 import Modal from "./Modales/Modal.jsx";
 import ReporteDiarioConsultar from "./Modales/ReporteDiarioConsultar.jsx";
 import servicioPaseos from "../servicios/servicioPaseos.js";
+import CalendarioDinamico from "./CalendarioDinamico.jsx";
 
 
 const PerfilUsuario = () => {
@@ -50,16 +51,14 @@ const PerfilUsuario = () => {
     function buscaFoto(){
         if(usuarioInformacion.foto === null || usuarioInformacion.foto === undefined || usuarioInformacion.foto === ""){
             return (
-                <div>
+                <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">
                     <img src="../imagenes/imagenUsuario.jpg" alt="Foto perfil usuario" />
-                    <button className="add-info-btn">Cambiar foto</button>
                 </div>);
 
         }else{
             return (<>{usuarioInformacion.foto ? (
-                <div>
+                <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">
                     <img src={usuarioInformacion.foto} alt="Foto perfil usuario" />
-                    <button className="boton-foto add-info-btn">Cambiar foto</button>
                 </div>
               ) : (
                 <p>Cargando imagen...</p>
@@ -212,108 +211,120 @@ const PerfilUsuario = () => {
 
     //Carga de la interfaz de perfil de usuario
     return (
-        <div className="usuario-perfil">
-            <div className="ficha-container">
-                <div className="foto">
-                  {/* Verificación condicional para evitar errores */}
-                  {buscaFoto()}
-                  
-                </div>
-                <div className="info text-gray-800 text-sm">
-                    <h1 className="titulo text-lg font-semibold mb-2">
-                    Info general <span className="nombre">{usuarioInformacion.nombre}</span>
-                    </h1>
-                    <div className="detalles">
-                        <p>
-                            <strong>Nombre:</strong> {usuarioInformacion.nombre}{" "}
-                        </p>
-                        <p>
-                            <strong>Apellidos:</strong> {usuarioInformacion.apellido1}, {usuarioInformacion.apellido2}
-                        </p>
-                        <p>
-                            <strong>Email:</strong> {usuarioInformacion.email}
-                        </p>
-                        <p>
-                            <strong>Licencia PPP:</strong> {usuarioInformacion.licenciaPPP ? "Sí" : "No"}
-                        </p>
-                        <p>
-                            <strong>Movil:</strong>{" "}
-                            {usuarioInformacion.telefono}{" "}
-                        </p>
-                        <p>
-                            <strong>Nombre de usuario:</strong> {usuarioInformacion.nombre_usuario}
-                        </p>
-                        <p>
-                            <strong>Direccion:</strong> {usuarioInformacion.direccion}
-                        </p>
-                        <p>
-                            <strong>DNI:</strong> {usuarioInformacion.dni}
-                        </p>
-                        <p>
-                            <strong>Cambio de contraseña:</strong> Link
-                        </p>
-                    </div>
-                </div>
+      <div className="usuario-perfil flex flex-col items-center w-[90%] mx-auto">
+        <div className="ficha-container flex flex-col md:flex-row items-center justify-center w-full max-w-6xl my-8">
+          {/* Foto con ancho fijo y menor que el de info */}
+          <div className="flex justify-center items-center w-full md:w-1/3 mb-4 md:mb-0">
+            {buscaFoto()}
+          </div>
+          <div className="info text-gray-800 text-sm flex flex-col items-center w-full md:w-2/3">
+            <div className="flex items-center justify-between w-full mb-2">
+              <h1 className="titulo text-lg font-semibold text-center text-red-700">
+                Info general <span className="nombre">{usuarioInformacion.nombre}</span>
+              </h1>
+              <button
+                className="bg-orange-500 hover:bg-orange-600 text-white p-2 rounded transition-colors ml-2"
+                onClick={() => editarAnimal()}
+              >
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+                  <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+                </svg>
+              </button>
             </div>
-            <div className= "fila">
-
-                <div className="tabs-container border border-gray-300 rounded-md overflow-hidden mb-4">
-                    {/* Columna para los tabs */}
-                    {/* Tabs */}
-                    <div className="tabs border-b border-gray-300">
-                        <button
-                            className={`tab px-4 py-2 ${
-                            activeTab === "roles"
-                                ? "border-b-2 border-blue-500 text-blue-500"
-                                : "text-gray-500"
-                            }`}
-                            onClick={() => setActiveTab("roles")}
-                        >
-                            Roles
-                        </button>
-                        <button
-                            className={`tab px-4 py-2 ${
-                            activeTab === "reportes"
-                                ? "border-b-2 border-blue-500 text-blue-500"
-                                : "text-gray-500"
-                            }`}
-                            onClick={() => setActiveTab("reportes")}
-                        >
-                            Reportes diarios
-                        </button>
-                        <button
-                            className={`tab px-4 py-2 ${
-                            activeTab === "animales"
-                                ? "border-b-2 border-blue-500 text-blue-500"
-                                : "text-gray-500"
-                            }`}
-                            onClick={() => setActiveTab("animales")}
-                        >
-                            Animales cuidados
-                        </button>
-                    </div>
-                    {/* Contenido de las tabs */}
-                    <div className="tab-content mt-4">
-                        {activeTab === "roles" && (
-                            <div>{user?.data.roles}</div>
-                        )}
-                        {activeTab === "reportes" && (
-                            visualizaReportesDiarios()
-                        )}
-                        {activeTab === "animales" && (
-                            visualizaAnimalesCuidados()
-                        )}
-                    </div>
-                </div>
-                <div>{/* Columna para el calendario */}
-
-                </div>
-            </div> 
-            {/* Modales */}
-            <Modal isOpen={modals.consultar} onClose={() => gestionarModal("consultar", false)}>
-              <ReporteDiarioConsultar reporte={reporteSeleccionado}/>
-            </Modal>
+            <div className="detalles w-full bg-gray-100 p-4 rounded-md">
+              <p>
+                  <strong>Nombre:</strong> {usuarioInformacion.nombre}{" "}
+              </p>
+              <p>
+                  <strong>Apellidos:</strong> {usuarioInformacion.apellido1}, {usuarioInformacion.apellido2}
+              </p>
+              <p>
+                  <strong>Email:</strong> {usuarioInformacion.email}
+              </p>
+              <p>
+                  <strong>Licencia PPP:</strong> {usuarioInformacion.licenciaPPP ? "Sí" : "No"}
+              </p>
+              <p>
+                  <strong>Movil:</strong>{" "}
+                  {usuarioInformacion.telefono}{" "}
+              </p>
+              <p>
+                  <strong>Nombre de usuario:</strong> {usuarioInformacion.nombre_usuario}
+              </p>
+              <p>
+                  <strong>Direccion:</strong> {usuarioInformacion.direccion}
+              </p>
+              <p>
+                  <strong>DNI:</strong> {usuarioInformacion.dni}
+              </p>
+              <p>
+                  <strong>Cambio de contraseña:</strong> Link
+              </p>
+            </div>
+          </div>
         </div>
+        {/* Fila de tabs y calendario alineados al centro */}
+        <div className="fila w-full flex flex-col lg:flex-row items-start justify-center">
+          <div className="flex flex-col lg:flex-row w-full gap-6 items-start justify-center">
+            {/* Tabs */}
+            <div className="tabs-container border border-gray-300 rounded-md overflow-hidden mb-4 w-full max-w-4xl lg:w-2/3">
+              {/* Columna para los tabs */}
+              <div className="tabs border-b border-gray-300">
+                <button
+                  className={`tab px-4 py-2 ${
+                    activeTab === "roles"
+                      ? "border-b-2 border-blue-500 text-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveTab("roles")}
+                >
+                  Roles
+                </button>
+                <button
+                  className={`tab px-4 py-2 ${
+                    activeTab === "reportes"
+                      ? "border-b-2 border-blue-500 text-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveTab("reportes")}
+                >
+                  Reportes diarios
+                </button>
+                <button
+                  className={`tab px-4 py-2 ${
+                    activeTab === "animales"
+                      ? "border-b-2 border-blue-500 text-blue-500"
+                      : "text-gray-500"
+                  }`}
+                  onClick={() => setActiveTab("animales")}
+                >
+                  Animales cuidados
+                </button>
+              </div>
+              {/* Contenido de las tabs */}
+              <div className="tab-content mt-4">
+                {activeTab === "roles" && (
+                  <div>{user?.data.roles}</div>
+                )}
+                {activeTab === "reportes" && (
+                  visualizaReportesDiarios()
+                )}
+                {activeTab === "animales" && (
+                  visualizaAnimalesCuidados()
+                )}
+              </div>
+            </div>
+            {/* Calendario al lado de los tabs */}
+            <div className="w-full lg:w-1/3 flex justify-center mb-4 lg:mb-0">
+              <CalendarioDinamico reportesDiarios={reportesDiarios} />
+            </div>
+          </div>
+        </div>
+        {/* Modales */}
+        <Modal isOpen={modals.consultar} onClose={() => gestionarModal("consultar", false)}>
+          <ReporteDiarioConsultar reporte={reporteSeleccionado}/>
+        </Modal>
+      </div>
     );
 }
 export default PerfilUsuario;

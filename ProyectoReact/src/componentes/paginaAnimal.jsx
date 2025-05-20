@@ -416,7 +416,16 @@ const PaginaAnimal = () => {
     const rolesUsuario = user.data.roles; // Asumiendo que los roles del usuario están en `user.data.roles`
     const tieneAcceso = Roles.soloAdmin.some((rol) => rolesUsuario.includes(rol));
     if(tieneAcceso){
-      return (<button className="add-info-btn" onClick={() => editarAnimal()}>Editar</button> );
+      return (
+        <button
+          className=" bg-orange-500 hover:bg-orange-600 text-white p-2 rounded transition-colors"
+          onClick={() => editarAnimal()}
+        >
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
+            <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
+          </svg>
+        </button>
+      );
     }
   }
   function agregarBotonesReportes(){
@@ -471,7 +480,9 @@ const PaginaAnimal = () => {
 
   return (
     <div className="animal px-4 py-6">
-      <div className="ficha-container bg-white shadow-md rounded-xl p-4 flex flex-col md:flex-row gap-6 max-w-3xl mx-auto">
+      <div className="ficha-container bg-white shadow-md rounded-xl p-4 flex flex-col md:flex-row gap-6 max-w-3xl mx-auto relative">
+        {/* Botón editar en la esquina superior derecha */}
+        
         <div className="foto flex-shrink-0 w-full md:w-1/2 flex justify-center">
           {/* Verificación condicional para evitar errores */}
           {animalInformacion.foto ? (
@@ -485,10 +496,12 @@ const PaginaAnimal = () => {
           )}
         </div>
         <div className="info text-gray-800 text-sm w-full md:w-1/2">
-        {muestraBotonEditar()}
-          <h1 className="titulo text-xl font-semibold text-red-700 mb-2">
-            Ficha de <span className="nombre">{animalInformacion.nombre}</span>
-          </h1>
+          <div className="flex items-center justify-between">
+            <h1 className="titulo text-xl font-semibold text-red-700 mb-2">
+              Ficha de <span className="nombre">{animalInformacion.nombre}</span>
+            </h1>
+            {muestraBotonEditar()}
+          </div>
           <span className="adopcion inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded mb-4">
             <i>💚 En adopción</i>
           </span>

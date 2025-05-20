@@ -8,9 +8,18 @@ import UserCard from './UserCard';
 import AnimalCard from './AnimalCard.jsx';
 import servicioAnimales from '../servicios/servicioAnimales.js';
 import servicioUsuarios from "../servicios/servicioUsuarios.js";
+import FiltroAnimales from "./FiltroAnimales"; // Asegúrate de importar el componente
+
 const PaginaGestion = () => {
     const [usuarios, setUsuarios] = useState([]);
     const [animales,setAnimales] = useState([]);
+    const [filtros, setFiltros] = useState({
+        animal: '',
+        nivel: '',
+        clase: '',
+        estado: ''
+    });
+    const [animalesFiltrado, setAnimalesFiltrado] = useState([]);
     const tabs = [
         { id: "usuarios", label: "Usuarios" },
         { id: "animales", label: "Animales" },
@@ -71,6 +80,37 @@ const PaginaGestion = () => {
         });
     };
 
+    // Filtrado en tiempo real usando los filtros del componente externo
+    useEffect(() => {
+        let filtrados = animales;
+
+        if (filtros.animal.trim() !== '') {
+            filtrados = filtrados.filter(animal =>
+                animal.nombre.toLowerCase().includes(filtros.animal.toLowerCase())
+            );
+        }
+        if (filtros.nivel !== undefined && filtros.nivel !== '' && !isNaN(filtros.nivel)) {
+            filtrados = filtrados.filter(animal =>
+                String(animal.nivel) === String(filtros.nivel)
+            );
+        }
+        if (filtros.clase) {
+            filtrados = filtrados.filter(animal =>
+                animal.clase && animal.clase.toLowerCase() === filtros.clase.toLowerCase()
+            );
+        }
+        if (filtros.estado) {
+            filtrados = filtrados.filter(animal =>
+                animal.situacion && animal.situacion.toLowerCase() === filtros.estado.toLowerCase()
+            );
+        }
+        setAnimalesFiltrado(filtrados);
+    }, [filtros, animales]);
+
+    const handleFiltrosChange = (nuevosFiltros) => {
+        setFiltros(nuevosFiltros);
+    };
+
     // Cargar datos al cambiar de pestaña
     useEffect(() => {
         if (activeTab === "usuarios") {
@@ -129,8 +169,12 @@ const PaginaGestion = () => {
                         </button>
                         <h2 className="mt-4 text-lg font-bold">Gestión de Animales</h2>
                         <p>Contenido relacionado con la gestión de animales.</p>
+                        
+                        {/* FiltroAnimales aquí */}
+                        <FiltroAnimales filtros={filtros} onFiltrosChange={handleFiltrosChange} errores={{}} />
+
                         <ul className="list-disc pl-5">
-                            {animales.map((animal) => (
+                            {(animalesFiltrado.length > 0 ? animalesFiltrado : animales).map((animal) => (
                                 <AnimalCard key={animal.id_animal} animal={animal} />
                             ))}
                         </ul>
