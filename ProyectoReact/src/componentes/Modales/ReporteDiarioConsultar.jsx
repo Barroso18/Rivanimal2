@@ -7,7 +7,7 @@ import ListaReportesGatos from "../ListaReportesGatos.jsx";
 import ListaReportesPaseos from "../ListaReportesPaseos.jsx";
 
 function ReporteDiarioConsultar({ reporte, onClose }) {
-  console.log("Reporte diario:", reporte);
+  //console.log("Reporte diario:", reporte);
   const [activeTab, setActiveTab] = useState("paseos");
   const [paseos, setPaseos] = useState([]);
   const [repGatos, setRepGatos] = useState([]);
@@ -29,7 +29,7 @@ function ReporteDiarioConsultar({ reporte, onClose }) {
     servicioPaseos
       .getPaseosPorReporteDiario(reporte.id_reporte_diario)
       .then((response) => {
-        console.log("Paseos del reporte diario:", response.data);
+        //console.log("Paseos del reporte diario:", response.data);
         setPaseos(response.data);
       })
       .catch((error) => {

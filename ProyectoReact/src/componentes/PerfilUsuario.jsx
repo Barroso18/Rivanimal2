@@ -11,7 +11,7 @@ import Modal from "./Modales/Modal.jsx";
 import ReporteDiarioConsultar from "./Modales/ReporteDiarioConsultar.jsx";
 import servicioPaseos from "../servicios/servicioPaseos.js";
 import CalendarioDinamico from "./CalendarioDinamico.jsx";
-import EditarUsuario from "./Modales/Editarusuario.jsx";
+import EditarUsuario from "./Modales/EditarUsuario.jsx";
 
 
 const PerfilUsuario = () => {
@@ -61,6 +61,15 @@ const PerfilUsuario = () => {
         })
         .catch((error) => console.error("Error al obtener los datos del usuario:", error));
     }, [user?.data.id])
+    const recargaUsuario = () =>{
+       const idUsuario = user?.data.id;
+        ServicioUsuarios.buscaPorIdCompleto(idUsuario)
+        .then((response) => {
+            setUsuarioInformacion(response.data);
+            cargaReportesDiarios(idUsuario);
+        })
+        .catch((error) => console.error("Error al obtener los datos del usuario:", error));
+    }
     function buscaFoto(){
         if(usuarioInformacion.foto === null || usuarioInformacion.foto === undefined || usuarioInformacion.foto === ""){
             return (
@@ -338,7 +347,10 @@ const PerfilUsuario = () => {
           <ReporteDiarioConsultar reporte={reporteSeleccionado}/>
         </Modal>
         <Modal isOpen={modalsUsuario.editar} onClose={() => gestionarModalUsuario("editar", false)}>
-          <EditarUsuario usuario={usuarioInformacion} onClose={() => gestionarModalUsuario("editar", false)}/>
+          <EditarUsuario usuario={usuarioInformacion} onClose={() => {
+            gestionarModalUsuario("editar", false);
+            recargaUsuario();
+            }}/>
         </Modal>
       </div>
     );

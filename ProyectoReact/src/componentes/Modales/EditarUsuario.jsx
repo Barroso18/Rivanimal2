@@ -9,26 +9,25 @@ import Roles from '../Roles';
 import Swal from "sweetalert2";
 
 ///////////////////////////////////
-//SIN TERMINAR
+//SIN TERMINAR Este debe de ser para un usuario con rol admin
 //////////////////////////////////
-const EditarUsuario = ({onClose}) => {
-    const [nombre, setNombre] = useState('');
-    const [apellido1, setApellido1] = useState('');
-    const [apellido2, setApellido2] = useState('');
-    const [contrasena, setContrasena] = useState('');
-    const [nombreUsuario, setNombreUsuario] = useState('');
-    const [roles, setRoles] = useState('');
-    const [dni, setDni] = useState('');
-    const [telefono, setTelefono] = useState('');
-    const [email, setEmail] = useState('');
-    const [direccion, setDireccion] = useState('');
-    const [foto, setFoto] = useState('');
-    const [licenciaPPP, setLicenciaPPP] = useState(false);
+const EditarUsuario = ({usuario,onClose}) => {
+    const [nombre, setNombre] = useState(usuario.nombre);
+    const [apellido1, setApellido1] = useState(usuario.apellido1);
+    const [apellido2, setApellido2] = useState(usuario.apellido2);
+    const [nombreUsuario, setNombreUsuario] = useState(usuario.nombre_usuario);
+    const [roles, setRoles] = useState(usuario.roles);
+    const [dni, setDni] = useState(usuario.dni);
+    const [telefono, setTelefono] = useState(usuario.telefono);
+    const [email, setEmail] = useState(usuario.email);
+    const [direccion, setDireccion] = useState(usuario.direccion);
+    const [foto, setFoto] = useState(usuario.foto);
+    const [licenciaPPP, setLicenciaPPP] = useState(usuario.licenciaPPP);
     const [mensaje, setMensaje] = useState('');
       const [error, setError] = useState('');
     const [errores, setErrores] = useState('');
-    const [image, setImage] = useState(null);
-    const [preview, setPreview] = useState(null);
+    const [image, setImage] = useState(usuario.foto);
+    const [preview, setPreview] = useState(usuario.foto);
     const navigate = useNavigate();
     const [message, setMessage] = useState("");
 
@@ -60,7 +59,6 @@ const EditarUsuario = ({onClose}) => {
       setNombre('');
       setApellido1('');
       setApellido2('');
-      setContrasena('');
       setNombreUsuario('');
       setRoles([]);
       setDni('');
@@ -78,10 +76,10 @@ const EditarUsuario = ({onClose}) => {
       e.preventDefault();        
       // Crear un objeto FormData para enviar los datos
       const formData = new FormData();
+      formData.append("id_usuario",usuario.id_usuario);
       formData.append("nombre", nombre);
       formData.append("apellido1", apellido1);
       formData.append("apellido2", apellido2);
-      formData.append("contrasena", contrasena);
       formData.append("nombreUsuario", nombreUsuario);
       formData.append("roles", roles);
       formData.append("dni", dni);
@@ -92,10 +90,10 @@ const EditarUsuario = ({onClose}) => {
       if (foto) {
           formData.append("file", foto); // Adjuntar la imagen
       }
-      await servicioUsuarios.registro(formData)
+      await servicioUsuarios.actualiza(formData)
         .then((response) => {
-          if (response.data.message === "Registro exitoso") {
-            setMensaje("Usuario registrado correctamente");
+          if (response.data.message === "Actualización exitosa") {
+            setMensaje("Usuario actualizado correctamente");
             setError("");
             resetFormulario();
             Swal.fire({
@@ -129,7 +127,7 @@ const EditarUsuario = ({onClose}) => {
               >
                 ✖
               </button>
-              <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Registro</h2>
+              <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Editar usuario</h2>
           
               <form onSubmit={controlaRegistro} className="space-y-6">
 
@@ -190,17 +188,6 @@ const EditarUsuario = ({onClose}) => {
                       value={nombreUsuario}
                       name="nombreUsuario"
                       onChange={(e) => setNombreUsuario(e.target.value)}
-                      required
-                      className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
-                    />
-                  </div>
-                  <div className="flex-1 min-w-[150px]">
-                    <label className="block text-sm font-medium text-gray-600">Contraseña:</label>
-                    <input
-                      type="password"
-                      value={contrasena}
-                      name="contrasena"
-                      onChange={(e) => setContrasena(e.target.value)}
                       required
                       className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
                     />

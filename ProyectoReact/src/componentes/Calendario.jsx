@@ -5,7 +5,7 @@ import Modal from "./Modales/Modal.jsx";
 import ReporteDiarioCrear from "./Modales/ReporteDiarioCrear.jsx";
 import { useAuth } from '../Login/AuthProvider';
 import ReporteDiarioConsultar from "./Modales/ReporteDiarioConsultar.jsx";
-
+import servicioReporteDiario from "../servicios/servicioReporteDiario.js";
 
 const Calendario = () => {
   const [reporteSeleccionado, setReporteSeleccionado] = useState(null);
@@ -31,18 +31,7 @@ const Calendario = () => {
       };
     });
   };
-/*
-  useEffect(() => {
-    let funcion= "reportesdiario";
-    fetch(`http://localhost/Rivanimal2/FuncionesPHP/calendario.php?funcion=${funcion}`) // Asegúrate de que la URL es correcta
-      .then((response) => response.json())
-      .then((data) => setReportesDia(data))
-      .catch((error) => console.error("Error al obtener los animales:", error));
-  }, []);
-*/
 
-
-  
   //Constantes para gestionar los modales
   const [modals, setModals] = useState({
       crear: false,
@@ -82,37 +71,18 @@ const Calendario = () => {
     const funcion = "reportesdiario";
     const datosEnviar = {
       funcion,
-      fecha_inicial: `${semana[0].año}-${String(semana[0].mesnum).padStart(2, '0')}-${String(semana[0].diaMes).padStart(2, '0')}`, // Formato YYYY-MM-DD
-      fecha_final: `${semana[6].año}-${String(semana[6].mesnum).padStart(2, '0')}-${String(semana[6].diaMes).padStart(2, '0')}` // Formato YYYY-MM-DD
+      fecha_inicial: `${semana[0].año}-${String(semana[0].mesnum).padStart(2, '0')}-${String(semana[0].diaMes).padStart(2, '0')}`,
+      fecha_final: `${semana[6].año}-${String(semana[6].mesnum).padStart(2, '0')}-${String(semana[6].diaMes).padStart(2, '0')}`
     };
-    try {
-      const response = await fetch('http://localhost/Rivanimal2/FuncionesPHP/calendario.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json', // Tipo de contenido JSON
-        },
-        body: JSON.stringify(datosEnviar), // Convertir los datos a JSON
+    await servicioReporteDiario.buscaReportesDiariosSemana(datosEnviar)
+      .then((response) => {
+        const data = response.data;
+        setReportesDia(Array.isArray(data) ? data : []);
+      })
+      .catch((error) => {
+        console.error("Error al enviar los datos:", error);
+        setReportesDia([]);
       });
-  
-      if (!response.ok) {
-        const errorText = await response.text(); // Obtener el texto del error para depuración
-        throw new Error(`Error en la solicitud: ${response.status} - ${errorText}`);
-      }
-  
-      const data = await response.json(); // Convertir la respuesta a JSON
-      //console.log("Respuesta del servidor:", data);
-  
-      if (Array.isArray(data)) {
-        setReportesDia(data); // Actualizar el estado con los datos recibidos
-      } else {
-        if(data.error != 1 && data.error != 2){ 
-          console.error("La respuesta no tiene el formato esperado:", data);
-        }
-        
-      }
-    } catch (error) {
-      console.error("Error al enviar los datos:", error);
-    }
   };
   
   const abrDiaSemana = (dia) => {

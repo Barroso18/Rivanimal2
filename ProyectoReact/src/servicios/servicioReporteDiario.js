@@ -11,5 +11,12 @@ class ServicioReporteDiario {
     buscarReportesDiariosPorUsuario(idusuario){
         return https.post(`/reporte_diario.php?funcion=buscarPorUsuario`, { idusuario });
     }
+    buscaReportesDiariosSemana(datosRegistro){
+        return https.post(`/calendario.php`, datosRegistro, {
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        });
+    }
 }
 export default new ServicioReporteDiario();

@@ -16,6 +16,12 @@ class ServicioUsuario {
            'Content-Type': 'multipart/form-data',
          }});
    }
+   async actualiza(datosRegistro) {
+      return https.post(`/usuarios.php?funcion=actualiza`, datosRegistro ,{
+         headers: {
+           'Content-Type': 'multipart/form-data',
+         }});
+   }
    buscaPorNombre(usuario){
       return https.post(`/usuarios.php?funcion=buscaPorNombre`, { usuario });
    }
