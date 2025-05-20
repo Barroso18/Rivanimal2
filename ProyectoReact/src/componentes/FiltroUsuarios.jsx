@@ -48,7 +48,7 @@ const FiltroUsuarios = ({ filtros, onFiltrosChange, errores }) => {
         </select>
         {errores?.rol && <p className="error">{errores.rol}</p>}
       </div>
-      <button onClick={eliminarFiltros} type="button" className="add-info-btn h-10 mt-4 md:mt-0">Todos</button>
+      <button onClick={eliminarFiltros} type="button" className="bg-orange-500 hover:bg-orange-600 text-white rounded-md h-10 mt-4 md:mt-0">Todos</button>
     </div>
   );
 };

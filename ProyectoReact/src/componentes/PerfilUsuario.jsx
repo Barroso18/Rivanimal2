@@ -214,7 +214,7 @@ const PerfilUsuario = () => {
                     {/*  onClick={() => consultarPaseo(reporte)}*/}
                       <button
                         onClick={() => consultarReporteDiario(reporte)}
-                        className="flex items-center gap-2 bg-purple-300 text-white px-4 py-2 rounded-xl shadow-md hover:bg-purple-400 transition"
+                        className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-xl shadow-md transition"
                       >
                         <span className="text-lg">I</span>
                         Mas info
@@ -338,7 +338,10 @@ const PerfilUsuario = () => {
             </div>
             {/* Calendario al lado de los tabs */}
             <div className="w-full lg:w-1/3 flex justify-center mb-4 lg:mb-0">
-              <CalendarioDinamico reportesDiarios={reportesDiarios} />
+              <CalendarioDinamico
+                reportesDiarios={reportesDiarios}
+                onRecargarReportes={() => cargaReportesDiarios(usuarioInformacion.id_usuario)}
+              />
             </div>
           </div>
         </div>

@@ -280,7 +280,10 @@ const PerfilUsuarioPublico = () => {
               </div>
               {/* Calendario al lado de los tabs */}
               <div className="w-full lg:w-1/3 flex justify-center mb-4 lg:mb-0">
-                  <CalendarioDinamico reportesDiarios={reportesDiarios} />
+                  <CalendarioDinamico
+                    reportesDiarios={reportesDiarios}
+                    onRecargarReportes={() => cargaReportesDiarios(usuarioInformacion.id_usuario)}
+                  />
               </div>
             </div>
           </div> 

@@ -1,12 +1,14 @@
 import React, { useState } from 'react';
-import Modal from './Modales/Modal'; // Asegúrate de importar tu componente Modal
-import ReporteDiarioConsultar from './Modales/ReporteDiarioConsultar'; // Importa el modal de consulta
+import Modal from './Modales/Modal'; 
+import ReporteDiarioConsultar from './Modales/ReporteDiarioConsultar'; 
+import ReporteDiarioCrear from './Modales/ReporteDiarioCrear';
 
 const diasSemana = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-function CalendarioDinamico({ reportesDiarios = [] }) {
+function CalendarioDinamico({ reportesDiarios = [], onRecargarReportes }) {
   const [fechaActual, setFechaActual] = useState(new Date());
   const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalAbiertoRepCrear,setModalAbiertoRepCrear] = useState(false);
   const [reporteSeleccionado, setReporteSeleccionado] = useState(null);
 
   const obtenerDiasDelMes = (año, mes) => {
@@ -80,6 +82,14 @@ function CalendarioDinamico({ reportesDiarios = [] }) {
     year: 'numeric'
   });
 
+  // Al cerrar el modal de crear, recarga los reportes diarios
+  const handleCerrarCrear = () => {
+    setModalAbiertoRepCrear(false);
+    if (typeof onRecargarReportes === "function") {
+      onRecargarReportes();
+    }
+  };
+
   return (
     <div className="bg-white p-8 rounded-xl shadow-lg w-full max-w-md">
       <div className="flex justify-between items-center mb-6">
@@ -104,7 +114,8 @@ function CalendarioDinamico({ reportesDiarios = [] }) {
       </div>
       <div className="grid grid-cols-7 gap-3 text-center">{renderizarDias()}</div>
       <div className="mt-6 text-center">
-        <button className="bg-purple-600 text-white px-6 py-3 rounded-full hover:bg-purple-700 transition text-lg">
+        <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full transition text-lg"
+        onClick={() =>setModalAbiertoRepCrear(true)}>
           Apuntarse
         </button>
       </div>
@@ -112,6 +123,9 @@ function CalendarioDinamico({ reportesDiarios = [] }) {
         {reporteSeleccionado && (
           <ReporteDiarioConsultar reporte={reporteSeleccionado} />
         )}
+      </Modal>
+      <Modal isOpen={modalAbiertoRepCrear} onClose={handleCerrarCrear}>
+        <ReporteDiarioCrear onClose={handleCerrarCrear} />
       </Modal>
     </div>
   );
