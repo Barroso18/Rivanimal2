@@ -31,10 +31,20 @@ const Login = () => {
 
   };
   return (
-    <div>
-      
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-500 to-teal-500">
-      <div className="bg-white p-8 rounded-lg shadow-lg w-96">
+    <div
+      className="min-h-screen flex flex-col items-center justify-center"
+      style={{
+        backgroundImage: "url('/imagenes/fondo-huellas.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
+      <div className="flex items-center justify-center gap-4 my-6">
+        <img src='/imagenes/logoRivanimal.jpg' className="h-20 object-contain" alt="Logo Rivanimal" />
+        <img src='/imagenes/logo-texto.jpg' className="h-20 object-contain" alt="Logo texto" />
+      </div>
+      <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -64,13 +74,12 @@ const Login = () => {
           {error && <p style={{ color: 'red' }}>{error}</p>}
           <button
             type="submit"
-            className="w-full bg-blue-500 text-white p-3 rounded-md hover:bg-blue-600"
+            className="w-full bg-green-500 text-white p-3 rounded-md hover:bg-green-600"
           >
             Iniciar Sesión
           </button>
         </form>
       </div>
-    </div>
     </div>
   );
 };

@@ -245,10 +245,9 @@ const PaginaAnimal = () => {
     }
   }
   function filtrarInfo(filtro) {
-    if (tratamientos != null) {
-      if(buscaTratamientoTipo(filtro, tratamientos) != null){
-        const tratamientosFiltrado = buscaTratamientoTipo(filtro, tratamientos);
-        //return tratamientosFiltrado;
+    if (tratamientos !== null) {
+      const tratamientosFiltrado = buscaTratamientoTipo(filtro, tratamientos);
+      if (tratamientosFiltrado && tratamientosFiltrado.length > 0) {
         return (
           <div className="overflow-x-auto">
             <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-left">
@@ -275,9 +274,17 @@ const PaginaAnimal = () => {
             </table>
           </div>
         );
+      }else{
+        return (
+          <p className="p-4">No hay registros</p>
+        );
       }
       
     }
+    return (
+      <p className="p-4">No hay registros</p>
+    );
+    /*
     return (
           <div className="overflow-x-auto">
             <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-left">
@@ -302,6 +309,7 @@ const PaginaAnimal = () => {
             </table>
           </div>
     );
+    */
   }
 
   async function cargaUsuariosCuidadores(id_animal){
@@ -326,7 +334,7 @@ const PaginaAnimal = () => {
 
     const visualizaUsuariosCuidadores = () => {
       if (!usuarios || usuarios.length === 0) {
-        return <p>No hay usuarios cuidadores.</p>;
+        return <p className="p-4">No hay usuarios cuidadores.</p>;
       }
       return (
         <div className="overflow-x-auto">
@@ -552,18 +560,25 @@ const PaginaAnimal = () => {
         <div className="tab-content mt-4">
           {activeTab === "salud" && (
             <div className="p-4">
+              <h1>Información de tratamientos veterinarios</h1>
               {filtrarInfo("veterinario")}
             </div>
           )}
 
           {activeTab === "higiene" && (
-            <div className="higiene p-4">Información de la higiene del animal.</div>
+            <div className="higiene p-4">
+              <h1>Información de los baños y tratamientos de higiene</h1>
+              {filtrarInfo("higiene")}
+            </div>
           )}
           {esPerro2()}
           
 
           {activeTab === "alimentacion" && (
-            <div className="p-4">{filtrarInfo("alimentacion")}</div>
+            <div className="p-4">
+              <h1>Información de las dietas y alimentación</h1>
+              {filtrarInfo("alimentacion")}
+            </div>
           )}
           {activeTab === "socializacion" && (
             <div className="p-4">Socialización con personas y otros animales.</div>

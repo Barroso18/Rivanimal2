@@ -21,7 +21,7 @@ const ListaReportesPaseos = ({ reportes }) => {
         gestionarModalPaseo("consultar", true); // Abre el modal de consulta
     };
     if (reportes == null || reportes.length == 0) {
-        return <p>No hay reportes registrados</p>;
+        return <p className="p-4">No hay reportes registrados</p>;
     } else {
         const totalPaginas = Math.ceil(reportes.length / elementosPorPagina);
 

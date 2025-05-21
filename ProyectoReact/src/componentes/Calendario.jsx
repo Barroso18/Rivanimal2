@@ -231,7 +231,7 @@ const Calendario = () => {
   {/* Botón de acción */}
   <div className="flex justify-center mt-4">
     <button
-      className="bg-purple-600 text-white px-4 py-2 rounded hover:bg-purple-700 transition"
+      className="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700 transition"
       onClick={() => crearReporteDiario()}
     >
       APÚNTAME
