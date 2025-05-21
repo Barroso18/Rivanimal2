@@ -107,7 +107,7 @@ if($funcion === 'actualiza'){
     // Procesa la foto si fue enviada
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $fotoNombre = $nombre_usuario . '.' . $extension;
+        $fotoNombre = 'U_'.$nombre_usuario . '.' . $extension;
         $carpetaFotos = "../ProyectoReact/public/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
@@ -116,7 +116,7 @@ if($funcion === 'actualiza'){
         }
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
-            $foto = "../imagenes/U_".$fotoNombre;
+            $foto = "../imagenes/".$fotoNombre;
         } else {
             echo json_encode(["message" => "Error al subir la foto"]);
             exit();
