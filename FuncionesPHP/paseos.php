@@ -43,6 +43,16 @@ if($funcion === 'buscaAnimalPorUsuario'){
     }
     echo json_encode(buscaAnimalPorUsuario($conn, $usuario));
 }
+if($funcion === 'borraPaseoPorId'){
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['idPaseo'])) {
+        $id_paseo = $input['idPaseo'];
+    } else {
+        echo json_encode(array("mensaje" => "ID de paseo no proporcionado"));
+        exit;
+    }
+    echo borraPaseoPorId($conn, $id_paseo);
+}
 if($funcion=== 'agregaPaseo'){
     $voluntario = $_POST['voluntario'] ?? '';
     $animal = $_POST['animal'] ?? 0;

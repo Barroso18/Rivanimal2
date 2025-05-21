@@ -116,7 +116,7 @@ if($funcion === 'actualiza'){
         }
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
-            $foto = "../imagenes/".$fotoNombre;
+            $foto = "../imagenes/U_".$fotoNombre;
         } else {
             echo json_encode(["message" => "Error al subir la foto"]);
             exit();
@@ -143,5 +143,15 @@ if($funcion === 'actualiza'){
 
     $stmt->close();
     $conn->close();
+}
+if($funcion === 'borraPorId'){
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['idusuario'])) {
+        $idusuario = $input['idusuario'];
+    } else {
+        echo json_encode(array("error" => "ID de usuario no proporcionado"));
+        exit;
+    }
+    echo borraUsuarioPorId($conn, $idusuario);
 }
 ?>

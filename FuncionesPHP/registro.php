@@ -83,7 +83,7 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
     }
 
     if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
-        $foto = "../imagenes/".$fotoNombre;
+        $foto = "../imagenes/U_".$fotoNombre;
     } else {
         echo json_encode(["message" => "Error al subir la foto"]);
         exit();

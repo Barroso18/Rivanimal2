@@ -37,6 +37,9 @@ class ServicioUsuario {
    buscaTodosUsuarios(){
       return https.post(`/usuarios.php?funcion=buscaTodos`);
    }
+   borraUsuarioPorId(idusuario){
+      return https.post(`/usuarios.php?funcion=borraPorId`,{idusuario});
+   }
 }
 
 export default new ServicioUsuario();

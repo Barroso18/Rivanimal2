@@ -101,4 +101,14 @@ if($funcion=== 'agregaReporteGato'){
     
     echo agregaReporteGato($conn, $voluntario, $animal, $reporte_diario, $caca_nivel, $descripcion, $fecha_hora_inicio, $fecha_hora_fin);
 }
+if($funcion === 'borraPorId'){
+     $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['idReporteGato'])) {
+        $id_reporte_gato = $input['idReporteGato'];
+    } else {
+        echo json_encode(array("mensaje" => "ID de reporte no proporcionado"));
+        exit;
+    }
+    echo borraReporteGatoPorId($conn, $id_reporte_gato);
+}
 ?>

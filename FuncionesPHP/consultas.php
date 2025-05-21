@@ -268,6 +268,161 @@ use \Firebase\JWT\JWT;
             return json_encode(["message" => "Error al registrar el reporte gatos"]);
         }
     }
+    function borraPaseoPorId($conn, $id_paseo){
+        $sql = "DELETE FROM reporte_paseo WHERE id_paseo = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_paseo);
+
+        if ($stmt->execute()) {
+            $filas_afectadas = $stmt->affected_rows;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Paseo eliminado exitosamente",
+                "filas_eliminadas" => $filas_afectadas
+            ]);
+        } else {
+            $error = $stmt->error;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Error al eliminar el paseo",
+                "error" => $error
+            ]);
+        }
+    }
+    function borraReporteGatoPorId($conn, $id_rep){
+        $sql = "DELETE FROM reporte_gatos WHERE id_rep_gatos = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_rep);
+
+        if ($stmt->execute()) {
+            $filas_afectadas = $stmt->affected_rows;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Reporte gato eliminado exitosamente",
+                "filas_eliminadas" => $filas_afectadas
+            ]);
+        } else {
+            $error = $stmt->error;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Error al eliminar el reporte gato",
+                "error" => $error
+            ]);
+        }
+    }
+    function borraReporteDiarioPorId($conn, $id_rep){
+        $sql = "DELETE FROM reporte_diario WHERE id_reporte_diario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_rep);
+
+        if ($stmt->execute()) {
+            $filas_afectadas = $stmt->affected_rows;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Eliminación completada",
+                "filas_eliminadas" => $filas_afectadas
+            ]);
+        } else {
+            $error = $stmt->error;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Error al eliminar el reporte diario",
+                "error" => $error
+            ]);
+        }
+    }
+    function borraUsuarioPorId($conn, $id_usuario){
+        $foto = '';
+        // 1. Obtener la ruta de la foto asociada al usuario
+        $sql_foto = "SELECT foto FROM usuario WHERE id_usuario = ?";
+        $stmt_foto = $conn->prepare($sql_foto);
+        $stmt_foto->bind_param("i", $id_usuario);
+        $stmt_foto->execute();
+        $stmt_foto->bind_result($foto);
+        $stmt_foto->fetch();
+        $stmt_foto->close();
+
+        // 2. Borrar el archivo de la foto si existe y no es vacío
+        if (!empty($foto)) {
+            $foto = substr($foto, 3); // Quita los 3 primeros caracteres si es necesario
+            $ruta_foto = __DIR__ . "/../ProyectoReact/public/" . $foto;
+            if (file_exists($ruta_foto)) {
+                unlink($ruta_foto);
+            }
+        }
+
+        // 3. Borrar el usuario de la base de datos
+        $sql = "DELETE FROM usuario WHERE id_usuario = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_usuario);
+
+        if ($stmt->execute()) {
+            $filas_afectadas = $stmt->affected_rows;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Usuario eliminado exitosamente",
+                "filas_eliminadas" => $filas_afectadas
+            ]);
+        } else {
+            $error = $stmt->error;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Error al eliminar el usuario",
+                "error" => $error
+            ]);
+        }
+    }
+    function borraAnimalPorId($conn, $id_animal) {
+        $foto = '';
+        // 1. Obtener la ruta de la foto asociada al animal
+        $sql_foto = "SELECT foto FROM animal WHERE id_animal = ?";
+        $stmt_foto = $conn->prepare($sql_foto);
+        $stmt_foto->bind_param("i", $id_animal);
+        $stmt_foto->execute();
+        $stmt_foto->bind_result($foto);
+        $stmt_foto->fetch();
+        $stmt_foto->close();
+
+        // 2. Borrar el archivo de la foto si existe y no es vacío
+        if (!empty($foto)) {
+            $foto = substr($foto, 3); // Quita los 3 primeros caracteres
+            $ruta_foto = __DIR__ . "/../ProyectoReact/public/" . $foto;
+            if (file_exists($ruta_foto)) {
+                unlink($ruta_foto);
+            }
+        }
+
+        // 3. Borrar el animal de la base de datos
+        $sql = "DELETE FROM animal WHERE id_animal = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_animal);
+
+        if ($stmt->execute()) {
+            $filas_afectadas = $stmt->affected_rows;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Animal eliminado exitosamente",
+                "filas_eliminadas" => $filas_afectadas
+            ]);
+        } else {
+            $error = $stmt->error;
+            $stmt->close();
+            $conn->close();
+            return json_encode([
+                "mensaje" => "Error al eliminar el animal",
+                "error" => $error
+            ]);
+        }
+    }
     /*
     function agregaAnimal($conn){//Sin terminar
         $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp) 

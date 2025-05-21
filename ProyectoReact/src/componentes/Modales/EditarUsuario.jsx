@@ -12,6 +12,8 @@ import Swal from "sweetalert2";
 //SIN TERMINAR Este debe de ser para un usuario con rol admin
 //////////////////////////////////
 const EditarUsuario = ({usuario,onClose}) => {
+    const { user } = useAuth();
+    console.log('User: ',user);
     const [nombre, setNombre] = useState(usuario.nombre);
     const [apellido1, setApellido1] = useState(usuario.apellido1);
     const [apellido2, setApellido2] = useState(usuario.apellido2);
@@ -116,6 +118,15 @@ const EditarUsuario = ({usuario,onClose}) => {
           console.error("Error en axios:", error);
         });
     };
+    // Solo ocultar el input de roles si el usuario autenticado NO es admin
+    const esAdmin = Array.isArray(user?.data?.roles)
+        ? user.data.roles.includes('admin')
+        : typeof user?.data?.roles === 'string'
+            ? user.data.roles.split(',').map(r => r.trim()).includes('admin')
+            : false;
+
+    const esMismoUsuario = user?.data?.usuario === usuario.nombre_usuario;
+
     return (
           <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
             <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
@@ -233,28 +244,80 @@ const EditarUsuario = ({usuario,onClose}) => {
                 </div>
 
                 {/* Grupo 4: Roles */}
-                <div className="mb-4 flex-1 min-w-[150px]">
-                  <label className="block text-sm font-medium text-gray-600 mb-2"><strong>Roles:</strong></label>
-                  <div className="flex flex-wrap gap-4">
-                    {Roles.todos.map((rol) => (
-                      <label key={rol} className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          value={rol}
-                          checked={roles.includes(rol)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setRoles([...roles, rol]);
-                            } else {
-                              setRoles(roles.filter(r => r !== rol));
-                            }
-                          }}
-                        />
-                        <span className="text-sm capitalize">{rol}</span>
-                      </label>
-                    ))}
+                {(
+                  // Si es admin y está editando a otro usuario
+                  esAdmin && !esMismoUsuario
+                ) && (
+                  <div className="mb-4 flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600 mb-2"><strong>Roles:</strong></label>
+                    <div className="flex flex-wrap gap-4">
+                      {Roles.todos.map((rol) => {
+                        // Si el usuario editado ya es admin, no permitir quitar el rol admin
+                        if (!esMismoUsuario && rol === 'admin' && roles.includes('admin')) {
+                          return (
+                            <label key={rol} className="flex items-center space-x-2 opacity-60 cursor-not-allowed">
+                              <input
+                                type="checkbox"
+                                value={rol}
+                                checked={true}
+                                disabled
+                                readOnly
+                              />
+                              <span className="text-sm capitalize">{rol} (no se puede quitar)</span>
+                            </label>
+                          );
+                        }
+                        // Para el resto de casos, permitir libremente
+                        return (
+                          <label key={rol} className="flex items-center space-x-2">
+                            <input
+                              type="checkbox"
+                              value={rol}
+                              checked={roles.includes(rol)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setRoles([...roles, rol]);
+                                } else {
+                                  setRoles(roles.filter(r => r !== rol));
+                                }
+                              }}
+                            />
+                            <span className="text-sm capitalize">{rol}</span>
+                          </label>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+                )}
+
+                {/* Si es admin y se edita a sí mismo, puede cambiar todos los roles */}
+                {(
+                  esAdmin && esMismoUsuario
+                ) && (
+                  <div className="mb-4 flex-1 min-w-[150px]">
+                    <label className="block text-sm font-medium text-gray-600 mb-2"><strong>Roles:</strong></label>
+                    <div className="flex flex-wrap gap-4">
+                      {Roles.todos.map((rol) => (
+                        <label key={rol} className="flex items-center space-x-2">
+                          <input
+                            type="checkbox"
+                            value={rol}
+                            checked={roles.includes(rol)}
+                            onChange={(e) => {
+                              if (e.target.checked) {
+                                setRoles([...roles, rol]);
+                              } else {
+                                setRoles(roles.filter(r => r !== rol));
+                              }
+                            }}
+                          />
+                          <span className="text-sm capitalize">{rol}</span>
+                        </label>
+                      ))}
+                    </div>
+                  </div>
+                )}
+
                 {/* Grupo 5: Licencia PPP */}
                 <div className="flex-1 min-w-[150px]">
                   <label className="flex items-center space-x-2">
@@ -285,8 +348,8 @@ const EditarUsuario = ({usuario,onClose}) => {
 
                 {/* Grupo 8: Botones */}
                 <div className="space-y-2">
-                  <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Registrar</button>
-                  <button type="button" onClick={resetFormulario} className="w-full bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar campos</button>
+                  <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Actualizar</button>
+                  <button type="button" onClick={resetFormulario} className="w-full bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar cambios</button>
                   {/*
                   <Link to="/login">
                     <button type="button" className="w-full bg-green-500 text-white p-2 text-sm rounded mt-2 hover:bg-green-600">Volver login</button>

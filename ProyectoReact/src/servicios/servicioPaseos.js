@@ -21,6 +21,9 @@ class ServicioPaseos {
            'Content-Type': 'multipart/form-data',
          }});
    }
+   borraPaseoPorId(idPaseo){
+    return https.post(`/paseos.php?funcion=borraPaseoPorId`, {idPaseo});
+   }
   get(id) {
     return http.get(`/paseos/${id}`);
   }

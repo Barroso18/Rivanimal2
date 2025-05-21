@@ -471,8 +471,6 @@ function PaseoCrear({ animal, voluntario, onClose }) {
                                         name="descripcion"
                                         value={form.descripcion || ""}
                                         onChange={gestionarCambio}
-                                        maxLength={100}
-                                        rows={3}
                                         className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
                                         placeholder="Añade una descripción (máx. 100 caracteres)"
                                     />

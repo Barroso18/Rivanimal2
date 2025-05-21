@@ -57,7 +57,7 @@ function CalendarioDinamicoAnimal({ reportes = [],clase }) {
           key={dia}
           className={`w-10 h-10 rounded-lg text-base transition
             ${esHoy ? 'bg-blue-100 text-blue-600 font-bold' : ''}
-            ${tieneReporte ? 'bg-purple-300 text-white font-bold border-2 border-purple-500' : 'hover:bg-purple-100 hover:font-semibold'}
+            ${tieneReporte ? 'bg-green-300 text-white font-bold border-2 border-green-500' : 'hover:bg-orange-100 hover:font-semibold'}
           `}
           title={tieneReporte ? 'Tienes un reporte este día' : ''}
           onClick={() => {

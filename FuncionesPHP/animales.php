@@ -109,7 +109,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     // Procesa la foto si fue enviada
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $fotoNombre = $nombre.$identificador . '.' . $extension;
+        $fotoNombre = 'A_'.$nombre.'_'.$identificador . '.' . $extension;
         $carpetaFotos = "../ProyectoReact/public/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
@@ -216,7 +216,7 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     // Procesa la foto si fue enviada
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $fotoNombre = $nombre.$identificador . '.' . $extension;
+        $fotoNombre = 'A_'.$nombre.'_'.$identificador . '.' . $extension;
         $carpetaFotos = "../ProyectoReact/public/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
@@ -305,5 +305,15 @@ if($funcion === 'buscaUsuariosPorAnimal'){
     echo json_encode($fila);
     
 
+}
+if($funcion === 'borraPorId'){
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['id_animal'])) {
+        $id_animal = $input['id_animal'];
+    } else {
+        echo json_encode(array("mensaje" => "ID de animal no proporcionado"));
+        exit;
+    }
+    echo borraAnimalPorId($conn, $id_animal);
 }
 ?>

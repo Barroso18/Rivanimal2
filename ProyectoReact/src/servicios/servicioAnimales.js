@@ -65,17 +65,8 @@ class ServicioAnimales {
          }});
    }
 
-  
-  create(data) {
-    return http.post("/animales", data);
-  }
-
-  update(id, data) {
-    return http.put(`/animales/${id}`, data);
-  }
-
-  delete(id) {
-    return http.delete(`/animales/${id}`);
+  borraAnimalPorId(id_animal){
+    return https.post(`/animales.php?funcion=borraPorId`, { id_animal });
   }
   
 }

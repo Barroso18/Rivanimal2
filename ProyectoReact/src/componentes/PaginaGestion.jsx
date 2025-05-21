@@ -199,7 +199,11 @@ const PaginaGestion = () => {
                         </div>
                         <ul className="list-disc pl-5">
                             {usuariosFiltrado.map((usuario) => (
-                                <UserCard2 key={usuario.id_usuario} usuario={usuario} />
+                                <UserCard2
+                                    key={usuario.id_usuario}
+                                    usuario={usuario}
+                                    onDelete={() =>cargaTabUsuarios()}
+                                    onEdit={() =>cargaTabUsuarios()}/>
                             ))}
                         </ul>
                     </div>
@@ -228,7 +232,7 @@ const PaginaGestion = () => {
                         </div>
                         <ul className="list-disc pl-5">
                             {(animalesFiltrado.length > 0 ? animalesFiltrado : animales).map((animal) => (
-                                <AnimalCard key={animal.id_animal} animal={animal} />
+                                <AnimalCard key={animal.id_animal} animal={animal} onDelete={() =>cargaTabAnimales()}/>
                             ))}
                         </ul>
                     </div>
@@ -251,8 +255,17 @@ const PaginaGestion = () => {
                 <Registro onClose={() => gestionarModalUsuarios("crear", false)} />
             </Modal>
 
-            <Modal isOpen={modalsAnimales.crear} onClose={() => gestionarModalAnimales("crear", false)}>
-                <AgregarAnimal onClose={() => gestionarModalAnimales("crear", false)} />
+            <Modal
+                isOpen={modalsAnimales.crear}
+                onClose={() => {
+                    gestionarModalAnimales("crear", false);
+                    cargaTabAnimales(); // Recarga la lista de animales al cerrar el modal
+                }}
+                >
+                <AgregarAnimal onClose={() => {
+                    gestionarModalAnimales("crear", false);
+                    cargaTabAnimales(); // Recarga la lista de animales al cerrar desde el propio modal
+                }} />
             </Modal>
         </div>
     );

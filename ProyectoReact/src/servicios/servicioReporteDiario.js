@@ -18,5 +18,8 @@ class ServicioReporteDiario {
             }
         });
     }
+    borraReporteDiarioPorId(idReporteDiario){
+        return https.post(`/reporte_diario.php?funcion=borraPorId`, {idReporteDiario});
+    }
 }
 export default new ServicioReporteDiario();

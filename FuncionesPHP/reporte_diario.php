@@ -128,7 +128,17 @@ if ($funcion === 'registrar') {
         echo json_encode(["errores" => ["general" => "Error al consultar reportes diarios: " . $e->getMessage()]]);
         //http_response_code(500); // Código de error 500: Error interno del servidor
     }
-} 
+} else if($funcion === 'borraPorId'){
+    //Hay que comprobar primero si existen paseos u otros reportes asociados
+    $input = json_decode(file_get_contents("php://input"), true);
+    if (isset($input['idReporteDiario'])) {
+        $id_reporte_diario = $input['idReporteDiario'];
+    } else {
+        echo json_encode(array("mensaje" => "ID de reporte no proporcionado"));
+        exit;
+    }
+    echo borraReporteDiarioPorId($conn, $id_reporte_diario);
+}
 
 else {
     echo json_encode(["errores" => ["general" => "Función no válida"]]);

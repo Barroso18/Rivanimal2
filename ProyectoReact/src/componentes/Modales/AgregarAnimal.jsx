@@ -114,7 +114,7 @@ const AgregarAnimal = ({onClose})=>{
             console.log("Datos: ", response.data)
             //resetFormulario();
             //Cerramos el modal una vez el animal se ha agregado
-            //onClose();
+            onClose();
           } else if (response.data.errores) {
             setError(Object.values(response.data.errores).join(", "));
           } else {

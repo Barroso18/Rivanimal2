@@ -20,7 +20,8 @@ const MenuSuperior = () => {
 */
   const [togleUsuario, setTogleUsuario] = useState(false);
 
-  const handleLogout = async() => {
+  const handleLogout = async () => {
+    localStorage.setItem("justLoggedOut", "1");
     await logout();
     navigate('/login');
   };

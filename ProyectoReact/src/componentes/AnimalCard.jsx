@@ -4,7 +4,8 @@ import Modal from "./Modales/Modal.jsx";
 import EditarAnimal from "./Modales/EditarAnimal.jsx";
 import ServicioAnimales from "../servicios/servicioAnimales";
 import { useEffect, useState, useRef } from "react";
-
+import servicioAnimales from '../servicios/servicioAnimales';
+import Swal from "sweetalert2";
 
 const AnimalCard = ({ animal, onEdit, onDelete, onView  }) => {
   const [animalInformacion, setAnimalInformacion] = useState(animal);
@@ -33,7 +34,36 @@ const AnimalCard = ({ animal, onEdit, onDelete, onView  }) => {
           console.error("Error al obtener el animal:", error);
         });
     };
-
+  const borrarAnimal = () =>{
+    servicioAnimales.borraAnimalPorId(animal.id_animal)
+      .then((response) => {
+          if(response.data.error){
+              Swal.fire({
+                  title: "Error",
+                  text: response.data.error,
+                  icon: "error",
+                  confirmButtonText: "Aceptar",
+              });
+          }
+          if(response.data.mensaje === 'Animal eliminado exitosamente'){
+              const mensaje = "Animales eliminados: "+response.data.filas_eliminadas;
+              Swal.fire({
+                  title: response.data.mensaje,
+                  text: mensaje,
+                  icon: "success",
+                  confirmButtonText: "Aceptar",
+              }).then(() => {
+                  // Recargar la lista de usuarios después de eliminar
+                  if (typeof onDelete === "function") {
+                      onDelete();
+                  }
+              });
+          }
+      })
+      .catch((error) => {
+          console.error("Error al borrar el usuario:", error);
+      });
+  }
   return (
     <li className="flex flex-col sm:flex-row items-center sm:items-start justify-between p-4 bg-white rounded-lg shadow-md border mb-4">
       {/* Información principal */}
@@ -44,18 +74,17 @@ const AnimalCard = ({ animal, onEdit, onDelete, onView  }) => {
 
       {/* Botones */}
       <div className="flex gap-2 mt-4 sm:mt-0 sm:ml-4">
-        <button
-          className="relative bg-green-500 hover:bg-green-600 text-white flex flex-row items-center gap-2 px-4 py-2 rounded-md text-sm group"
-        >
-          <Link to={`/pagina-animal/${animal.id_animal}`} className="flex items-center gap-1">
+        <Link to={`/pagina-animal/${animal.id_animal}`} className="flex items-center gap-1">
+          <button
+            className="relative bg-green-500 hover:bg-green-600 text-white flex flex-row items-center gap-2 px-4 py-2 rounded-md text-sm group">
             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-6">
                 <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 0 1 .67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 1 1-.671-1.34l.041-.022ZM12 9a.75.75 0 1 0 0-1.5.75.75 0 0 0 0 1.5Z" clipRule="evenodd" />
             </svg>
-          </Link>
-          <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10">
-              Ver animal
-          </span>
-        </button>
+            <span className="absolute left-1/2 -translate-x-1/2 top-full mt-2 px-2 py-1 rounded bg-black text-white text-xs opacity-0 group-hover:opacity-100 transition pointer-events-none whitespace-nowrap z-10">
+                Ver animal
+            </span>
+          </button>
+        </Link>
         <button
           onClick={() => editarAnimal()}
           className="relative bg-orange-400 hover:bg-orange-600 text-white flex flex-row items-center gap-2 px-4 py-2 rounded-md text-sm group"
@@ -68,7 +97,7 @@ const AnimalCard = ({ animal, onEdit, onDelete, onView  }) => {
           </span>
         </button>
         <button
-          onClick={onDelete}
+          onClick={() => borrarAnimal()}
           className="relative bg-red-500 hover:bg-red-600 text-white flex flex-row items-center gap-2 px-4 py-2 rounded-md text-sm group"
         >
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="size-6">
