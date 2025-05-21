@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import Modal from './Modales/Modal'; // Asegúrate de importar tu componente Modal
 import ReporteDiarioConsultar from './Modales/ReporteDiarioConsultar'; // Importa el modal de consulta
+import PaseoConsultar from './Modales/PaseoConsultar';
+import ReporteGatoConsultar from './Modales/ReporteGatoConsultar';
 
 const diasSemana = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-function CalendarioDinamicoAnimal({ reportesDiarios = [] }) {
+function CalendarioDinamicoAnimal({ reportes = [],clase }) {
   const [fechaActual, setFechaActual] = useState(new Date());
-  const [modalAbierto, setModalAbierto] = useState(false);
+  const [modalAbiertoPerro, setModalAbiertoPerro] = useState(false);
+  const [modalAbiertoGato, setModalAbiertoGato] = useState(false);
   const [reporteSeleccionado, setReporteSeleccionado] = useState(null);
 
   const obtenerDiasDelMes = (año, mes) => {
@@ -18,12 +21,15 @@ function CalendarioDinamicoAnimal({ reportesDiarios = [] }) {
 
   // Mapear reportes por día para acceso rápido
   const reportesPorDia = {};
-  reportesDiarios.forEach(r => {
-    const fecha = new Date(r.fecha);
-    if (fecha.getFullYear() === año && fecha.getMonth() === mes) {
-      reportesPorDia[fecha.getDate()] = r;
-    }
-  });
+  if(reportes !== null){
+    reportes.forEach(r => {
+      const fecha = new Date(r.fecha_hora_inicio);
+      if (fecha.getFullYear() === año && fecha.getMonth() === mes) {
+        reportesPorDia[fecha.getDate()] = r;
+      }
+    });
+  }
+  
 
   const renderizarDias = () => {
     const primerDia = new Date(año, mes, 1).getDay();
@@ -57,7 +63,12 @@ function CalendarioDinamicoAnimal({ reportesDiarios = [] }) {
           onClick={() => {
             if (tieneReporte) {
               setReporteSeleccionado(reporte);
-              setModalAbierto(true);
+              if(clase === "perro"){
+                setModalAbiertoPerro(true);
+              }
+              if(clase === "gato"){
+                setModalAbiertoGato(true);
+              }
             }
           }}
         >
@@ -108,9 +119,14 @@ function CalendarioDinamicoAnimal({ reportesDiarios = [] }) {
           Apuntarse
         </button>
       </div>
-      <Modal isOpen={modalAbierto} onClose={() => setModalAbierto(false)}>
+      <Modal isOpen={modalAbiertoPerro} onClose={() => setModalAbiertoPerro(false)}>
         {reporteSeleccionado && (
-          <ReporteDiarioConsultar reporte={reporteSeleccionado} />
+          <PaseoConsultar paseoInformacion={reporteSeleccionado} onClose={() => setModalAbiertoPerro(false)}/>
+        )}
+      </Modal>
+      <Modal isOpen={modalAbiertoGato} onClose={() => setModalAbiertoGato(false)}>
+        {reporteSeleccionado && (
+          <ReporteGatoConsultar repGatoInformacion={reporteSeleccionado}  onClose={() => setModalAbiertoGato(false)}/>
         )}
       </Modal>
     </div>

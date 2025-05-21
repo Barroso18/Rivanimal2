@@ -1,7 +1,7 @@
 import { PlusCircle } from 'lucide-react';
 import { Link } from "react-router-dom";
 import Modal from "./Modales/Modal.jsx";
-import EditarUsuario from "./Modales/Editarusuario.jsx";
+import EditarUsuario from "./Modales/EditarUsuario.jsx";
 import servicioUsuarios from "../servicios/servicioUsuarios";
 import { useEffect, useState, useRef } from "react";
 
@@ -44,7 +44,7 @@ const UserCard2 = ({ usuario, onEdit, onDelete, onView  }) => {
                     {usuario.roles.map((rol, index) => (
                         <span
                             key={index}
-                            className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded mr-1"
+                            className="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded mr-1"
                         >
                             {rol.trim()}
                         </span>
@@ -55,7 +55,7 @@ const UserCard2 = ({ usuario, onEdit, onDelete, onView  }) => {
             {/* Botones */}
             <div className="flex gap-2 mt-4 sm:mt-0 sm:ml-4">
                 <button
-                className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600"
+                className="bg-green-500 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600"
                 >
                 <Link to={`/perfil-publico/${usuario.nombre_usuario}`} className="flex items-center gap-1">
                     Ver
@@ -63,7 +63,7 @@ const UserCard2 = ({ usuario, onEdit, onDelete, onView  }) => {
                 </button>
                 <button
                 onClick={() => editarusuario()}
-                className="bg-yellow-500 text-white px-4 py-2 rounded-md text-sm hover:bg-yellow-600"
+                className="bg-orange-400 text-white px-4 py-2 rounded-md text-sm hover:bg-orange-600"
                 >
                 Editar
                 </button>

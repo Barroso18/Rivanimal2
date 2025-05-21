@@ -23,6 +23,7 @@ import { buscaReportePorFecha } from "../herramientas/buscaReportePorFecha.js";
 import ListaReportesGatos from "./ListaReportesGatos.jsx";
 import ListaReportesPaseos from "./ListaReportesPaseos.jsx";
 import Roles from "./Roles.jsx";
+import CalendarioDinamicoAnimal from "./CalendarioDinamicoAnimal.jsx";
 
 const PaginaAnimal = () => {
   const [activeTab, setActiveTab] = useState("reportes"); // Estado para controlar la pestaña activa
@@ -98,8 +99,8 @@ const PaginaAnimal = () => {
     if (!idanimal) {
       console.error("ID del animal no proporcionado.");
       return;
-    }
-    ServicioAnimales.buscaPorid_animal(parseInt(idanimal))
+    }else{
+     ServicioAnimales.buscaPorid_animal(parseInt(idanimal))
       .then((response) => {
         if(response.data.errores){
           setError(Object.values(response.data.errores).join(", "));
@@ -121,6 +122,8 @@ const PaginaAnimal = () => {
       .catch((error) => {
         console.error("Error al obtener el animal:", error);
       });
+      
+    }
   }, [idanimal]);
   // Recargamos la información del animal
   const recargaAnimal = () => {
@@ -522,7 +525,7 @@ const PaginaAnimal = () => {
               <strong>Desde:</strong> {animalInformacion.fecha_entrada}{" "}
             </p>
             <p>
-              <strong>Fecha de nacimiento:</strong>{" "}
+              <strong>Nacimiento:</strong>{" "}
               {animalInformacion.fecha_nacimiento}{" "}
             </p>
             <p>
@@ -548,25 +551,25 @@ const PaginaAnimal = () => {
         {/* Contenido de las tabs */}
         <div className="tab-content mt-4">
           {activeTab === "salud" && (
-            <div>
+            <div className="p-4">
               {filtrarInfo("veterinario")}
             </div>
           )}
 
           {activeTab === "higiene" && (
-            <div className="higiene">Información de la higiene del animal.</div>
+            <div className="higiene p-4">Información de la higiene del animal.</div>
           )}
           {esPerro2()}
           
 
           {activeTab === "alimentacion" && (
-            <div>{filtrarInfo("alimentacion")}</div>
+            <div className="p-4">{filtrarInfo("alimentacion")}</div>
           )}
           {activeTab === "socializacion" && (
-            <div>Socialización con personas y otros animales.</div>
+            <div className="p-4">Socialización con personas y otros animales.</div>
           )}
           {activeTab === "otros" && (
-            <div>
+            <div className="p-4">
               Otros datos del animal.
               <p>
                 <strong>Comportamiento:</strong>{" "}
@@ -583,6 +586,7 @@ const PaginaAnimal = () => {
       <div>
         Padrinos, Voluntarios, Adoptantes
         {visualizaUsuariosCuidadores()}
+        <CalendarioDinamicoAnimal reportes={paseos} clase={animalInformacion.clase}/>
       </div>
       {agregarBotonesReportes()}
       

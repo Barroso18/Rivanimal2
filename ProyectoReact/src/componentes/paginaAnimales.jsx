@@ -77,7 +77,7 @@ const PaginaAnimales = () => {
               <p className="text-gray-500">Estado: {animal.situacion}</p>
               <p className="text-gray-500">Nivel: {animal.nivel}</p>
               <Link to={`/pagina-animal/${animal.id_animal}`}>
-                <button className="add-info-btn">Mas info</button>
+                <button className="bg-green-500 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600">Mas info</button>
               </Link>
             </div>
           ))}

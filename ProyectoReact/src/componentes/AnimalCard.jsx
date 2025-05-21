@@ -45,7 +45,7 @@ const AnimalCard = ({ animal, onEdit, onDelete, onView  }) => {
       {/* Botones */}
       <div className="flex gap-2 mt-4 sm:mt-0 sm:ml-4">
         <button
-          className="bg-blue-500 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-600"
+          className="bg-green-500 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600"
         >
           <Link to={`/pagina-animal/${animal.id_animal}`} className="flex items-center gap-1">
             Ver
@@ -53,7 +53,7 @@ const AnimalCard = ({ animal, onEdit, onDelete, onView  }) => {
         </button>
         <button
           onClick={() => editarAnimal()}
-          className="bg-yellow-500 text-white px-4 py-2 rounded-md text-sm hover:bg-yellow-600"
+          className="bg-orange-400 text-white px-4 py-2 rounded-md text-sm hover:bg-orange-600"
         >
           Editar
         </button>

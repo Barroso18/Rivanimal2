@@ -26,7 +26,7 @@ const UserCard = ({ usuario }) => {
           {roles.map((rol, index) => (
             <span
               key={index}
-              className="bg-blue-100 text-blue-800 text-xs font-medium px-2.5 py-0.5 rounded"
+              className="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded"
             >
               {rol.trim()}
             </span>

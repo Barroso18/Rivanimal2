@@ -5,7 +5,7 @@ import ReporteDiarioCrear from './Modales/ReporteDiarioCrear';
 
 const diasSemana = ['L', 'M', 'X', 'J', 'V', 'S', 'D'];
 
-function CalendarioDinamico({ reportesDiarios = [], onRecargarReportes }) {
+function CalendarioDinamico({ reportesDiarios = [], onRecargarReportes, usuarioActual, usuarioPerfil }) {
   const [fechaActual, setFechaActual] = useState(new Date());
   const [modalAbierto, setModalAbierto] = useState(false);
   const [modalAbiertoRepCrear,setModalAbiertoRepCrear] = useState(false);
@@ -20,12 +20,15 @@ function CalendarioDinamico({ reportesDiarios = [], onRecargarReportes }) {
 
   // Mapear reportes por día para acceso rápido
   const reportesPorDia = {};
-  reportesDiarios.forEach(r => {
-    const fecha = new Date(r.fecha);
-    if (fecha.getFullYear() === año && fecha.getMonth() === mes) {
-      reportesPorDia[fecha.getDate()] = r;
-    }
-  });
+  if(reportesDiarios !== null){
+    reportesDiarios.forEach(r => {
+      const fecha = new Date(r.fecha);
+      if (fecha.getFullYear() === año && fecha.getMonth() === mes) {
+        reportesPorDia[fecha.getDate()] = r;
+      }
+    });
+  }
+  
 
   const renderizarDias = () => {
     const primerDia = new Date(año, mes, 1).getDay();
@@ -114,10 +117,14 @@ function CalendarioDinamico({ reportesDiarios = [], onRecargarReportes }) {
       </div>
       <div className="grid grid-cols-7 gap-3 text-center">{renderizarDias()}</div>
       <div className="mt-6 text-center">
-        <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full transition text-lg"
-        onClick={() =>setModalAbiertoRepCrear(true)}>
-          Apuntarse
-        </button>
+        {usuarioActual === usuarioPerfil && (
+          <button
+            className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-full transition text-lg"
+            onClick={() => setModalAbiertoRepCrear(true)}
+          >
+            Apuntarse
+          </button>
+        )}
       </div>
       <Modal isOpen={modalAbierto} onClose={() => setModalAbierto(false)}>
         {reporteSeleccionado && (

@@ -69,7 +69,7 @@ const PerfilUsuarioPublico = () => {
 
   const visualizaAnimalesCuidados = () => {
     if (!animales || animales.length === 0) {
-      return <p>No hay animales cuidados.</p>;
+      return <p className="p-2">No hay animales cuidados.</p>;
     }
     return (
       <div className="overflow-x-auto">
@@ -268,7 +268,21 @@ const PerfilUsuarioPublico = () => {
                   {/* Contenido de las tabs */}
                   <div className="tab-content mt-4">
                       {activeTab === "roles" && (
-                          <div>{user?.data.roles}</div>
+                        <div className="flex flex-wrap gap-2 p-4">
+                          {(usuarioInformacion.roles && Array.isArray(usuarioInformacion.roles)
+                            ? usuarioInformacion.roles
+                            : typeof usuarioInformacion.roles === "string"
+                              ? usuarioInformacion.roles.split(",").map(r => r.trim())
+                              : []
+                          ).map((rol, idx) => (
+                            <span
+                              key={idx}
+                              className="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded"
+                            >
+                              {rol}
+                            </span>
+                          ))}
+                        </div>
                       )}
                       {activeTab === "reportes" && (
                           visualizaReportesDiarios()
@@ -282,6 +296,8 @@ const PerfilUsuarioPublico = () => {
               <div className="w-full lg:w-1/3 flex justify-center mb-4 lg:mb-0">
                   <CalendarioDinamico
                     reportesDiarios={reportesDiarios}
+                    usuarioActual={user}
+                    usuarioPerfil={usuarioInformacion}
                     onRecargarReportes={() => cargaReportesDiarios(usuarioInformacion.id_usuario)}
                   />
               </div>
