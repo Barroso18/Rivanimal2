@@ -423,6 +423,34 @@ use \Firebase\JWT\JWT;
             ]);
         }
     }
+    function agregarChenil($conn, $numero, $reja, $guillotina, $activo, $descripcion){
+        $sql = "INSERT INTO chenil (numero, guillotina, reja, activo, descripcion) VALUES (?, ?, ?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iiiis", $numero, $guillotina, $reja, $activo, $descripcion);
+        if ($stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            return ["mensaje" => "Chenil creado"];
+        } else {
+            $stmt->close();
+            $conn->close();
+            return ["errores" => "Error al crear el chenil"];
+        }
+    }
+    function buscaChenilPorNumero($conn,$numero){
+
+    }
+    function existeChenilPorNumero($conn, $numero) {
+        $total = 0;
+        $sql = "SELECT COUNT(*) AS total FROM chenil WHERE numero = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $numero);
+        $stmt->execute();
+        $stmt->bind_result($total);
+        $stmt->fetch();
+        $stmt->close();
+        return $total > 0;
+    }
     /*
     function agregaAnimal($conn){//Sin terminar
         $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp) 

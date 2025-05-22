@@ -11,6 +11,7 @@ import servicioAnimales from '../servicios/servicioAnimales.js';
 import servicioUsuarios from "../servicios/servicioUsuarios.js";
 import FiltroAnimales from "./FiltroAnimales"; 
 import FiltroUsuarios from './FiltroUsuarios.jsx';
+import ChenilCrear from './Modales/ChenilCrear.jsx';
 
 const PaginaGestion = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -45,6 +46,12 @@ const PaginaGestion = () => {
         consultar: false,
         editar: false,
     });
+    const [modalsCheniles, setModalsCheniles] = useState({
+        crear: false,
+        consultar: false,
+        editar: false,
+        asignar: false,
+    });
     const gestionarModalUsuarios = (tipoModal, estadoAbierto) => {
         setModalsUsuarios((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
         // Si el modal se cierra, recargar la lista de usuarios
@@ -52,13 +59,20 @@ const PaginaGestion = () => {
             cargaTabUsuarios();
         }
     };
+
     const gestionarModalAnimales = (tipoModal, estadoAbierto) => {
         setModalsAnimales((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
     };
+    const gestionarModalCheniles = (tipoModal, estadoAbierto) => {
+        setModalsCheniles((previoModals) => ({ ...previoModals, [tipoModal]: estadoAbierto }));
+    };
+
     const crearRegistroUsuario = () => {
         gestionarModalUsuarios("crear", true);
     };
-
+    const crearChenil = () =>{
+        gestionarModalCheniles("crear",true);
+    }
 
     const crearRegistroAnimal = () => {
         gestionarModalAnimales("crear", true);
@@ -217,7 +231,7 @@ const PaginaGestion = () => {
                         </button>
                         <button type="button" 
                             className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
-                            >
+                            onClick={() =>crearChenil()}>
                                 Agregar chenil
                         </button>
                         <button type="button" 
@@ -266,6 +280,14 @@ const PaginaGestion = () => {
                     gestionarModalAnimales("crear", false);
                     cargaTabAnimales(); // Recarga la lista de animales al cerrar desde el propio modal
                 }} />
+            </Modal>
+            <Modal isOpen={modalsCheniles.crear}
+                onClose={() => {
+                    gestionarModalCheniles("crear", false);
+                }}>
+                <ChenilCrear onClose={() => {
+                    gestionarModalCheniles("crear", false);
+                }}/>
             </Modal>
         </div>
     );

@@ -69,6 +69,15 @@ class ServicioAnimales {
     return https.post(`/animales.php?funcion=borraPorId`, { id_animal });
   }
   
+  async crearChenil(datosRegistro) {
+    return https.post(`/animales.php?funcion=crearChenil`, {datosRegistro});
+  }
+  async asignarChenil(datosRegistro) {
+    return https.post(`/animales.php?funcion=asignarChenil`, {datosRegistro});
+  }
+  async editarChenil(datosRegistro) {
+    return https.post(`/animales.php?funcion=editarChenil`, {datosRegistro});
+  }
 }
 
 export default new ServicioAnimales();

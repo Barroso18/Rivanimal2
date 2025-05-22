@@ -316,4 +316,38 @@ if($funcion === 'borraPorId'){
     }
     echo borraAnimalPorId($conn, $id_animal);
 }
+if($funcion === 'crearChenil'){
+    $input = json_decode(file_get_contents("php://input"), true);
+    $numero = $input['datosRegistro']['numero'];
+    $reja = $input['datosRegistro']['reja'] ?? 0;
+    $guillotina = $input['datosRegistro']['guillotina'] ?? 0;
+    $activo = $input['datosRegistro']['activo'] ?? 0;
+    $descripcion = $input['datosRegistro']['descripcion'] ?? '';
+    if (empty($input['datosRegistro']['numero']) || $input['datosRegistro']['numero'] === 0) {
+        $errores['numero'] = "El campo número es obligatorio y distinto de 0";
+    }
+    if (!empty($errores)) {
+        echo json_encode(["errores" => $errores]);
+        exit();
+    }
+    $existeChenil = existeChenilPorNumero($conn,$numero);
+    if($existeChenil){
+        $errores['numero'] = "Ya existe un chenil con ese número";
+    }
+    if (!empty($errores)) {
+        echo json_encode(["errores" => $errores]);
+        exit();
+    }
+    echo json_encode(agregarChenil($conn, $numero,$reja,$guillotina,$activo,$descripcion));
+}
+if($funcion === 'editarChenil'){
+    $numero = 0;
+    
+    //echo agregarChenil($conn, $numero,$reja,$guillotina,$activo,$descripcion);
+}
+if($funcion === 'asignarChenil'){
+    $numero = 0;
+    
+    //echo agregarChenil($conn, $numero,$reja,$guillotina,$activo,$descripcion);
+}
 ?>
