@@ -440,6 +440,17 @@ use \Firebase\JWT\JWT;
     function buscaChenilPorNumero($conn,$numero){
 
     }
+    function buscaChenilSinAsignar($conn){
+        $sql ="SELECT * FROM chenil WHERE activo = 1 AND id_chenil NOT IN (SELECT chenil FROM chenil_animal);";
+        $stmt = $conn->prepare($sql);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return null;
+        }
+    }
     function existeChenilPorNumero($conn, $numero) {
         $total = 0;
         $sql = "SELECT COUNT(*) AS total FROM chenil WHERE numero = ?";
@@ -451,6 +462,23 @@ use \Firebase\JWT\JWT;
         $stmt->close();
         return $total > 0;
     }
+    function cargaRazasSugerencias($conn, $clase){
+        $sql = "SELECT nombre FROM raza_animal WHERE clase = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("s", $clase);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        $razas = [];
+        if ($resultado && $resultado->num_rows > 0) {
+            while ($fila = $resultado->fetch_assoc()) {
+                $razas[] = $fila['nombre'];
+            }
+        }
+        $stmt->close();
+        return $razas;
+    }
+
+
     /*
     function agregaAnimal($conn){//Sin terminar
         $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp) 
@@ -507,6 +535,24 @@ use \Firebase\JWT\JWT;
             return $resultado->fetch_all(MYSQLI_ASSOC);
         } else {
             return null;
+        }
+    }
+    function buscaNumeroChenilPorIdAnimal($conn, $id_animal) {
+        $numero = 0;
+        $sql = "SELECT c.numero 
+                FROM chenil_animal ca
+                INNER JOIN chenil c ON ca.chenil = c.id_chenil
+                WHERE ca.animal = ? AND ca.activo = 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $id_animal);
+        $stmt->execute();
+        $stmt->bind_result($numero);
+        if ($stmt->fetch()) {
+            $stmt->close();
+            return $numero;
+        } else {
+            $stmt->close();
+            return null; // No tiene chenil asignado
         }
     }
 ?>

@@ -380,7 +380,7 @@ function PaseoCrear({ animal, voluntario, onClose }) {
                                         type="number"
                                         name="caca_nivel"
                                         min={0}
-                                        max={5}
+                                        max={7}
                                         value={form.caca_nivel || 0}
                                         onChange={gestionarCambio}
                                         className="w-full p-1 text-sm border border-gray-300 rounded mt-1"

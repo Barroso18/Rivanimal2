@@ -1,6 +1,7 @@
 import React, {useEffect,useState} from "react";
 import Swal from "sweetalert2";
 import servicioAnimales from "../../servicios/servicioAnimales";
+import '../../estilos/estilos.css';
 
 const EditarAnimal = ({animal,onClose})=>{
     const [id_animal,setId_animal] = useState(animal.id_animal);
@@ -23,6 +24,14 @@ const EditarAnimal = ({animal,onClose})=>{
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(animal.foto);
     const [foto, setFoto] = useState(animal.foto);
+    const [localidad, setLocalidad] = useState(animal.localidad || "");
+    const [disponibilidad, setDisponibilidad] = useState(
+      animal.disponibilidad
+        ? Array.isArray(animal.disponibilidad)
+          ? animal.disponibilidad
+          : animal.disponibilidad.split(",").map((d) => d.trim()).filter(Boolean)
+        : []
+    );
     //Manejador de imagenes
     const handleImageChange = (event) => {//Como hago para meter la imagen en la preview
         const file = event.target.files[0];
@@ -77,6 +86,8 @@ const EditarAnimal = ({animal,onClose})=>{
         formData.append("comportamiento",comportamiento);
         formData.append("socializacion",socializacion);
         formData.append("id_animal",id_animal);
+        formData.append("localidad", localidad);
+        formData.append("disponibilidad", disponibilidad.join(","));
         console.log("id_animal: ", id_animal);
         if (foto) {
           formData.append("file", foto); // Adjuntar la imagen
@@ -112,6 +123,9 @@ const EditarAnimal = ({animal,onClose})=>{
                 html: datosHTML,
                 icon: "success",
                 confirmButtonText: "Aceptar",
+                customClass: {
+                    confirmButton: "swal-tailwind-confirm"
+                }
             });
             console.log("Datos: ", response.data)
             //resetFormulario();
@@ -142,6 +156,20 @@ const EditarAnimal = ({animal,onClose})=>{
         const day = String(d.getDate()).padStart(2, '0');
         return `${d.getFullYear()}-${month}-${day}`;
     };
+
+    // Añade este useEffect para controlar la disponibilidad cuando la situación es "Adoptado"
+    
+    useEffect(() => {
+        if (situacion === "Adoptado") {
+            setDisponibilidad(["Adoptado"]);
+        } else if (situacion === "Refugio" || situacion === "Residencia") {
+            setDisponibilidad(["Apadrinar", "Acogida", "Adopción"]);
+        } else if (situacion === "Casa acogida") {
+            setDisponibilidad(["Adopción"]);
+        } else {
+            setDisponibilidad((prev) => prev.filter((d) => d !== "Adoptado"));
+        }
+    }, [situacion]);
 
     return(
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
@@ -301,6 +329,25 @@ const EditarAnimal = ({animal,onClose})=>{
                         />
                     </div>
                     <div className="flex-1 min-w-[150px]">
+                        <label className="block text-sm font-medium text-gray-600">Localidad:</label>
+                        <select
+                            value={localidad}
+                            name="localidad"
+                            onChange={(e) => setLocalidad(e.target.value)}
+                            required
+                            className="w-full p-1 text-sm border border-gray-300 rounded mt-1">
+                            <option value="" disabled>
+                                Selecciona una localidad
+                            </option>
+                            <option value="RIVAS-VACIAMADRID">RIVAS-VACIAMADRID</option>
+                            <option value="PARLA">PARLA</option>
+                            <option value="MADRID">MADRID</option>
+                        </select>
+                    </div>
+                </div>
+                {/* Grupo 4: situacion */}
+                <div className="flex flex-wrap gap-4">
+                    <div className="flex-1 min-w-[150px]">
                         <label className="block text-sm font-medium text-gray-600">Situación:</label>
                         <select
                             value={situacion}
@@ -311,10 +358,103 @@ const EditarAnimal = ({animal,onClose})=>{
                             <option value="" disabled>
                                 Selecciona una situación
                             </option>
-                            <option value="adopcion,refugio">En adopcion, refugio</option>
-                            <option value="adopcion,acogida">En adopcion, casa acogida</option>
-                            <option value="adoptado">Adoptado</option>
+                            <option value="Refugio">Refugio</option>
+                            <option value="Casa acogida">Casa acogida</option>
+                            <option value="Residencia">Residencia</option>
+                            <option value="Adoptado">Adoptado</option>
                         </select>
+                    </div>
+                    <div className="flex-1 min-w-[150px]">
+                        <label className="block text-sm font-medium text-gray-600">Disponibilidad:</label>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              value="Apadrinar"
+                              checked={disponibilidad.includes("Apadrinar")}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setDisponibilidad([...disponibilidad, "Apadrinar"]);
+                                } else {
+                                  setDisponibilidad(disponibilidad.filter(d => d !== "Apadrinar"));
+                                }
+                              }}
+                              className="form-checkbox text-blue-600"
+                              disabled={
+                                situacion === "Adoptado" ||
+                                !(
+                                  situacion === "Refugio" ||
+                                  situacion === "Residencia"
+                                )
+                              }
+                            />
+                            <span className="ml-2">Apadrinar</span>
+                          </label>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              value="Acogida"
+                              checked={disponibilidad.includes("Acogida")}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setDisponibilidad([...disponibilidad, "Acogida"]);
+                                } else {
+                                  setDisponibilidad(disponibilidad.filter(d => d !== "Acogida"));
+                                }
+                              }}
+                              className="form-checkbox text-blue-600"
+                              disabled={
+                                situacion === "Adoptado" ||
+                                !(
+                                  situacion === "Refugio" ||
+                                  situacion === "Residencia"
+                                )
+                              }
+                            />
+                            <span className="ml-2">Acogida</span>
+                          </label>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              value="Adopción"
+                              checked={disponibilidad.includes("Adopción")}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setDisponibilidad([...disponibilidad, "Adopción"]);
+                                } else {
+                                  setDisponibilidad(disponibilidad.filter(d => d !== "Adopción"));
+                                }
+                              }}
+                              className="form-checkbox text-blue-600"
+                              disabled={
+                                situacion === "Adoptado" ||
+                                !(
+                                  situacion === "Refugio" ||
+                                  situacion === "Residencia" ||
+                                  situacion === "Casa acogida"
+                                )
+                              }
+                            />
+                            <span className="ml-2">Adopción</span>
+                          </label>
+                          <label className="inline-flex items-center">
+                            <input
+                              type="checkbox"
+                              value="Adoptado"
+                              checked={disponibilidad.includes("Adoptado")}
+                              onChange={e => {
+                                if (e.target.checked) {
+                                  setDisponibilidad([...disponibilidad, "Adoptado"]);
+                                } else {
+                                  setDisponibilidad(disponibilidad.filter(d => d !== "Adoptado"));
+                                }
+                              }}
+                              className="form-checkbox text-blue-600"
+                              disabled={situacion !== "Adoptado"}
+                            />
+                            <span className="ml-2">Adoptado</span>
+                          </label>
+                        </div>
                     </div>
                 </div>
                 {/* Grupo 4: fecha_nacimiento, fecha_entrada, peso */}
@@ -392,14 +532,23 @@ const EditarAnimal = ({animal,onClose})=>{
                 {/* Grupo 6: foto */}
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[150px]">
-                        <label className="block text-sm font-medium text-gray-600">Foto:</label>
-                        <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="w-full mt-1 text-sm"
-                        />
-                        {preview && <img src={preview} alt="Preview" className="mt-2 h-16 rounded border object-cover" />}
+                        
+                        <div className="flex items-center gap-4 mt-1">
+                            <label className="block text-sm font-medium text-gray-600">Foto:</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="text-sm"
+                            />
+                            {preview && (
+                                <img
+                                    src={preview}
+                                    alt="Preview"
+                                    className="h-16 rounded border object-cover"
+                                />
+                            )}
+                        </div>
                     </div>
                 </div>
                 {/* Grupo 7: Mensajes */}
@@ -407,14 +556,9 @@ const EditarAnimal = ({animal,onClose})=>{
                 {mensaje && <p className="text-green-600">{mensaje}</p>}
 
                 {/* Grupo 8: Botones */}
-                <div className="space-y-2">
-                  <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Actualizar</button>
-                  <button type="button" onClick={resetFormulario} className="w-full bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar cambios</button>
-                  {/*
-                  <Link to="/login">
-                    <button type="button" className="w-full bg-green-500 text-white p-2 text-sm rounded mt-2 hover:bg-green-600">Volver login</button>
-                  </Link>
-                  */}
+                <div className="flex gap-4 mt-2 justify-center">
+                  <button type="submit" className="bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Actualizar</button>
+                  <button type="button" onClick={resetFormulario} className="bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar cambios</button>
                 </div>
             </form>
         </div>

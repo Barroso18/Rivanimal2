@@ -161,7 +161,6 @@ const ChenilCrear = ({ onClose }) => {
             <button
               type="submit"
               className="bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600"
-              style={{ minWidth: "130px" }}
             >
               Agregar
             </button>
@@ -169,7 +168,6 @@ const ChenilCrear = ({ onClose }) => {
               type="button"
               onClick={resetFormulario}
               className="bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600"
-              style={{ minWidth: "130px" }}
             >
               Borrar campos
             </button>

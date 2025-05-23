@@ -37,6 +37,7 @@ const PaginaAnimal = () => {
   const [error, setError] = useState([]);
   const [usuarios, setUsuarios] = useState([]);
   const [paseoSeleccionado, setPaseoSeleccionado] = useState(null); // Estado para almacenar el paseo seleccionado
+  const [numeroChenil, setNumeroChenil] = useState(null);
   //Variables para la paginacion de los paseos
   const [paginaActual, setPaginaActual] = useState(0);
   const elementosPorPagina = 4;
@@ -186,6 +187,18 @@ const PaginaAnimal = () => {
     }
   }, [activeTab]);
 
+  useEffect(() => {
+      if (animalInformacion.situacion === "Refugio" && animalInformacion.clase === "perro") {
+        ServicioAnimales.buscaChenilAnimal(animalInformacion.id_animal)
+          .then((response) => {
+            setNumeroChenil(response.data); // Si tu backend devuelve {numero: 22}, usa response.data.numero
+          })
+          .catch(() => setNumeroChenil(null));
+      } else {
+        setNumeroChenil(null);
+      }
+    }, [animalInformacion.id_animal, animalInformacion.situacion, animalInformacion.clase]);
+
   const crearPaseo = (animal) => {
     gestionarModalPaseo("crear", true);
   };
@@ -223,7 +236,7 @@ const PaginaAnimal = () => {
   const recargaReportes = () =>{
     if (animalInformacion.id_animal) {
       if(animalInformacion.clase == "perro"){
-      servicioPaseos.getPaseosPorAnimal(animalInformacion.id_animal)
+      servicioPaseos.getPaseosPorAnimal(ananimalInformacion.id_animal)
         .then((response) => {
           //console.log("Paseos del animal:", response.data);
           setPaseos(response.data); 
@@ -513,9 +526,37 @@ const PaginaAnimal = () => {
             </h1>
             {muestraBotonEditar()}
           </div>
-          <span className="adopcion inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded mb-4">
-            <i>💚 En adopción</i>
-          </span>
+          {/* Mostrar etiquetas de disponibilidad */}
+          {animalInformacion.disponibilidad
+            ? animalInformacion.disponibilidad
+                .split(",")
+                .filter(Boolean)
+                .map((item, idx) => (
+                  <span
+                    key={idx}
+                    className="inline-block bg-green-100 text-green-700 text-xs font-medium px-2 py-1 rounded mb-2 mr-2"
+                  >
+                    <i>
+                      {item.trim().toLowerCase() === "acogida" && "🏠 "}
+                      {item.trim().toLowerCase() === "apadrinar" && (
+                        // Icono de moneda SVG
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 20 20"
+                          fill="currentColor"
+                          className="inline w-4 h-4 mr-1"
+                          style={{ verticalAlign: "middle" }}
+                        >
+                          <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="2" fill="#facc15" />
+                          <text x="10" y="14" textAnchor="middle" fontSize="10" fill="#b45309" fontWeight="bold">€</text>
+                        </svg>
+                      )}
+                      {item.trim().toLowerCase() === "adopción" && "💚 "}
+                      {item.trim()}
+                    </i>
+                  </span>
+                ))
+          : null}
           
           <div className="detalles space-y-2 bg-gray-100 p-4 rounded-md">
             <p>
@@ -544,8 +585,19 @@ const PaginaAnimal = () => {
               <strong>Peso:</strong> {animalInformacion.peso} Kg
             </p>
             <p>
-              <strong>Situación:</strong> {animalInformacion.situacion}
+              <strong>Situación:</strong> {animalInformacion.situacion}<br/>
+              <strong>Localidad:</strong> {animalInformacion.localidad}
             </p>
+            {/* Mostrar chenil solo si corresponde */}
+            {animalInformacion.situacion === "Refugio" && animalInformacion.clase === "perro" && (
+              <p><strong>Chenil:</strong>
+              <span className="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded">
+                {numeroChenil !== null && numeroChenil !== undefined && numeroChenil !== 0
+                  ? `${numeroChenil}`
+                  : "ninguno"}
+              </span>
+              </p>
+            )}
           </div>
         </div>
       </div>
@@ -658,6 +710,7 @@ const PaginaAnimal = () => {
         <EditarAnimal animal={animalInformacion}
         onClose={()=>gestionarModalAnimal("editar",false)}/>
       </Modal>
+     
     </div>
   );
 };

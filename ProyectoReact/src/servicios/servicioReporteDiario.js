@@ -1,4 +1,3 @@
-import http from "./http-axios.js";
 import https from "./https-axios.js";
 
 class ServicioReporteDiario {

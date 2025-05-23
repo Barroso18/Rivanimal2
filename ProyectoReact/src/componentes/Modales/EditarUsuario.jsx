@@ -7,13 +7,14 @@ import { Link } from 'react-router-dom';
 import servicioUsuarios from '../../servicios/servicioUsuarios';
 import Roles from '../Roles';
 import Swal from "sweetalert2";
+import '../../estilos/estilos.css';
 
 ///////////////////////////////////
 //SIN TERMINAR Este debe de ser para un usuario con rol admin
 //////////////////////////////////
 const EditarUsuario = ({usuario,onClose}) => {
     const { user } = useAuth();
-    console.log('User: ',user);
+    //console.log('User: ',user);
     const [nombre, setNombre] = useState(usuario.nombre);
     const [apellido1, setApellido1] = useState(usuario.apellido1);
     const [apellido2, setApellido2] = useState(usuario.apellido2);
@@ -103,6 +104,9 @@ const EditarUsuario = ({usuario,onClose}) => {
               text: mensaje,
               icon: "success",
               confirmButtonText: "Aceptar",
+              customClass: {
+                    confirmButton: "swal-tailwind-confirm"
+                }
             });
             //navigate("/pagina-gestion"); // Redirigir a la página de login después del registro exitoso
             //Cerramos el modal una vez el usuario se ha agregado
@@ -332,29 +336,28 @@ const EditarUsuario = ({usuario,onClose}) => {
                   </label>
                 </div>
                 {/* Grupo 6: Foto */}
-                <div className="flex-1 min-w-[150px]">
-                    <label className="block text-sm font-medium text-gray-600">Foto:</label>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      onChange={handleImageChange}
-                      className="w-full mt-1 text-sm"
-                    />
-                    {preview && <img src={preview} alt="Preview" className="mt-2 h-16 rounded border object-cover" />}
+                <div className="flex flex-wrap gap-4">
+                  <div className="flex-1 min-w-[150px]">
+                    <div className="flex items-center gap-4 mt-1">
+                        <label className="block text-sm font-medium text-gray-600">Foto:</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleImageChange}
+                          className="text-sm"
+                        />
+                        {preview && <img src={preview} alt="Preview" className="h-16 rounded border object-cover" />}
+                    </div>
+                  </div>
                 </div>
                 {/* Grupo 7: Mensajes */}
                 {error && <p className="text-red-500">{error}</p>}
                 {mensaje && <p className="text-green-600">{mensaje}</p>}
 
                 {/* Grupo 8: Botones */}
-                <div className="space-y-2">
-                  <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Actualizar</button>
-                  <button type="button" onClick={resetFormulario} className="w-full bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar cambios</button>
-                  {/*
-                  <Link to="/login">
-                    <button type="button" className="w-full bg-green-500 text-white p-2 text-sm rounded mt-2 hover:bg-green-600">Volver login</button>
-                  </Link>
-                  */}
+                <div className="flex gap-4 mt-2 justify-center">
+                  <button type="submit" className="bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Actualizar</button>
+                  <button type="button" onClick={resetFormulario} className="bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar cambios</button>
                 </div>
                 
               </form>

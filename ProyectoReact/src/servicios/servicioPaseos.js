@@ -3,7 +3,7 @@ import https from "./https-axios.js";
 class ServicioPaseos {
   getAll() {
     //return http.get("/paseos");
-    return http.get("/paseos.php?funcion=paseostodos");
+    return https.get("/paseos.php?funcion=paseostodos");
   }
   getPaseosPorAnimal(idanimal) {
     return https.post(`/paseos.php?funcion=paseosporanimal`, { idanimal });
@@ -24,21 +24,7 @@ class ServicioPaseos {
    borraPaseoPorId(idPaseo){
     return https.post(`/paseos.php?funcion=borraPaseoPorId`, {idPaseo});
    }
-  get(id) {
-    return http.get(`/paseos/${id}`);
-  }
 
-  create(data) {
-    return http.post("/paseos", data);
-  }
-
-  update(id, data) {
-    return http.put(`/paseos/${id}`, data);
-  }
-
-  delete(id) {
-    return http.delete(`/paseos/${id}`);
-  }
 }
 
 export default new ServicioPaseos();

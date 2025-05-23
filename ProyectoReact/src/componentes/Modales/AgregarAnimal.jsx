@@ -1,6 +1,7 @@
-import React, {useEffect,useState} from "react";
+import React, {useEffect, useState} from "react";
 import Swal from "sweetalert2";
 import servicioAnimales from "../../servicios/servicioAnimales";
+import '../../estilos/estilos.css';
 
 const AgregarAnimal = ({onClose})=>{
 
@@ -19,10 +20,15 @@ const AgregarAnimal = ({onClose})=>{
     const [descripcion,setDescripcion] = useState('');
     const [comportamiento,setComportamiento] = useState('');
     const [socializacion,setSocializacion] = useState('');
+    const [localidad,setLocalidad] = useState('');
+    const [disponibilidad,setDisponibilidad] = useState([]);
     const [mensaje, setMensaje] = useState('');
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(null);
     const [foto, setFoto] = useState('');
+    const [razasSugeridas, setRazasSugeridas] = useState([]);
+    const [razasRecientes, setRazasRecientes] = useState([]); // Nuevo estado para razas recientes
+
     //Manejador de imagenes
     const handleImageChange = (event) => {
         const file = event.target.files[0];
@@ -32,7 +38,6 @@ const AgregarAnimal = ({onClose})=>{
         }
     };
 
-
     // Función para restablecer el formulario
     const resetFormulario = () => {
         setNombre('');
@@ -40,6 +45,7 @@ const AgregarAnimal = ({onClose})=>{
         setRaza('');
         setSexo('');
         setTamaño('');
+        setLocalidad('');
         setppp(false);
         setIdentificador(0);
         setNivel(0);
@@ -55,7 +61,21 @@ const AgregarAnimal = ({onClose})=>{
         setError('');
         setPreview(null);
     };
-
+    const cargaRazasSugerencias = () => {
+        if (!clase) return null;
+        servicioAnimales.cargaRazasSugerencias(clase)
+            .then((response) => {
+                if (response.data && Array.isArray(response.data)) {
+                    setRazasSugeridas(response.data);
+                }
+            })
+            .catch((error) => {
+                setRazasSugeridas([]);
+            });
+        return razasSugeridas.map((raza, idx) => (
+            <option key={idx} value={raza} />
+        ));
+    };
 
     const controlaRegistro = async (e) => {
         e.preventDefault();
@@ -70,12 +90,14 @@ const AgregarAnimal = ({onClose})=>{
         formData.append("identificador",identificador);
         formData.append("nivel",nivel);
         formData.append("situacion",situacion);
+        formData.append("disponibilidad",disponibilidad);
         formData.append("fechaNacimiento",fechaNacimiento);
         formData.append("fechaEntrada",fechaEntrada);
         formData.append("peso",peso);
         formData.append("descripcion",descripcion);
         formData.append("comportamiento",comportamiento);
         formData.append("socializacion",socializacion);
+        formData.append("localidad",localidad);
         if (foto) {
           formData.append("file", foto); // Adjuntar la imagen
         }
@@ -91,12 +113,14 @@ const AgregarAnimal = ({onClose})=>{
             <p><strong>Identificador:</strong> ${identificador}</p>
             <p><strong>Nivel:</strong> ${nivel}</p>
             <p><strong>Situación:</strong> ${situacion}</p>
+            <p><strong>Disponibilidad:</strong> ${disponibilidad}</p>
             <p><strong>Fecha de Nacimiento:</strong> ${fechaNacimiento}</p>
             <p><strong>Fecha de Entrada:</strong> ${fechaEntrada}</p>
             <p><strong>Peso:</strong> ${peso} kg</p>
             <p><strong>Descripción:</strong> ${descripcion}</p>
             <p><strong>Comportamiento:</strong> ${comportamiento}</p>
             <p><strong>Socialización:</strong> ${socializacion}</p>
+            <p><strong>Localidad:</strong> ${localidad}</p>
         </div>
         `;
         
@@ -110,6 +134,9 @@ const AgregarAnimal = ({onClose})=>{
                 html: datosHTML,
                 icon: "success",
                 confirmButtonText: "Aceptar",
+                customClass: {
+                    confirmButton: "swal-tailwind-confirm"
+                }
             });
             console.log("Datos: ", response.data)
             //resetFormulario();
@@ -128,6 +155,31 @@ const AgregarAnimal = ({onClose})=>{
 
 
     };
+
+    useEffect(() => {
+        cargaRazasSugerencias();
+        // eslint-disable-next-line
+    }, [clase]);
+
+    useEffect(() => {
+        if (raza && !razasRecientes.includes(raza.trim()) && raza.trim() !== "") {
+            setRazasRecientes(prev => [...prev, raza.trim()]);
+        }
+        // eslint-disable-next-line
+    }, [raza]);
+
+    // Añade este useEffect para controlar la disponibilidad cuando la situación es "Adoptado"
+    useEffect(() => {
+        if (situacion === "Adoptado") {
+            setDisponibilidad(["Adoptado"]);
+        } else if (situacion === "Refugio" || situacion === "Residencia") {
+            setDisponibilidad(["Apadrinar", "Acogida", "Adopción"]);
+        } else if (situacion === "Casa acogida") {
+            setDisponibilidad(["Adopción"]);
+        } else {
+            setDisponibilidad((prev) => prev.filter((d) => d !== "Adoptado"));
+        }
+    }, [situacion]);
 
     return(
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
@@ -184,11 +236,15 @@ const AgregarAnimal = ({onClose})=>{
                         />
                         {/* Aqui ira una funcion que cargue el datalist en funcion de si es perro o gato */}
                         <datalist id="razas-sugerencias">
-                            <option value="Labrador" />
-                            <option value="Pastor Alemán" />
-                            <option value="Siamés" />
-                            <option value="Persa" />
-                            <option value="Otra" />
+                            {clase && razasSugeridas
+                                .filter(razaSugerida =>
+                                    !razasRecientes.some(r => r.toLowerCase() === razaSugerida.toLowerCase())
+                                )
+                                .map((raza, idx) => (
+                                    <option key={idx} value={raza} />
+                                ))
+                            }
+                            {clase && <option value="Otra" />}
                         </datalist>
                     </div>
                     
@@ -260,7 +316,7 @@ const AgregarAnimal = ({onClose})=>{
                     )}
                 </div>
 
-                {/* Grupo 3: identifiacador, situacion, nivel */}
+                {/* Grupo 3: identifiacador, localidad, nivel */}
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[150px]">
                         <label className="block text-sm font-medium text-gray-600">Identificador:</label>
@@ -287,6 +343,25 @@ const AgregarAnimal = ({onClose})=>{
                         />
                     </div>
                     <div className="flex-1 min-w-[150px]">
+                        <label className="block text-sm font-medium text-gray-600">Localidad:</label>
+                        <select
+                            value={localidad}
+                            name="localidad"
+                            onChange={(e) => setLocalidad(e.target.value)}
+                            required
+                            className="w-full p-1 text-sm border border-gray-300 rounded mt-1">
+                            <option value="" disabled>
+                                Selecciona una localidad
+                            </option>
+                            <option value="RIVAS-VACIAMADRID">RIVAS-VACIAMADRID</option>
+                            <option value="PARLA">PARLA</option>
+                            <option value="MADRID">MADRID</option>
+                        </select>
+                    </div>
+                </div>
+                {/* Grupo 4: situacion */}
+                <div className="flex flex-wrap gap-4">
+                    <div className="flex-1 min-w-[150px]">
                         <label className="block text-sm font-medium text-gray-600">Situación:</label>
                         <select
                             value={situacion}
@@ -297,13 +372,106 @@ const AgregarAnimal = ({onClose})=>{
                             <option value="" disabled>
                                 Selecciona una situación
                             </option>
-                            <option value="adopcion,refugio">En adopcion, refugio</option>
-                            <option value="adopcion,acogida">En adopcion, casa acogida</option>
-                            <option value="adoptado">Adoptado</option>
+                            <option value="Refugio">Refugio</option>
+                            <option value="Casa acogida">Casa acogida</option>
+                            <option value="Residencia">Residencia</option>
+                            <option value="Adoptado">Adoptado</option>
                         </select>
                     </div>
+                    <div className="flex-1 min-w-[150px]">
+                        <label className="block text-sm font-medium text-gray-600">Disponibilidad:</label>
+                        <div className="flex flex-wrap gap-2 mt-1">
+                            <label className="inline-flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Apadrinar"
+                                    checked={disponibilidad.includes("Apadrinar")}
+                                    onChange={e => {
+                                        if (e.target.checked) {
+                                            setDisponibilidad([...disponibilidad, "Apadrinar"]);
+                                        } else {
+                                            setDisponibilidad(disponibilidad.filter(d => d !== "Apadrinar"));
+                                        }
+                                    }}
+                                    className="form-checkbox text-blue-600"
+                                    disabled={
+                                        situacion === "Adoptado" ||
+                                        !(
+                                            situacion === "Refugio" ||
+                                            situacion === "Residencia"
+                                        )
+                                    }
+                                />
+                                <span className="ml-2">Apadrinar</span>
+                            </label>
+                            <label className="inline-flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Acogida"
+                                    checked={disponibilidad.includes("Acogida")}
+                                    onChange={e => {
+                                        if (e.target.checked) {
+                                            setDisponibilidad([...disponibilidad, "Acogida"]);
+                                        } else {
+                                            setDisponibilidad(disponibilidad.filter(d => d !== "Acogida"));
+                                        }
+                                    }}
+                                    className="form-checkbox text-blue-600"
+                                    disabled={
+                                        situacion === "Adoptado" ||
+                                        !(
+                                            situacion === "Refugio" ||
+                                            situacion === "Residencia"
+                                        )
+                                    }
+                                />
+                                <span className="ml-2">Acogida</span>
+                            </label>
+                            <label className="inline-flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Adopción"
+                                    checked={disponibilidad.includes("Adopción")}
+                                    onChange={e => {
+                                        if (e.target.checked) {
+                                            setDisponibilidad([...disponibilidad, "Adopción"]);
+                                        } else {
+                                            setDisponibilidad(disponibilidad.filter(d => d !== "Adopción"));
+                                        }
+                                    }}
+                                    className="form-checkbox text-blue-600"
+                                    disabled={
+                                        situacion === "Adoptado" ||
+                                        !(
+                                            situacion === "Refugio" ||
+                                            situacion === "Residencia" ||
+                                            situacion === "Casa acogida"
+                                        )
+                                    }
+                                />
+                                <span className="ml-2">Adopción</span>
+                            </label>
+                            <label className="inline-flex items-center">
+                                <input
+                                    type="checkbox"
+                                    value="Adoptado"
+                                    checked={disponibilidad.includes("Adoptado")}
+                                    onChange={e => {
+                                        if (e.target.checked) {
+                                            setDisponibilidad([...disponibilidad, "Adoptado"]);
+                                        } else {
+                                            setDisponibilidad(disponibilidad.filter(d => d !== "Adoptado"));
+                                        }
+                                    }}
+                                    className="form-checkbox text-blue-600"
+                                    disabled={situacion !== "Adoptado"}
+                                />
+                                <span className="ml-2">Adoptado</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
-                {/* Grupo 4: fecha_nacimiento, fecha_entrada, peso */}
+                {/* Grupo 5: fecha_nacimiento, fecha_entrada, peso */}
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[150px]">
                         <label className="block text-sm font-medium text-gray-600">Fecha de nacimiento:</label>
@@ -339,7 +507,7 @@ const AgregarAnimal = ({onClose})=>{
                         />
                     </div>
                 </div>
-                {/* Grupo 5: descripcion, comportamiento, socializacion */}
+                {/* Grupo 6: descripcion, comportamiento, socializacion */}
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[150px]">
                         <label className="block text-sm font-medium text-gray-600">Descripción:</label>
@@ -375,33 +543,37 @@ const AgregarAnimal = ({onClose})=>{
                         />
                     </div>
                 </div>
-                {/* Grupo 6: foto */}
+                {/* Grupo 7: foto */}
                 <div className="flex flex-wrap gap-4">
                     <div className="flex-1 min-w-[150px]">
-                        <label className="block text-sm font-medium text-gray-600">Foto:</label>
-                        <input
-                        type="file"
-                        accept="image/*"
-                        onChange={handleImageChange}
-                        className="w-full mt-1 text-sm"
-                        required
-                        />
-                        {preview && <img src={preview} alt="Preview" className="mt-2 h-16 rounded border object-cover" />}
+                        
+                        <div className="flex items-center gap-4 mt-1">
+                            <label className="block text-sm font-medium text-gray-600">Foto:</label>
+                            <input
+                                type="file"
+                                accept="image/*"
+                                onChange={handleImageChange}
+                                className="text-sm"
+                                required
+                            />
+                            {preview && (
+                                <img
+                                    src={preview}
+                                    alt="Preview"
+                                    className="h-16 rounded border object-cover"
+                                />
+                            )}
+                        </div>
                     </div>
                 </div>
-                {/* Grupo 7: Mensajes */}
+                {/* Grupo 8: Mensajes */}
                 {error && <p className="text-red-500">{error}</p>}
                 {mensaje && <p className="text-green-600">{mensaje}</p>}
 
-                {/* Grupo 8: Botones */}
-                <div className="space-y-2">
-                  <button type="submit" className="w-full bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Registrar</button>
-                  <button type="button" onClick={resetFormulario} className="w-full bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar campos</button>
-                  {/*
-                  <Link to="/login">
-                    <button type="button" className="w-full bg-green-500 text-white p-2 text-sm rounded mt-2 hover:bg-green-600">Volver login</button>
-                  </Link>
-                  */}
+                {/* Grupo 9: Botones */}
+                <div className="flex gap-4 mt-2 justify-center">
+                  <button type="submit" className="bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600">Registrar</button>
+                  <button type="button" onClick={resetFormulario} className="bg-red-500 text-white p-2 text-sm rounded hover:bg-red-600">Borrar campos</button>
                 </div>
             </form>
         </div>

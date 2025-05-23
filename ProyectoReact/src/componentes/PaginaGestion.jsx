@@ -20,7 +20,7 @@ const PaginaGestion = () => {
         animal: '',
         nivel: '',
         clase: '',
-        estado: ''
+        situacion: ''
     });
     const [animalesFiltrado, setAnimalesFiltrado] = useState([]);
     const [usuariosFiltrado, setUsuariosFiltrado] = useState([]);
@@ -32,6 +32,7 @@ const PaginaGestion = () => {
     const tabs = [
         { id: "usuarios", label: "Usuarios" },
         { id: "animales", label: "Animales" },
+        { id: "cheniles", label: "Cheniles" },
         { id: "reportesdiarios", label: "Reportes diarios" }
     ];
     const tabRefs = useRef({});
@@ -96,7 +97,7 @@ const PaginaGestion = () => {
                 });
                 setUsuarios(usuariosProcesados);
                 setUsuariosFiltrado(usuariosProcesados);
-                console.log("Lista de usuarios:", usuariosProcesados);
+                //console.log("Lista de usuarios:", usuariosProcesados);
             })
             .catch((error) => {
                 console.error("Error al cargar la lista de usuarios:", error);
@@ -107,7 +108,7 @@ const PaginaGestion = () => {
         servicioAnimales.getAll()
         .then((response) => {
                 setAnimales(response.data);
-                console.log("Lista de animales:", response.data);
+                //console.log("Lista de animales:", response.data);
         })
         .catch((error) => {
             console.error("Error al cargar la lista de animales:", error);
@@ -133,13 +134,13 @@ const PaginaGestion = () => {
                 animal.clase && animal.clase.toLowerCase() === filtros.clase.toLowerCase()
             );
         }
-        if (filtros.estado) {
+        if (filtros.situacion) {
             filtrados = filtrados.filter(animal =>
-                animal.situacion && animal.situacion.toLowerCase() === filtros.estado.toLowerCase()
+                animal.situacion && animal.situacion.toLowerCase() === filtros.situacion.toLowerCase()
             );
         }
         setAnimalesFiltrado(filtrados);
-    }, [filtros, animales]);
+    }, [filtros, animales]); 
 
     const handleFiltrosChange = (nuevosFiltros) => {
         setFiltros(nuevosFiltros);
@@ -208,7 +209,7 @@ const PaginaGestion = () => {
                         </button>
                         <h2 className="mt-4 text-lg font-bold">Lista de Usuarios</h2>
                         <p>Esta es la lista de usuarios registrados en la aplicación:</p>
-                        <div className="flex justify-center">
+                        <div className="flex justify-center items-center">
                             <FiltroUsuarios filtros={filtros2} onFiltrosChange={handleFiltrosChange2} errores={errores} />
                         </div>
                         <ul className="list-disc pl-5">
@@ -231,23 +232,27 @@ const PaginaGestion = () => {
                         </button>
                         <button type="button" 
                             className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
-                            onClick={() =>crearChenil()}>
-                                Agregar chenil
-                        </button>
-                        <button type="button" 
-                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
                             >
                                 Asignar chenil
                         </button>
                         <h2 className="mt-4 text-lg font-bold">Gestión de Animales</h2>
                         <p>Contenido relacionado con la gestión de animales.</p>
-                        <div className="flex justify-center">
+                        <div className="flex justify-center items-center">
                             <FiltroAnimales filtros={filtros} onFiltrosChange={handleFiltrosChange} errores={{}} />
                         </div>
                         <ul className="list-disc pl-5">
-                            {(animalesFiltrado.length > 0 ? animalesFiltrado : animales).map((animal) => (
-                                <AnimalCard key={animal.id_animal} animal={animal} onDelete={() =>cargaTabAnimales()}/>
-                            ))}
+                            {filtros.animal || filtros.nivel || filtros.clase || filtros.situacion
+                                ? (
+                                animalesFiltrado.length > 0
+                                    ? animalesFiltrado.map((animal) => (
+                                        <AnimalCard key={animal.id_animal} animal={animal} onDelete={() =>cargaTabAnimales()}/>
+                                    ))
+                                    : <>No se encontraron animales con esos filtros.</>
+                                )
+                                : animales.map((animal) => (
+                                    <AnimalCard key={animal.id_animal} animal={animal} onDelete={() =>cargaTabAnimales()}/>
+                                ))
+                            }
                         </ul>
                     </div>
                 )}
@@ -260,6 +265,18 @@ const PaginaGestion = () => {
                         </button>
                         <h2 className="mt-4 text-lg font-bold">Reportes Diarios</h2>
                         <p>Contenido relacionado con los reportes diarios.</p>
+                    </div>
+                )}
+                {activeTab === "cheniles" && (
+                    <div>
+                        
+                        <button type="button" 
+                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                            onClick={() =>crearChenil()}>
+                                Agregar chenil
+                        </button>
+                        <h2 className="mt-4 text-lg font-bold">Gestion de cheniles y zonas de gatos</h2>
+                        <p>Contenido relacionado con los cheniles y zonas de gatos.</p>
                     </div>
                 )}
             </div>

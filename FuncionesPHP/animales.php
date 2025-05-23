@@ -56,6 +56,8 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     $socializacion = $_POST['socializacion'] ?? '';
     $nivel = $_POST['nivel'] ?? 0;
     $ppp = $_POST['ppp'] ?? 0;
+    $localidad = $_POST['localidad'] ?? '';
+    $disponibilidad = $_POST['disponibilidad'] ?? '';
     $foto = '';
     $errores = [];
     // Validaciones básicas
@@ -63,7 +65,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     if (empty($clase)) $errores['clase'] = "La clase es obligatoria";
     if (empty($raza)) $errores['raza'] = "La clase es obligatoria";
     if (empty($sexo)) $errores['sexo'] = "El sexo es obligatorio";
-    if (empty($identificador) || $identificador === 0 || is_nan($identificador)) $errores['identificador'] = "El identificador es obligatorio y debe ser un número mayor que 0";
+    if (empty($identificador) || $identificador === 0 || is_nan($identificador)|| $identificador<0) $errores['identificador'] = "El identificador es obligatorio y debe ser un número mayor que 0";
     if (empty($tamaño)) $errores['tamaño'] = "El tamaño es obligatorio";
     if (empty($situacion)) $errores['situacion'] = "La situación es obligatoria";
     if (empty($fechaNacimiento)) $errores['fechaNacimiento'] = "La fecha de nacimiento es obligatoria";
@@ -71,6 +73,8 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     if(empty($peso) || is_nan($peso)|| $peso <0) $errores['peso'] = "El peso debe ser un número positivo";
     if (empty($nivel) || is_nan($nivel)) $errores['nivel'] = "El nivel es obligatorio y debe ser un número entre 1 y 5";
     if (empty($clase)) $errores['clase'] = "La clase es obligatoria";
+    if(empty($localidad)) $errores['localidad']="La localidad es obligatoria";
+    if(empty($disponibilidad)) $errores['disponibilidad']="La disponibilidad es obligatoria";
      // Validar el formato de la fecha
     $fecha_obj = DateTime::createFromFormat('Y-m-d', $fechaNacimiento);
     if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $fechaNacimiento) {
@@ -128,10 +132,10 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
 
     //agregaAnimal($conn);
 
-    $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?)";
+    $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp,disponibilidad,localidad) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssissssiissssi", $nombre, $clase, $raza, $sexo,$identificador,$tamaño,$situacion,$fechaNacimiento,$fechaEntrada,$nivel,$peso,$descripcion,$foto,$comportamiento,$socializacion,$ppp);
+    $stmt->bind_param("ssssissssiissssiss", $nombre, $clase, $raza, $sexo,$identificador,$tamaño,$situacion,$fechaNacimiento,$fechaEntrada,$nivel,$peso,$descripcion,$foto,$comportamiento,$socializacion,$ppp,$disponibilidad,$localidad);
     
     if ($stmt->execute()) {
         echo json_encode(["message" => "Registro de animal exitoso"]);
@@ -162,6 +166,8 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     $socializacion = $_POST['socializacion'] ?? '';
     $nivel = $_POST['nivel'] ?? 0;
     $ppp = $_POST['ppp'] ?? 0;
+    $localidad = $_POST['localidad'] ?? '';
+    $disponibilidad = $_POST['disponibilidad'] ?? '';
     $foto = '';
     $errores = [];
     // Validaciones básicas
@@ -178,6 +184,8 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     if(empty($peso) || is_nan($peso)|| $peso <0) $errores['peso'] = "El peso debe ser un número positivo";
     if (empty($nivel) || is_nan($nivel)) $errores['nivel'] = "El nivel es obligatorio y debe ser un número entre 1 y 5";
     if (empty($clase)) $errores['clase'] = "La clase es obligatoria";
+    if(empty($localidad)) $errores['localidad']="La localidad es obligatoria";
+    if(empty($disponibilidad)) $errores['disponibilidad']="La disponibilidad es obligatoria";
      // Validar el formato de la fecha
     $fecha_obj = DateTime::createFromFormat('Y-m-d', $fechaNacimiento);
     if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $fechaNacimiento) {
@@ -238,17 +246,17 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     // Si se subió una nueva foto, actualiza también el campo foto
     if (!empty($foto)) {
         $sql = "UPDATE animal SET 
-            nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, foto=?, comportamiento=?, socializacion=?, ppp=?
+            nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, foto=?, comportamiento=?, socializacion=?, ppp=?, localidad=?, disponibilidad=?
             WHERE id_animal=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssissssiissssii", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $foto, $comportamiento, $socializacion, $ppp, $id_animal);
+        $stmt->bind_param("ssssissssiissssissi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $foto, $comportamiento, $socializacion, $ppp,$localidad, $disponibilidad, $id_animal);
     } else {
         // Si no se subió nueva foto, no actualices el campo foto
         $sql = "UPDATE animal SET 
-            nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, comportamiento=?, socializacion=?, ppp=?
+            nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, comportamiento=?, socializacion=?, ppp=?, localidad=?, disponibilidad=?
             WHERE id_animal=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssissssiisssii", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $comportamiento, $socializacion, $ppp, $id_animal);
+        $stmt->bind_param("ssssissssiisssissi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $comportamiento, $socializacion, $ppp,$localidad, $disponibilidad, $id_animal);
     }
 
     if ($stmt->execute()) {
@@ -349,5 +357,25 @@ if($funcion === 'asignarChenil'){
     $numero = 0;
     
     //echo agregarChenil($conn, $numero,$reja,$guillotina,$activo,$descripcion);
+}
+
+if($funcion === 'cargaRazasSugerencias'){
+    $input = json_decode(file_get_contents("php://input"), true);
+    if(isset($input['clase'])){
+        $clase = $input['clase'];
+    }else{
+        echo json_encode(["error" => "La clase no puede ser vacia"]);
+    }
+    echo json_encode(cargaRazasSugerencias($conn, $clase));
+}
+
+if($funcion === 'buscaChenilAnimal'){
+    $input = json_decode(file_get_contents("php://input"), true);
+    if(isset($input['id_animal'])){
+        $id_animal = $input['id_animal'];
+    }else{
+        echo json_encode(["error" => "ID de animal no proporcionado"]);
+    }
+    echo json_encode(buscaNumeroChenilPorIdAnimal($conn, $id_animal));
 }
 ?>
