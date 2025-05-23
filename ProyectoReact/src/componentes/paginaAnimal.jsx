@@ -560,7 +560,20 @@ const PaginaAnimal = () => {
           
           <div className="detalles space-y-2 bg-gray-100 p-4 rounded-md">
             <p>
-              <strong>Nombre:</strong> {animalInformacion.nombre}{" "}
+              <strong>Nombre:</strong> {animalInformacion.nombre}{" "}<br/>
+            
+            {/* Mostrar chenil solo si corresponde */}
+            {animalInformacion.situacion === "Refugio" && animalInformacion.clase === "perro" && (
+              <>
+              
+              <strong>Chenil:</strong>
+              <span className="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded">
+                {numeroChenil !== null && numeroChenil !== undefined && numeroChenil !== 0
+                  ? `${numeroChenil}`
+                  : "ninguno"}
+              </span>
+              </>
+            )}
             </p>
             <p>
               <strong>Clase:</strong> {animalInformacion.clase}{" "}
@@ -588,16 +601,7 @@ const PaginaAnimal = () => {
               <strong>Situación:</strong> {animalInformacion.situacion}<br/>
               <strong>Localidad:</strong> {animalInformacion.localidad}
             </p>
-            {/* Mostrar chenil solo si corresponde */}
-            {animalInformacion.situacion === "Refugio" && animalInformacion.clase === "perro" && (
-              <p><strong>Chenil:</strong>
-              <span className="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded">
-                {numeroChenil !== null && numeroChenil !== undefined && numeroChenil !== 0
-                  ? `${numeroChenil}`
-                  : "ninguno"}
-              </span>
-              </p>
-            )}
+            
           </div>
         </div>
       </div>
