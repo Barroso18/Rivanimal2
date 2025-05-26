@@ -437,8 +437,31 @@ use \Firebase\JWT\JWT;
             return ["errores" => "Error al crear el chenil"];
         }
     }
+    function asignarChenil($conn,$id_animal,$id_chenil,$activo){
+        $sql = "INSERT INTO chenil_animal (animal, chenil, activo) VALUES (?, ?, ?)";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("iii", $id_animal, $id_chenil,$activo);
+        if ($stmt->execute()) {
+            $stmt->close();
+            $conn->close();
+            return ["mensaje" => "Chenil asignado"];
+        } else {
+            $stmt->close();
+            $conn->close();
+            return ["errores" => "Error al asignar el chenil"];
+        }
+    }
     function buscaChenilPorNumero($conn,$numero){
-
+        $sql ="SELECT * FROM chenil WHERE numero = ?";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("i", $numero);
+        $stmt->execute();
+        $resultado = $stmt->get_result();
+        if ($resultado && $resultado->num_rows > 0) {
+            return $resultado->fetch_all(MYSQLI_ASSOC);
+        } else {
+            return ["errores" => "No hay cheniles con ese número"];
+        }
     }
     function buscaChenilSinAsignar($conn){
         $sql ="SELECT * FROM chenil WHERE activo = 1 AND id_chenil NOT IN (SELECT chenil FROM chenil_animal);";
@@ -448,7 +471,7 @@ use \Firebase\JWT\JWT;
         if ($resultado && $resultado->num_rows > 0) {
             return $resultado->fetch_all(MYSQLI_ASSOC);
         } else {
-            return null;
+            return ["errores" => "No hay cheniles libres"];
         }
     }
     function existeChenilPorNumero($conn, $numero) {

@@ -637,7 +637,12 @@ const PaginaAnimal = () => {
             </div>
           )}
           {activeTab === "socializacion" && (
-            <div className="p-4">Socialización con personas y otros animales.</div>
+            <div className="p-4">
+              <strong>Socialización con personas y otros animales</strong>
+              <div>
+                {animalInformacion.socializacion}
+              </div>
+            </div>
           )}
           {activeTab === "otros" && (
             <div className="p-4">
@@ -654,12 +659,20 @@ const PaginaAnimal = () => {
           )}
         </div>
       </div>
-      <div>
-        Padrinos, Voluntarios, Adoptantes
-        {visualizaUsuariosCuidadores()}
-        <CalendarioDinamicoAnimal reportes={paseos} clase={animalInformacion.clase}/>
+      <div className="flex flex-col justify-center items-center lg:items-start lg:flex-row max-w-[800px] w-full">
+        <div className="py-4">
+          Padrinos, Voluntarios, Adoptantes
+          {visualizaUsuariosCuidadores()}
+        </div>
+
+        <CalendarioDinamicoAnimal
+          reportes={paseos}
+          clase={animalInformacion.clase}
+          crearPaseo={() => crearPaseo(animalInformacion.nombre)}
+          crearReporteGato={() => crearReporteGato(animalInformacion.nombre)}
+          onCrearReporte={()=>recargaReportes()}
+        />
       </div>
-      {agregarBotonesReportes()}
       
       <Modal isOpen={modalsPaseo.crear}
         onClose={() => {

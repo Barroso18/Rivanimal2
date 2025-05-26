@@ -113,7 +113,12 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     // Procesa la foto si fue enviada
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $fotoNombre = 'A_'.$nombre.'_'.$identificador . '.' . $extension;
+        if($clase === 'perro'){
+            $fotoNombre = 'A_'.$nombre.'_P'. '.' . $extension;
+        }
+        if($clase === 'gato'){
+            $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
+        }
         $carpetaFotos = "../ProyectoReact/public/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
@@ -224,7 +229,12 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     // Procesa la foto si fue enviada
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $fotoNombre = 'A_'.$nombre.'_'.$identificador . '.' . $extension;
+        if($clase === 'perro'){
+            $fotoNombre = 'A_'.$nombre.'_P'. '.' . $extension;
+        }
+        if($clase === 'gato'){
+            $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
+        }
         $carpetaFotos = "../ProyectoReact/public/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
@@ -354,11 +364,17 @@ if($funcion === 'editarChenil'){
     //echo agregarChenil($conn, $numero,$reja,$guillotina,$activo,$descripcion);
 }
 if($funcion === 'asignarChenil'){
-    $numero = 0;
+    $input = json_decode(file_get_contents("php://input"), true);
     
+    $id_animal = $input['datosRegistro']['animal'];
+    $id_chenil = $input['datosRegistro']['chenil'];
+    $activo = $input['datosRegistro']['activo'];
+    echo json_encode(asignarChenil($conn,$id_animal,$id_chenil,$activo));
     //echo agregarChenil($conn, $numero,$reja,$guillotina,$activo,$descripcion);
 }
-
+if($funcion === 'buscaChenilesLibres'){
+    echo json_encode(buscaChenilSinAsignar($conn));
+}
 if($funcion === 'cargaRazasSugerencias'){
     $input = json_decode(file_get_contents("php://input"), true);
     if(isset($input['clase'])){

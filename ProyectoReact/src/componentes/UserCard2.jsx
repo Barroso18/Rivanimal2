@@ -63,25 +63,27 @@ const UserCard2 = ({ usuario, onEdit, onDelete, onView  }) => {
         });
     }
     return (
-        <li className="flex flex-col sm:flex-row items-center sm:items-start justify-between p-4 bg-white rounded-lg shadow-md border mb-4">
+       <li className="relative flex flex-col sm:flex-row items-start sm:items-center justify-between p-4 bg-white rounded-lg shadow-md border mb-4">
             {/* Información principal */}
             <div className="flex-1">
                 <h3 className="text-lg font-semibold text-gray-800">{usuario.id_usuario} {usuario.nombre} {usuario.apellido1} {usuario.apellido2}</h3>
                 <p className="text-sm text-gray-600 mt-1">
-                    <strong>Usuario:</strong> {usuario.nombre_usuario} <strong>Roles: </strong>
+                    <span className="font-semibold">Usuario:</span> {usuario.nombre_usuario}
+                </p>
+                <div className="flex flex-wrap gap-2 mt-2"><strong>Roles: </strong>
                     {usuario.roles.map((rol, index) => (
                         <span
                             key={index}
-                            className="bg-green-100 text-green-700 text-xs font-medium px-2.5 py-0.5 rounded mr-1"
+                            className="bg-green-100 text-green-700 flex items-center justify-center text-xs font-medium px-2.5 py-0.5 rounded "
                         >
                             {rol.trim()}
                         </span>
                     ))}
-                </p>
+                </div>
             </div>
 
             {/* Botones */}
-            <div className="flex gap-2 mt-4 sm:mt-0 sm:ml-4">
+            <div className="divbotones mt-4 sm:mt-0 flex flex-row sm:flex-row justify-center sm:justify-end gap-2 w-full sm:w-auto">
                 <Link to={`/perfil-publico/${usuario.nombre_usuario}`} className="flex items-center gap-1">
                     <button
                     className="relative bg-green-500 hover:bg-green-600 text-white flex flex-row items-center gap-2 px-4 py-2 rounded-md text-sm group">

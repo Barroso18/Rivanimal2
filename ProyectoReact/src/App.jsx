@@ -10,7 +10,6 @@ import PerfilUsuarioPublico from './componentes/PerfilUsuarioPublico';
 import ServicioAnimales from './servicios/servicioAnimales';
 import ServicioPaseos from './servicios/servicioPaseos';
 import useStateStorage from './servicios/UseStateStorage';
-import PaginaPaseos from './componentes/PaginaPaseos';
 import Calendario from './componentes/Calendario';
 import { AuthProvider } from './Login/AuthProvider';
 import Login from './Login/login';
@@ -92,11 +91,6 @@ function App() {
             <Route path='/pagina-animal/:idanimal' element={
               <RutasProtegidas>
                 <PaginaAnimal/>
-              </RutasProtegidas>
-            } />
-            <Route path='/paseos' element={
-              <RutasProtegidas>
-                <PaginaPaseos/>
               </RutasProtegidas>
             } />
             <Route path='/pagina-animales' element={

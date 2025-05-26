@@ -4,6 +4,8 @@ import "../estilos/estilos.css";
 import Modal from "./Modales/Modal.jsx";
 import Registro from "./Modales/RegistroUsuario.jsx";
 import AgregarAnimal from './Modales/AgregarAnimal.jsx';
+import ChenilCrear from './Modales/ChenilCrear.jsx';
+import ChenilAsignar from './Modales/ChenilAsignar.jsx';
 import UserCard from './UserCard';
 import UserCard2 from './UserCard2';
 import AnimalCard from './AnimalCard.jsx';
@@ -11,7 +13,6 @@ import servicioAnimales from '../servicios/servicioAnimales.js';
 import servicioUsuarios from "../servicios/servicioUsuarios.js";
 import FiltroAnimales from "./FiltroAnimales"; 
 import FiltroUsuarios from './FiltroUsuarios.jsx';
-import ChenilCrear from './Modales/ChenilCrear.jsx';
 
 const PaginaGestion = () => {
     const [usuarios, setUsuarios] = useState([]);
@@ -78,6 +79,7 @@ const PaginaGestion = () => {
     const crearRegistroAnimal = () => {
         gestionarModalAnimales("crear", true);
     }
+
 
     // Función para cargar la lista de usuarios
     const cargaTabUsuarios = () => {
@@ -202,13 +204,17 @@ const PaginaGestion = () => {
             <div className="tab-content mt-4">
                 {activeTab === "usuarios" && (
                     <div>
-                        <button type="button" 
-                            className=" bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
-                            onClick={() => crearRegistroUsuario()}>
-                                Añadir Usuario
-                        </button>
-                        <h2 className="mt-4 text-lg font-bold">Lista de Usuarios</h2>
-                        <p>Esta es la lista de usuarios registrados en la aplicación:</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4">
+                            <div className="flex-1">
+                                <h2 className="mt-4 text-lg font-bold">Lista de Usuarios</h2>
+                                <p>Esta es la lista de usuarios registrados en la aplicación:</p>
+                            </div>
+                            <button type="button" 
+                                className=" bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                                onClick={() => crearRegistroUsuario()}>
+                                    Añadir Usuario
+                            </button>
+                        </div>
                         <div className="flex justify-center items-center">
                             <FiltroUsuarios filtros={filtros2} onFiltrosChange={handleFiltrosChange2} errores={errores} />
                         </div>
@@ -225,32 +231,47 @@ const PaginaGestion = () => {
                 )}
                 {activeTab === "animales" && (
                     <div>
-                        <button type="button" 
-                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
-                            onClick={() => crearRegistroAnimal()}>
-                                Registro Animal
-                        </button>
-                        <button type="button" 
-                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4">
+                            <div className="flex-1">
+                                <h2 className="text-lg font-bold">Gestión de Animales</h2>
+                                <p>Contenido relacionado con la gestión de animales.</p>
+                            </div>
+    
+                            <button
+                                type="button"
+                                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 self-start sm:self-auto"
+                                onClick={() => crearRegistroAnimal()}
                             >
-                                Asignar chenil
-                        </button>
-                        <h2 className="mt-4 text-lg font-bold">Gestión de Animales</h2>
-                        <p>Contenido relacionado con la gestión de animales.</p>
-                        <div className="flex justify-center items-center">
-                            <FiltroAnimales filtros={filtros} onFiltrosChange={handleFiltrosChange} errores={{}} />
+                                Registro Animal
+                            </button>
+                        </div>
+
+                        <div className="flex justify-center items-center mt-4">
+                        <FiltroAnimales filtros={filtros} onFiltrosChange={handleFiltrosChange} errores={{}} />
                         </div>
                         <ul className="list-disc pl-5">
                             {filtros.animal || filtros.nivel || filtros.clase || filtros.situacion
                                 ? (
                                 animalesFiltrado.length > 0
                                     ? animalesFiltrado.map((animal) => (
-                                        <AnimalCard key={animal.id_animal} animal={animal} onDelete={() =>cargaTabAnimales()}/>
+                                        <AnimalCard
+                                            key={animal.id_animal}
+                                            animal={animal}
+                                            onAsignar={() => {
+                                                cargaTabAnimales();
+                                            }}
+                                            onReAsignar={() => {
+                                                cargaTabAnimales();
+                                            }}
+                                            />
                                     ))
                                     : <>No se encontraron animales con esos filtros.</>
                                 )
                                 : animales.map((animal) => (
-                                    <AnimalCard key={animal.id_animal} animal={animal} onDelete={() =>cargaTabAnimales()}/>
+                                    <AnimalCard key={animal.id_animal} animal={animal} onDelete={() =>cargaTabAnimales()} onAsignar={() => {
+                                                
+                                                cargaTabAnimales();
+                                            }}/>
                                 ))
                             }
                         </ul>
@@ -258,25 +279,34 @@ const PaginaGestion = () => {
                 )}
                 {activeTab === "reportesdiarios" && (
                     <div>
-                        <button type="button" 
-                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
-                            >
-                                Agregar reporte
-                        </button>
-                        <h2 className="mt-4 text-lg font-bold">Reportes Diarios</h2>
-                        <p>Contenido relacionado con los reportes diarios.</p>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4">
+                            <div className="flex-1">
+                                <h2 className="mt-4 text-lg font-bold">Reportes Diarios</h2>
+                                <p>Contenido relacionado con los reportes diarios.</p>
+                            </div>
+                            <button type="button" 
+                                className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                                >
+                                    Agregar reporte
+                            </button>
+                        </div>
+                        
                     </div>
                 )}
                 {activeTab === "cheniles" && (
                     <div>
+                        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4">
+                            <div className="flex-1">
+                                <h2 className="mt-4 text-lg font-bold">Gestion de cheniles y zonas de gatos</h2>
+                                <p>Contenido relacionado con los cheniles y zonas de gatos.</p>
+                            </div>
+                            <button type="button" 
+                                className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                                onClick={() =>crearChenil()}>
+                                    Agregar chenil
+                            </button>
+                        </div>
                         
-                        <button type="button" 
-                            className="bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
-                            onClick={() =>crearChenil()}>
-                                Agregar chenil
-                        </button>
-                        <h2 className="mt-4 text-lg font-bold">Gestion de cheniles y zonas de gatos</h2>
-                        <p>Contenido relacionado con los cheniles y zonas de gatos.</p>
                     </div>
                 )}
             </div>
@@ -306,6 +336,7 @@ const PaginaGestion = () => {
                     gestionarModalCheniles("crear", false);
                 }}/>
             </Modal>
+            
         </div>
     );
 };

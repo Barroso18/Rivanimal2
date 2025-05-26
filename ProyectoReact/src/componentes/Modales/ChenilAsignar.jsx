@@ -5,24 +5,22 @@ import '../../estilos/estilos.css';
 /////////////////////////////////
 // Hay que modificarlo para asignarAnimal
 ////////////////////////////////
-const ChenilAsignar = ({onClose})=>{
+const ChenilAsignar = ({animal,onClose})=>{
+  const [chenilesLibres,setChenilesLibres] = useState([]);
+  const [chenilSeleccionado,setChenilSeleccionado] = useState({});
     const [mensaje, setMensaje] = useState('');
     const [error, setError] = useState('');
     const [form, setForm] = useState({
-        numero: 0,
-        reja: false,
-        guillotina: false,
-        activo: false,
-        descripcion: "",
+        chenil: "",
+        animal: animal.id_animal,
+        activo: true,
     });
 
     const resetFormulario = () => {
         setForm({
-            numero: 0,
-            reja: false,
-            guillotina: false,
-            activo: false,
-            descripcion: "",
+          chenil: "",
+          animal: animal.id_animal,
+          activo: true,
         });
     };
 
@@ -34,13 +32,46 @@ const ChenilAsignar = ({onClose})=>{
         });
     };
 
-    const envioFormulario = async (e) => {
+    const buscaChenilesLibres =() =>{
+      servicioAnimales.buscaChenilesLibres()
+      .then((response) => {
+        if (response.data.errores) {
+          setError(response.data.errores);
+          Swal.fire({
+              title: error,
+              icon: "fail",
+              confirmButtonText: "Aceptar",
+              customClass: {
+                  confirmButton: "swal-tailwind-confirm"
+              }
+          });
+          
+        } else {
+          setChenilesLibres(response.data);
+        }
+      }).catch((error) => {
+        setError("Error en la petición de busqueda.");
+        console.error("Error en axios:", error);
+      });
+    };
+
+    useEffect(() => {
+      buscaChenilesLibres();
+    }, []);
+
+    const envioFormulario = (e) => {
         e.preventDefault();
         setError('');
         setMensaje('');
-        try {
-            const response = await servicioAnimales.crearChenil(form);
-            if (response.data.mensaje === "Chenil creado") {
+        const datos = {
+            ...form,
+            chenil: Number(form.chenil),
+            animal: Number(form.animal),
+        };
+        console.log("Asignacion: ",datos);
+        servicioAnimales.asignarChenil(datos)
+        .then((response) => {
+          if (response.data.mensaje === "Chenil asignado") {
             setError("");
             Swal.fire({
                 title: response.data.mensaje,
@@ -58,12 +89,12 @@ const ChenilAsignar = ({onClose})=>{
                 : Object.values(response.data.errores).join(", ")
             );
             } else {
-            setError('Error desconocido al crear el chenil.');
+            setError('Error desconocido al asignar el chenil.');
             }
-        } catch (error) {
+        }).catch ((error) =>{
             setError('Error en la petición de registro.');
             console.error('Error en axios:', error);
-        }
+        })
     };
     return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
@@ -76,53 +107,43 @@ const ChenilAsignar = ({onClose})=>{
         >
           ✖
         </button>
-        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Registro de chenil</h2>
+        <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Asignar chenil</h2>
         {/* Formulario */}
         <form onSubmit={envioFormulario} className="space-y-6">
-          {/* Grupo 1: Número y reja */}
+          {/* Grupo 1: chenil y animal */}
           <div className="flex flex-wrap gap-4">
             <div className="flex-1 min-w-[150px]">
-              <label className="block text-sm font-medium text-gray-600">Número:</label>
+              <label className="block text-sm font-medium text-gray-600">Animal:</label>
               <input
-                type="number"
-                value={form.numero}
-                name="numero"
-                min={0}
-                onChange={gestionarCambio}
-                required
+                type="text"
+                value={`#${animal.id_animal} - ${animal.nombre}`}
+                disabled
                 className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
               />
             </div>
-            <div className="flex-1 min-w-[150px]">
-              <label className="block text-sm font-medium text-gray-600">Tiene reja:</label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={form.reja}
-                  name="reja"
-                  onChange={gestionarCambio}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <span className="text-sm text-black-600">Reja</span>
-              </label>
+             <div className="flex-1 min-w-[150px]">
+              <label className="block text-sm font-medium text-gray-600">Chenil:</label>
+              <select
+                value={form.chenil}
+                name="chenil"
+                onChange={gestionarCambio}
+                required
+                className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+              >
+                <option value="" disabled>
+                  Selecciona un chenil
+                </option>
+                {chenilesLibres.map((chenil) => (
+                  <option key={chenil.id_chenil} value={chenil.id_chenil}>
+                    {chenil.numero}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
 
-          {/* Grupo 2: guillotina y activo */}
+          {/* Grupo 2: activo */}
           <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-[150px]">
-              <label className="block text-sm font-medium text-gray-600">Tiene guillotina:</label>
-              <label className="flex items-center space-x-2">
-                <input
-                  type="checkbox"
-                  checked={form.guillotina}
-                  name="guillotina"
-                  onChange={gestionarCambio}
-                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <span className="text-sm text-black-600">Guillotina</span>
-              </label>
-            </div>
             <div className="flex-1 min-w-[150px]">
               <label className="block text-sm font-medium text-gray-600">Está activo:</label>
               <label className="flex items-center space-x-2">
@@ -138,21 +159,6 @@ const ChenilAsignar = ({onClose})=>{
             </div>
           </div>
 
-          {/* Grupo 3: descripcion */}
-          <div className="flex flex-wrap gap-4">
-            <div className="flex-1 min-w-[150px]">
-              <label className="block text-sm font-medium text-gray-600">Descripción:</label>
-              <textarea
-                id="descripcion"
-                name="descripcion"
-                value={form.descripcion}
-                onChange={gestionarCambio}
-                placeholder="Opcional"
-                className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
-              />
-            </div>
-          </div>
-
           {/* Grupo 4: Mensajes */}
           {error && <p className="text-red-500">{error}</p>}
           {mensaje && <p className="text-green-600">{mensaje}</p>}
@@ -164,7 +170,7 @@ const ChenilAsignar = ({onClose})=>{
               className="bg-blue-500 text-white p-2 text-sm rounded hover:bg-blue-600"
               style={{ minWidth: "130px" }}
             >
-              Agregar
+              Asignar
             </button>
             <button
               type="button"

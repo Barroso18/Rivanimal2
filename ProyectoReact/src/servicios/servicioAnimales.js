@@ -55,6 +55,12 @@ class ServicioAnimales {
   buscaChenilAnimal(id_animal){
     return https.post(`/animales.php?funcion=buscaChenilAnimal`, {id_animal});
   }
+  buscaChenilesLibres(){
+    return https.post(`/animales.php?funcion=buscaChenilesLibres`);
+  }
+  buscaChenilPorNumero(numero){
+    return https.post(`/animales.php?funcion=buscaChenilPorNumero`,{numero});
+  }
 }
 
 export default new ServicioAnimales();
