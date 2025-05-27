@@ -33,6 +33,8 @@ export const AuthProvider = ({ children }) => {
       const decodedUser = jwtDecode(token); // Decodifica el token
       setUser(decodedUser); // Guarda solo los datos del usuario
       localStorage.setItem('token', token);
+      console.log(token);
+      console.log(decodedUser); 
       navigate('/');
     } catch (error) {
       console.error('Error al decodificar token:', error);
