@@ -110,7 +110,7 @@ if($funcion === 'actualiza'){
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
         $fotoNombre = 'U_'.$nombre_usuario . '.' . $extension;
-        $carpetaFotos = "https://rivanimal-gestion.es/imagenes/";
+        $carpetaFotos = "var/www/Rivanimal2/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
         if (!is_dir($carpetaFotos)) {
