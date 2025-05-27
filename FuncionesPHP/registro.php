@@ -1,5 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *");
+include('url.php');
+header("Access-Control-Allow-Origin: $url");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
 

@@ -1,5 +1,6 @@
 <?php
-header("Access-Control-Allow-Origin: *"); // Allow any domain (replace * with a specific origin if needed)
+include('url.php');
+header("Access-Control-Allow-Origin: $url"); // Allow any domain (replace * with a specific origin if needed)
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow specific HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allow necessary headers
 
