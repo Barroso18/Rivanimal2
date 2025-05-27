@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const https = axios.create({
-  baseURL: "http://rivanimal-gestion.es/Rivanimal2/FuncionesPHP",
+  baseURL: "http://backend.rivanimal-gestion.es",
   headers: {
     "Content-Type": "application/json",
   },

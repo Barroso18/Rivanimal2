@@ -1,6 +1,6 @@
 <?php
 
-$servername = "93.93.117.225";
+$servername = "rivanimal-gestion.es";
 $username = "gestorRivanimal";
 $password ="rivanimal-gestion123";
 $dbname = "rivanimal";
