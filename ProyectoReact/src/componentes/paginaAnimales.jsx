@@ -66,21 +66,36 @@ const PaginaAnimales = () => {
 
   return (
     <>
-      <div className="p-6 max-w-6xl mx-auto">
+      <div className="pagina-Animal p-6 max-w-6xl mx-auto">
         <FiltroAnimales filtros={filtros} onFiltrosChange={handleFiltrosChange} errores={errores} />
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
           {animalesFiltrado.map((animal, indice) => (
-            <div key={indice} className="text-center">
-              <img src={animal.foto} alt={`imagen ${animal.nombre}`} className="rounded-md w-40 h-40 object-cover mx-auto" />
-              <h3 className="font-bold mt-2">{animal.nombre}</h3>
-              <p className="text-gray-600">{animal.raza}</p>
-              <p className="text-gray-500">Estado: {animal.situacion}</p>
-              <p className="text-gray-500">Nivel: {animal.nivel}</p>
-              <Link to={`/pagina-animal/${animal.id_animal}`}>
-                <button className="bg-green-500 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600">
-                  Mas info
-                </button>
-              </Link>
+            <div key={indice} className="flex flex-col h-full bg-white shadow-md rounded-lg overflow-hidden">
+              
+              {/* Imagen */}
+              <div className="w-full">
+                <img
+                  src={animal.foto}
+                  alt={`imagen ${animal.nombre}`}
+                  className="w-full h-60 object-cover"
+                />
+              </div>
+
+              {/* Contenido */}
+              <div className="flex flex-col flex-grow text-center p-4">
+                <h3 className="font-bold text-lg">{animal.nombre}</h3>
+                <p className="text-gray-600">{animal.raza}</p>
+                <p className="text-gray-500">Estado: {animal.situacion}</p>
+                <p className="text-gray-500">Nivel: {animal.nivel}</p>
+                <div className="mt-auto">
+                  <Link to={`/pagina-animal/${animal.id_animal}`}>
+                    <button className="bg-green-500 text-white px-4 py-2 rounded-md text-sm hover:bg-green-600">
+                      Más info
+                    </button>
+                  </Link>
+                </div>
+              </div>
+
             </div>
           ))}
         </div>

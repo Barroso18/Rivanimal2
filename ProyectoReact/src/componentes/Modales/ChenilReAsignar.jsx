@@ -101,15 +101,11 @@ const ChenilReAsignar = ({animal,chenil,onClose})=>{
     };
     return (
     <div className="fixed inset-0 bg-black bg-opacity-30 flex items-center justify-center z-50 p-4 overflow-y-auto">
-      <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6">
-        {/* Botón de cierre */}
-        <button
-          onClick={onClose}
-          className="close-btn absolute top-2 right-2 bg-white text-gray-500 hover:text-gray-800 rounded-full shadow-lg p-2"
-          aria-label="Cerrar"
-        >
-          ✖
-        </button>
+      <div className="relative bg-white rounded-lg shadow-lg w-full max-w-4xl max-h-[90vh] overflow-y-auto p-6 pt-12">
+        
+        {/* Botón de cierre (ahora dentro del modal) */}
+        
+
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Asignar chenil</h2>
         {/* Formulario */}
         <form onSubmit={envioFormulario} className="space-y-6">

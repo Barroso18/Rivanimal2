@@ -350,21 +350,19 @@ const PaginaAnimal = () => {
         return <p className="p-4">No hay usuarios cuidadores.</p>;
       }
       return (
-        <div className="overflow-x-auto">
+        <div className="w-full overflow-x-auto">
           <table className="table-auto border-collapse border border-gray-300 w-full text-sm text-left">
             <thead className="bg-gray-100">
               <tr>
                 <th className="border border-gray-300 px-4 py-2">Nombre</th>
-                <th className="border border-gray-300 px-4 py-2">Apellidos</th>
-                <th className="border border-gray-300 px-4 py-2">Nombre_usuario</th>
+                <th className="border border-gray-300 px-4 py-2">Usuario</th>
                 <th className="border border-gray-300 px-4 py-2">Rol</th>
               </tr>
             </thead>
             <tbody>
               {usuarios.map((cuidador, index) => (
                 <tr key={index} className="hover:bg-gray-50">
-                  <td className="border border-gray-300 px-4 py-2"><Link to={`/perfil-publico/${cuidador.nombre_usuario}`} className="underline text-blue-600 hover:text-blue-800">{cuidador.nombre}</Link></td>
-                  <td className="border border-gray-300 px-4 py-2">{cuidador.apellido1}, {cuidador.apellido2}</td>
+                  <td className="border border-gray-300 px-4 py-2"><Link to={`/perfil-publico/${cuidador.nombre_usuario}`} className="underline text-blue-600 hover:text-blue-800">{cuidador.nombre} {cuidador.apellido1}</Link></td>
                   <td className="border border-gray-300 px-4 py-2">{cuidador.nombre_usuario}</td>
                   <td className="border border-gray-300 px-4 py-2">
                     {cuidador.rol}
@@ -660,18 +658,22 @@ const PaginaAnimal = () => {
         </div>
       </div>
       <div className="flex flex-col justify-center items-center lg:items-start lg:flex-row max-w-[800px] w-full">
-        <div className="py-4">
-          Padrinos, Voluntarios, Adoptantes
+        <div className="w-full lg:w-1/2 py-4 px-2 sm:px-4">
+          <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center sm:text-left">
+            Padrinos, Voluntarios, Adoptantes
+          </h2>
           {visualizaUsuariosCuidadores()}
         </div>
-
-        <CalendarioDinamicoAnimal
-          reportes={paseos}
-          clase={animalInformacion.clase}
-          crearPaseo={() => crearPaseo(animalInformacion.nombre)}
-          crearReporteGato={() => crearReporteGato(animalInformacion.nombre)}
-          onCrearReporte={()=>recargaReportes()}
-        />
+        <div className="w-full lg:w-1/2 flex justify-center items-center ">
+          <CalendarioDinamicoAnimal
+            reportes={paseos}
+            clase={animalInformacion.clase}
+            crearPaseo={() => crearPaseo(animalInformacion.nombre)}
+            crearReporteGato={() => crearReporteGato(animalInformacion.nombre)}
+            onCrearReporte={()=>recargaReportes()}
+          />
+        </div>
+        
       </div>
       
       <Modal isOpen={modalsPaseo.crear}

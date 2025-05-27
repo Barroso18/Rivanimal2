@@ -153,6 +153,10 @@ a {
   flex-direction: column;
 }
 
+.pagina-Animal {
+  background-color: rgb(249 250 251/var(--tw-bg-opacity, 1));
+}
+
 .ficha-container {
   display: flex;
   background: white;

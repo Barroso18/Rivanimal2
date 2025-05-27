@@ -94,7 +94,7 @@ function CalendarioDinamicoAnimal({ reportes = [], clase, crearPaseo, crearRepor
 
       <div className="grid grid-cols-7 gap-3 text-center">{renderizarDias()}</div>
 
-      {/* 🎯 Botones de Reportes */}
+      {/* Botones de Reportes */}
       <div className="mt-6 flex flex-col items-center gap-4">
         {clase === 'perro' && (
           <button
@@ -107,7 +107,7 @@ function CalendarioDinamicoAnimal({ reportes = [], clase, crearPaseo, crearRepor
 
         {clase === 'gato' && (
           <button
-            className="bg-purple-500 text-white px-4 py-2 rounded-md hover:bg-purple-600"
+            className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
             onClick={crearReporteGato}
           >
             Reporte gato
@@ -115,7 +115,7 @@ function CalendarioDinamicoAnimal({ reportes = [], clase, crearPaseo, crearRepor
         )}
       </div>
 
-      {/* 🎯 Modales */}
+      {/*  Modales */}
       <Modal isOpen={modalAbiertoPerro} onClose={() => setModalAbiertoPerro(false)}>
         {reporteSeleccionado && (
           <PaseoConsultar paseoInformacion={reporteSeleccionado} onClose={() => setModalAbiertoPerro(false)} />

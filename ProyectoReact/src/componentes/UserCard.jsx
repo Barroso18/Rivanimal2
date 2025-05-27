@@ -7,11 +7,11 @@ const UserCard = ({ usuario }) => {
   return (
     <div className="flex flex-col sm:flex-row items-center sm:items-start p-4 bg-white rounded-xl shadow-sm border w-full">
       {/* Imagen */}
-      <div className="flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 bg-gray-200 rounded-md flex items-center justify-center">
+      <div className="flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 bg-gray-200 rounded-2xl flex items-center justify-center">
         <img
           src={usuario.foto || '../imagenes/imagenUsuario.jpg'}
           alt="User Avatar"
-          className="w-full h-full object-cover rounded-md"
+          className="w-full h-full object-cover rounded-2xl"
         />
       </div>
 

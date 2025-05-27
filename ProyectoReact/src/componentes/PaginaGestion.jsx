@@ -182,7 +182,7 @@ const PaginaGestion = () => {
     }, [activeTab]);
 
     return (
-        <div className='p-[3%]'>
+        <div className='p-[3%] min-h-screen'>
            
             {/* Tabs */}
             <div className="tabs flex border-b border-gray-300 overflow-x-auto whitespace-nowrap no-scrollbar">
@@ -210,7 +210,7 @@ const PaginaGestion = () => {
                                 <p>Esta es la lista de usuarios registrados en la aplicación:</p>
                             </div>
                             <button type="button" 
-                                className=" bg-green-500 text-white p-3 rounded-md hover:bg-green-600" 
+                                className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600 self-start sm:self-auto" 
                                 onClick={() => crearRegistroUsuario()}>
                                     Añadir Usuario
                             </button>
@@ -294,7 +294,7 @@ const PaginaGestion = () => {
                     </div>
                 )}
                 {activeTab === "cheniles" && (
-                    <div>
+                    <div className='h-full'>
                         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4">
                             <div className="flex-1">
                                 <h2 className="mt-4 text-lg font-bold">Gestion de cheniles y zonas de gatos</h2>

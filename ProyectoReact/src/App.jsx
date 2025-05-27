@@ -22,46 +22,8 @@ import PaginaVoluntarios from './componentes/PaginaVoluntarios';
 import PaginaGestion from './componentes/PaginaGestion';
 
 function App() {
-  //const [animales, setAnimales] = useStateStorage("animales", []);
-  //const [paseos, setPaseos] = useStateStorage("paseos", []);
-  //const [usuarios, setUsuarios] = useStateStorage("usuarios", []);
   const location = useLocation(); // Hook para obtener la ruta actual
-/*
-  useEffect(() => {
-    let funcion= "animalestodos";
-    fetch(`http://localhost/Rivanimal2/FuncionesPHP/animales.php?funcion=${funcion}`) // Asegúrate de que la URL es correcta
-      .then((response) => response.json())
-      .then((data) => setAnimales(data))
-      .catch((error) => console.error("Error al obtener los animales:", error));
-  }, []);
-*/
-/*
-  useEffect(() => {
-    ServicioPaseos.getAll()
-      .then(response => setPaseos(response.data))
-      .catch(() => {
-        Swal.fire({
-          title: "¿Tienes Internet?",
-          text: "No consigo descargar los paseos :(",
-          icon: "question"
-        });
-      });
-  }, []);
-*/
-/*
-  useEffect(() => {
-    ServicioUsuarios.getAll()
-      .then(response => setUsuarios(response.data))
-      .catch(() => {
-        Swal.fire({
-          title: "¿Tienes Internet?",
-          text: "No consigo descargar los usuarios :(",
-          icon: "question"
-        });
-      });
-  }, []);
 
-  */
   // Función para mostrar el menú superior solo si no estamos en la página de login
   const muestraMenu = () => {
     if (location.pathname !== "/login") { // Ocultar el menú en la página de login
@@ -71,16 +33,11 @@ function App() {
   };
   return (
     <AuthProvider>
-      <div className="App">
+      <div className="pagina-Animal App h-[100%]">
         <header className="App-header">
-          {/*
-          <MenuSuperior paseos={paseos} />
-          <MenuDesplegable/>
-          */}
           {muestraMenu()}
-          
         </header>
-        <main>
+        <main className='h-[100%]'>
           <Routes>
             <Route path="*" element={<Pagina404 />} />
             <Route path="/" element={
