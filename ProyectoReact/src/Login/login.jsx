@@ -15,20 +15,22 @@ const Login = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const datosLogin = { usuario, contrasena };
-    await servicioUsuarios.login(datosLogin)
-      .then((response) => {
-        if (response.data.jwt) {
-          console.log("aqui deberia entrar");
-          login(response.data.jwt); // Guardar token y cargar usuario
-        } else {
-          setError(response.data.message);
-        }
-      })
-      .catch((error) => {
-        console.error('Error en el login:', error);
-        setError('Error en el login');
-      });
+  const datosLogin = { usuario, contrasena };
+
+  try {
+    const response = await servicioUsuarios.login(datosLogin);
+    console.log("Login.js: Respuesta del backend:", response.data);
+
+    if (response.data.jwt) {
+      console.log("Login.js: Entrando a login() con token:", response.data.jwt);
+      login(response.data.jwt); // Aquí debería entrar
+    } else {
+      setError(response.data.message);
+    }
+  } catch (error) {
+    console.error('Error en el login:', error);
+    setError('Error en el login');
+  }
 
   };
   return (
