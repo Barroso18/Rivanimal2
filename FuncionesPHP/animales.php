@@ -122,7 +122,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
         if($clase === 'gato'){
             $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
         }
-        $carpetaFotos = "../imagenes/";
+        $carpetaFotos = $_SERVER['DOCUMENT_ROOT'] . "/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
         if (!is_dir($carpetaFotos)) {
@@ -238,7 +238,7 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
         if($clase === 'gato'){
             $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
         }
-        $carpetaFotos = "../imagenes/";
+        $carpetaFotos = $_SERVER['DOCUMENT_ROOT'] . "/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
         if (!is_dir($carpetaFotos)) {

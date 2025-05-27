@@ -77,7 +77,7 @@ $hashedPassword = password_hash($contrasena, PASSWORD_BCRYPT);
 if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
     $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
     $fotoNombre = 'U_'.$nombre_usuario . '.' . $extension;
-    $carpetaFotos = "../imagenes/";
+    $carpetaFotos = $_SERVER['DOCUMENT_ROOT'] . "/imagenes/";
     $fotoRuta = $carpetaFotos . $fotoNombre;
 
     if (!is_dir($carpetaFotos)) {
