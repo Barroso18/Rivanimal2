@@ -1,3 +1,3 @@
 <?php
-$url = "http://rivanimal-gestion.es/";
+$url = "https://backend.rivanimal-gestion.es/";
 ?>
