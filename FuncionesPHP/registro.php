@@ -1,9 +1,10 @@
 <?php
+/*
 include('url.php');
 header("Access-Control-Allow-Origin: $url");
 header("Access-Control-Allow-Methods: POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type, Authorization, X-Requested-With");
-
+*/
 // OJO: No establecemos Content-Type como application/json aquí, porque recibimos multipart/form-data
 
 include("ConexionBBDD.php");

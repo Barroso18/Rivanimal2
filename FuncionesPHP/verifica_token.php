@@ -1,7 +1,8 @@
 <?php
-include('url.php');
+/*include('url.php');
 header("Access-Control-Allow-Origin: $url");
 header('Content-Type: application/json');
+*/
 include('ConexionBBDD.php');
 require_once 'vendor/autoload.php';
 

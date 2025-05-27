@@ -1,9 +1,10 @@
 <?php
+/*
 include('url.php');
 header("Access-Control-Allow-Origin: $url"); // Allow any domain (replace * with a specific origin if needed)
 header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow specific HTTP methods
 header("Access-Control-Allow-Headers: Content-Type, Authorization"); // Allow necessary headers
-
+*/
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (isset($_FILES["file"])) {
         $carpetaFotos = "../ProyectoReact/public/imagenes/"; // Carpeta donde se guardarán las imágenes
