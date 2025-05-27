@@ -7,6 +7,17 @@ const https = axios.create({
   },
 });
 
+// Interceptor para añadir el token Authorization en cada petición
+https.interceptors.request.use(config => {
+  const token = localStorage.getItem('token');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, error => {
+  return Promise.reject(error);
+});
+
 // Interceptor para depurar errores
 https.interceptors.response.use(
   response => response,

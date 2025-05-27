@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode}  from 'jwt-decode';
+import jwtDecode  from 'jwt-decode';
 
 const AuthContext = createContext();
 
@@ -12,9 +12,15 @@ export const AuthProvider = ({ children }) => {
     const token = localStorage.getItem('token');
     if (token) {
       try {
-        return jwtDecode(token); // Extraer datos del usuario desde el token
+        const decoded = jwtDecode(token);
+        if (decoded.exp * 1000 < Date.now()) {
+          localStorage.removeItem('token');
+          return null;
+        }
+        return decoded;
       } catch (error) {
         console.error('Token inválido:', error);
+        localStorage.removeItem('token');
         return null;
       }
     }
