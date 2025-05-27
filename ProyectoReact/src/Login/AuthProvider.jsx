@@ -35,7 +35,7 @@ export const AuthProvider = ({ children }) => {
       localStorage.setItem('token', token);
       console.log(token);
       console.log(decodedUser); 
-      navigate('/');
+      navigate('/', { replace: true });
     } catch (error) {
       console.error('Error al decodificar token:', error);
     }
