@@ -19,10 +19,10 @@ const Login = () => {
 
   try {
     const response = await servicioUsuarios.login(datosLogin);
-    console.log("Login.js: Respuesta del backend:", response.data);
+    //console.log("Login.js: Respuesta del backend:", response.data);
 
     if (response.data.jwt) {
-      console.log("Login.js: Entrando a login() con token:", response.data.jwt);
+      //console.log("Login.js: Entrando a login() con token:", response.data.jwt);
       login(response.data.jwt); // Aquí debería entrar
     } else {
       setError(response.data.message);
