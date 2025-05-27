@@ -30,7 +30,7 @@ const MenuSuperior = () => {
     <div className="menu-superior mx-auto px-4 py-2 flex items-center justify-between flex-wrap bg-white shadow-md">
       {/* Logo */}
       <Link to="/"><img
-        src="/imagenes/logoRivanimal.jpg"
+        src="https://rivanimal-gestion.es/imagenes/logoRivanimal.jpg"
         alt="Logo Rivanimal"
         className="icono-logo h-10"
       /></Link>

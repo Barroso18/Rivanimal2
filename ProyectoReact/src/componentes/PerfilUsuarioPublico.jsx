@@ -42,7 +42,7 @@ const PerfilUsuarioPublico = () => {
   }, [nombre_usuario]);
 
   function buscaFoto() {
-    const imagenPredeterminada = "../imagenes/imagenUsuario.jpg";
+    const imagenPredeterminada = "https://rivanimal-gestion.es/imagenes/imagenUsuario.jpg";
     if (!usuarioInformacion.foto) {
       return (
         <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">

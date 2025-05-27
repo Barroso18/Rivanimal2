@@ -44,8 +44,8 @@ const Login = () => {
       }}
     >
       <div className="flex items-center justify-center gap-4 my-6">
-        <img src='/imagenes/logoRivanimal.jpg' className="h-20 object-contain" alt="Logo Rivanimal" />
-        <img src='/imagenes/logo-texto.jpg' className="h-20 object-contain" alt="Logo texto" />
+        <img src='https://rivanimal-gestion.es/imagenes/logoRivanimal.jpg' className="h-20 object-contain" alt="Logo Rivanimal" />
+        <img src='https://rivanimal-gestion.es/imagenes/logo-texto.jpg' className="h-20 object-contain" alt="Logo texto" />
       </div>
       <div className="bg-white bg-opacity-90 p-8 rounded-lg shadow-lg w-96">
         <h2 className="text-2xl font-bold text-center text-gray-800 mb-6">Iniciar Sesión</h2>

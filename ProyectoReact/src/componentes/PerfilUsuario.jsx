@@ -74,7 +74,7 @@ const PerfilUsuario = () => {
       if(usuarioInformacion.foto === null || usuarioInformacion.foto === undefined || usuarioInformacion.foto === ""){
         return (
             <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">
-                <img src="../imagenes/imagenUsuario.jpg" alt="Foto perfil usuario" />
+                <img src="https://rivanimal-gestion.es/imagenes/imagenUsuario.jpg" alt="Foto perfil usuario" />
             </div>);
 
       }else{

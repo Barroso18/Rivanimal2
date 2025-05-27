@@ -9,7 +9,7 @@ const UserCard = ({ usuario }) => {
       {/* Imagen */}
       <div className="flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 bg-gray-200 rounded-2xl flex items-center justify-center">
         <img
-          src={usuario.foto || '../imagenes/imagenUsuario.jpg'}
+          src={usuario.foto || 'https://rivanimal-gestion.es/imagenes/imagenUsuario.jpg'}
           alt="User Avatar"
           className="w-full h-full object-cover rounded-2xl"
         />

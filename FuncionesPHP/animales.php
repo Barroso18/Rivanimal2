@@ -122,7 +122,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
         if($clase === 'gato'){
             $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
         }
-        $carpetaFotos = "../ProyectoReact/public/imagenes/";
+        $carpetaFotos = "https://rivanimal-gestion.es/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
         if (!is_dir($carpetaFotos)) {
@@ -130,7 +130,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
         }
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
-            $foto = "../imagenes/".$fotoNombre;
+            $foto = "https://rivanimal-gestion.es/imagenes/".$fotoNombre;
         } else {
             echo json_encode(["message" => "Error al subir la foto"]);
             exit();
@@ -238,7 +238,7 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
         if($clase === 'gato'){
             $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
         }
-        $carpetaFotos = "../ProyectoReact/public/imagenes/";
+        $carpetaFotos = "https://rivanimal-gestion.es/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
 
         if (!is_dir($carpetaFotos)) {
@@ -246,7 +246,7 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
         }
 
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
-            $foto = "../imagenes/".$fotoNombre;
+            $foto = "https://rivanimal-gestion.es/imagenes/".$fotoNombre;
         } else {
             echo json_encode(["message" => "Error al subir la foto"]);
             exit();

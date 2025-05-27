@@ -77,7 +77,7 @@ $hashedPassword = password_hash($contrasena, PASSWORD_BCRYPT);
 if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
     $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
     $fotoNombre = 'U_'.$nombre_usuario . '.' . $extension;
-    $carpetaFotos = "../ProyectoReact/public/imagenes/";
+    $carpetaFotos = "https://rivanimal-gestion.es/imagenes/";
     $fotoRuta = $carpetaFotos . $fotoNombre;
 
     if (!is_dir($carpetaFotos)) {
@@ -85,7 +85,7 @@ if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
     }
 
     if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
-        $foto = "../imagenes/".$fotoNombre;
+        $foto = "https://rivanimal-gestion.es/imagenes/".$fotoNombre;
     } else {
         echo json_encode(["message" => "Error al subir la foto"]);
         exit();
