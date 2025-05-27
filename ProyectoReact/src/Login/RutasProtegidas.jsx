@@ -1,10 +1,11 @@
-import React from 'react';
-import { Navigate } from 'react-router-dom';
 import { useAuth } from './AuthProvider';
+import { Navigate } from 'react-router-dom';
 
 const RutaProtegida = ({ children }) => {
   const { user } = useAuth();
-  return user ? children : <Navigate to="/login" />;
+  if (!user) {
+    return <Navigate to="/login" replace />;
+  }
+  return children;
 };
-
 export default RutaProtegida;

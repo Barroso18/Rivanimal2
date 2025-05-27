@@ -1,51 +1,42 @@
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import {jwtDecode}  from 'jwt-decode';
+import { jwtDecode } from 'jwt-decode';
 
 const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const navigate = useNavigate();
-
-  // Recuperar usuario desde el token en localStorage
   const [user, setUser] = useState(() => {
     const token = localStorage.getItem('token');
     if (token) {
       try {
         const decoded = jwtDecode(token);
-        if (decoded.exp * 1000 < Date.now()) {
-          localStorage.removeItem('token');
-          return null;
-        }
+        console.log("🔑 Usuario recuperado del token:", decoded);
         return decoded;
       } catch (error) {
-        console.error('Token inválido:', error);
-        localStorage.removeItem('token');
+        console.error('❌ Token inválido:', error);
         return null;
       }
     }
     return null;
   });
 
-  // Función para iniciar sesión
   const login = (token) => {
     try {
-      const decodedUser = jwtDecode(token); // Decodifica el token
-      setUser(decodedUser); // Guarda solo los datos del usuario
+      const decodedUser = jwtDecode(token);
+      console.log("✅ Login exitoso, decoded user:", decodedUser);
+      setUser(decodedUser);
       localStorage.setItem('token', token);
-      console.log(token);
-      console.log(decodedUser); 
-      navigate('/', { replace: true });
+      navigate('/', { replace: true }); // <-- Asegura navegación
     } catch (error) {
-      console.error('Error al decodificar token:', error);
+      console.error('❌ Error al decodificar token:', error);
     }
   };
 
-  // Función para cerrar sesión
   const logout = () => {
     setUser(null);
     localStorage.removeItem('token');
-    navigate('/login');
+    navigate('/login', { replace: true });
   };
 
   return (
