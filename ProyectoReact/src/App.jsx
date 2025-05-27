@@ -32,7 +32,7 @@ function App() {
     return null;
   };
   return (
-    <AuthProvider>
+    
       <div className="pagina-Animal App h-[100%]">
         <header className="App-header">
           {muestraMenu()}
@@ -89,7 +89,6 @@ function App() {
           </Routes>
         </main>
       </div>
-    </AuthProvider>
   );
 }
 
