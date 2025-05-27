@@ -19,6 +19,7 @@ const Login = () => {
     await servicioUsuarios.login(datosLogin)
       .then((response) => {
         if (response.data.jwt) {
+          console.log("aqui deberia entrar");
           login(response.data.jwt); // Guardar token y cargar usuario
         } else {
           setError(response.data.message);
