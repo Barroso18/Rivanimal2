@@ -122,9 +122,15 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
         if($clase === 'gato'){
             $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
         }
-        $carpetaFotos = $_SERVER['DOCUMENT_ROOT'] . "/imagenes/";
+        $carpetaFotos = "/var/www/html/Rivanimal2/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
+        $mime = mime_content_type($_FILES['file']['tmp_name']);
+        $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
 
+        if (!in_array($mime, $permitidos)) {
+            echo json_encode(["error" => "Formato de imagen no permitido"]);
+            exit();
+        }
         if (!is_dir($carpetaFotos)) {
             mkdir($carpetaFotos, 0777, true);
         }
@@ -238,9 +244,15 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
         if($clase === 'gato'){
             $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
         }
-        $carpetaFotos = $_SERVER['DOCUMENT_ROOT'] . "/imagenes/";
+        $carpetaFotos = "/var/www/html/Rivanimal2/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
+        $mime = mime_content_type($_FILES['file']['tmp_name']);
+        $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
 
+        if (!in_array($mime, $permitidos)) {
+            echo json_encode(["error" => "Formato de imagen no permitido"]);
+            exit();
+        }
         if (!is_dir($carpetaFotos)) {
             mkdir($carpetaFotos, 0777, true);
         }

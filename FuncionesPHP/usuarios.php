@@ -110,9 +110,15 @@ if($funcion === 'actualiza'){
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
         $fotoNombre = 'U_'.$nombre_usuario . '.' . $extension;
-        $carpetaFotos = $_SERVER['DOCUMENT_ROOT'] . "/imagenes/";
+        $carpetaFotos = "/var/www/html/Rivanimal2/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
+        $mime = mime_content_type($_FILES['file']['tmp_name']);
+        $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
 
+        if (!in_array($mime, $permitidos)) {
+            echo json_encode(["error" => "Formato de imagen no permitido"]);
+            exit();
+        }
         if (!is_dir($carpetaFotos)) {
             mkdir($carpetaFotos, 0777, true);
         }
@@ -120,7 +126,7 @@ if($funcion === 'actualiza'){
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
             $foto = "https://rivanimal-gestion.es/imagenes/".$fotoNombre;
         } else {
-            echo json_encode(["message" => "Error al subir la foto"]);
+            echo json_encode(["error" => "Error al subir la foto"]);
             exit();
         }
     }
