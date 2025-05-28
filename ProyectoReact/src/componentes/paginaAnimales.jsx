@@ -75,7 +75,7 @@ const PaginaAnimales = () => {
               {/* Imagen */}
               <div className="w-full">
                 <img
-                  src={animal.foto}
+                  src={`${animal.foto}?v=${Date.now()}`}
                   alt={`imagen ${animal.nombre}`}
                   className="w-full h-60 object-cover"
                 />

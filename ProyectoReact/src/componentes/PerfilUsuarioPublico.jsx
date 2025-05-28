@@ -46,14 +46,14 @@ const PerfilUsuarioPublico = () => {
     if (!usuarioInformacion.foto) {
       return (
         <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">
-          <img src={imagenPredeterminada} alt="Foto perfil usuario" />
+          <img src={`${imagenPredeterminada}?v=${Date.now()}`} alt="Foto perfil usuario" />
         </div>
       );
     } else {
       return (
         <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">
           <img
-            src={usuarioInformacion.foto || imagenPredeterminada}
+            src={`${usuarioInformacion.foto}?v=${Date.now()}` || `${imagenPredeterminada}?v=${Date.now()}`}
             alt="Foto perfil usuario"
             onError={e => {
               e.target.onerror = null;

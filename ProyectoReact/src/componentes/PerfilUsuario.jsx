@@ -74,13 +74,13 @@ const PerfilUsuario = () => {
       if(usuarioInformacion.foto === null || usuarioInformacion.foto === undefined || usuarioInformacion.foto === ""){
         return (
             <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">
-                <img src="https://rivanimal-gestion.es/imagenes/imagenUsuario.jpg" alt="Foto perfil usuario" />
+                <img src={`https://rivanimal-gestion.es/imagenes/imagenUsuario.jpg?${Date.now()}`} alt="Foto perfil usuario" />
             </div>);
 
       }else{
         return (<>{usuarioInformacion.foto ? (
             <div className="foto flex justify-center items-center w-full md:w-auto mb-4 md:mb-0">
-                <img src={usuarioInformacion.foto} alt="Foto perfil usuario" />
+                <img src={`${usuarioInformacion.foto}?v=${Date.now()}`} alt="Foto perfil usuario" />
             </div>
           ) : (
             <p>Cargando imagen...</p>

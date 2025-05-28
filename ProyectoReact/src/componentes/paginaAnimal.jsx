@@ -509,7 +509,7 @@ const PaginaAnimal = () => {
           {/* Verificación condicional para evitar errores */}
           {animalInformacion.foto ? (
             <img
-              src={animalInformacion.foto}
+              src={`${animalInformacion.foto}?v=${Date.now()}`}
               alt="Perro en adopción"
               className="rounded-lg w-full h-auto object-cover max-h-[400px]"
             />
