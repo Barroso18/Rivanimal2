@@ -3,16 +3,25 @@ import { Link } from "react-router-dom";
 
 const UserCard = ({ usuario }) => {
   const roles = Array.isArray(usuario.roles) ? usuario.roles : [];
-
+  const imagenPredeterminada = "https://rivanimal-gestion.es/imagenes/imagenUsuario.jpg";
   return (
     <div className="flex flex-col sm:flex-row items-center sm:items-start p-4 bg-white rounded-xl shadow-sm border w-full">
       {/* Imagen */}
       <div className="flex-shrink-0 w-24 h-24 sm:w-20 sm:h-20 bg-gray-200 rounded-2xl flex items-center justify-center">
-        <img
-          src={`${usuario.foto}?v=${Date.now()}` || `https://rivanimal-gestion.es/imagenes/imagenUsuario.jpg?v=${Date.now()}`}
-          alt="User Avatar"
-          className="w-full h-full object-cover rounded-2xl"
-        />
+        {(usuario.foto === '')||(
+          <img
+            src={`${usuario.foto}?v=${Date.now()}`}
+            alt="User Avatar"
+            className="w-full h-full object-cover rounded-2xl"
+          />
+        )}
+        {!(usuario.foto === '')||(
+          <img
+            src={`${imagenPredeterminada}?v=${Date.now()}`}
+            alt="User Avatar"
+            className="w-full h-full object-cover rounded-2xl"
+          />
+        )}
       </div>
 
       {/* Información */}
