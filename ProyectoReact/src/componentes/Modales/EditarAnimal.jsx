@@ -23,7 +23,7 @@ const EditarAnimal = ({animal,onClose})=>{
     const [mensaje, setMensaje] = useState('');
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(animal.foto);
-    const [foto, setFoto] = useState(animal.foto);
+    const [foto, setFoto] = useState(null);
     const [localidad, setLocalidad] = useState(animal.localidad || "");
     const [disponibilidad, setDisponibilidad] = useState(
       animal.disponibilidad
@@ -85,10 +85,10 @@ const EditarAnimal = ({animal,onClose})=>{
         formData.append("descripcion",descripcion);
         formData.append("comportamiento",comportamiento);
         formData.append("socializacion",socializacion);
-        formData.append("id_animal",id_animal);
+        formData.append("id_animal",animal.id_animal);
         formData.append("localidad", localidad);
         formData.append("disponibilidad", disponibilidad.join(","));
-        console.log("id_animal: ", id_animal);
+        console.log("id_animal: ", animal.id_animal);
         if (foto) {
           formData.append("file", foto); // Adjuntar la imagen
         }

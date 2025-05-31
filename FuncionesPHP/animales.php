@@ -258,7 +258,8 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
         $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
 
         if (!in_array($mime, $permitidos)) {
-            echo json_encode(["error" => "Formato de imagen no permitido"]);
+            $errores['foto'] = "Formato de imagen no permitido";
+            echo json_encode(["errores" => $errores]);
             exit();
         }
         if (!is_dir($carpetaFotos)) {
@@ -268,7 +269,8 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
             $foto = "https://rivanimal-gestion.es/imagenes/".$fotoNombre;
         } else {
-            echo json_encode(["message" => "Error al subir la foto"]);
+            $errores['foto'] = "Error al subir la foto";
+            echo json_encode(["errores" => $errores]);
             exit();
         }
     }
