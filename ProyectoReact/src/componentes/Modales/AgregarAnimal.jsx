@@ -501,8 +501,13 @@ const AgregarAnimal = ({onClose})=>{
                             type="number"
                             value={peso}
                             name="peso"
-                            onChange={(e) => setPeso(e.target.value)}
+                            onChange={(e) => {
+                            // Normaliza el decimal: convierte coma en punto
+                            const inputValue = e.target.value.replace(',', '.');
+                            setPeso(inputValue);
+                            }}
                             required
+                            step="0.01"
                             className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
                         />
                     </div>

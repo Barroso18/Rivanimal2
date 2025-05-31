@@ -482,15 +482,20 @@ const EditarAnimal = ({animal,onClose})=>{
                         />
                     </div>
                     <div className="flex-1 min-w-[150px]">
-                        <label className="block text-sm font-medium text-gray-600">Peso(Kg):</label>
-                        <input
-                            type="number"
-                            value={peso}
-                            name="peso"
-                            onChange={(e) => setPeso(e.target.value)}
-                            required
-                            className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
-                        />
+                      <label className="block text-sm font-medium text-gray-600">Peso(Kg):</label>
+                      <input
+                        type="number"
+                        value={peso}
+                        name="peso"
+                        onChange={(e) => {
+                          // Normaliza el decimal: convierte coma en punto
+                          const inputValue = e.target.value.replace(',', '.');
+                          setPeso(inputValue);
+                        }}
+                        required
+                        step="0.01"
+                        className="w-full p-1 text-sm border border-gray-300 rounded mt-1"
+                      />
                     </div>
                 </div>
                 {/* Grupo 5: descripcion, comportamiento, socializacion */}

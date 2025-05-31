@@ -64,20 +64,20 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     $foto = '';
     $errores = [];
     // Validaciones básicas
-    if (empty($nombre)) $errores['nombre'] = "El nombre es obligatorio";
+    if (empty(trim($nombre))) $errores['nombre'] = "El nombre es obligatorio";
+    if (empty(trim($clase))) $errores['clase'] = "La clase es obligatoria";
+    if (empty(trim($raza))) $errores['raza'] = "La clase es obligatoria";
+    if (empty(trim($sexo))) $errores['sexo'] = "El sexo es obligatorio";
+    if (!isset($identificador) || !is_numeric($identificador) || intval($identificador) <= 0) $errores['identificador'] = "El identificador es obligatorio y debe ser un número mayor que 0";
+    if (empty(trim($tamaño))) $errores['tamaño'] = "El tamaño es obligatorio";
+    if (empty(trim($situacion))) $errores['situacion'] = "La situación es obligatoria";
+    if (empty(trim($fechaNacimiento))) $errores['fechaNacimiento'] = "La fecha de nacimiento es obligatoria";
+    if (empty(trim($fechaEntrada))) $errores['fechaEntrada'] = "La fecha de entrada es obligatoria";
+    if(!isset($peso) || !is_numeric($peso) || floatval($peso) < 0) $errores['peso'] = "El peso debe ser un número positivo";
+    if (!isset($nivel) || !is_numeric($nivel) || intval($nivel) < 1 || intval($nivel) > 5) $errores['nivel'] = "El nivel es obligatorio y debe ser un número entre 1 y 5";
     if (empty($clase)) $errores['clase'] = "La clase es obligatoria";
-    if (empty($raza)) $errores['raza'] = "La clase es obligatoria";
-    if (empty($sexo)) $errores['sexo'] = "El sexo es obligatorio";
-    if (empty($identificador) || $identificador === 0 || is_nan($identificador)|| $identificador<0) $errores['identificador'] = "El identificador es obligatorio y debe ser un número mayor que 0";
-    if (empty($tamaño)) $errores['tamaño'] = "El tamaño es obligatorio";
-    if (empty($situacion)) $errores['situacion'] = "La situación es obligatoria";
-    if (empty($fechaNacimiento)) $errores['fechaNacimiento'] = "La fecha de nacimiento es obligatoria";
-    if (empty($fechaEntrada)) $errores['fechaEntrada'] = "La fecha de entrada es obligatoria";
-    if(empty($peso) || is_nan($peso)|| $peso <0) $errores['peso'] = "El peso debe ser un número positivo";
-    if (empty($nivel) || is_nan($nivel)) $errores['nivel'] = "El nivel es obligatorio y debe ser un número entre 1 y 5";
-    if (empty($clase)) $errores['clase'] = "La clase es obligatoria";
-    if(empty($localidad)) $errores['localidad']="La localidad es obligatoria";
-    if(empty($disponibilidad)) $errores['disponibilidad']="La disponibilidad es obligatoria";
+    if(empty(trim($localidad))) $errores['localidad']="La localidad es obligatoria";
+    if(empty(trim($disponibilidad))) $errores['disponibilidad']="La disponibilidad es obligatoria";
      // Validar el formato de la fecha
     $fecha_obj = DateTime::createFromFormat('Y-m-d', $fechaNacimiento);
     if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $fechaNacimiento) {
@@ -185,21 +185,20 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     $foto = '';
     $errores = [];
     // Validaciones básicas
-    if(empty($id_animal) || $id_animal === 0) $errores['id_animal'] = "El id_animal es obligatorio";
-    if (empty($nombre)) $errores['nombre'] = "El nombre es obligatorio";
+    if (empty(trim($nombre))) $errores['nombre'] = "El nombre es obligatorio";
+    if (empty(trim($clase))) $errores['clase'] = "La clase es obligatoria";
+    if (empty(trim($raza))) $errores['raza'] = "La clase es obligatoria";
+    if (empty(trim($sexo))) $errores['sexo'] = "El sexo es obligatorio";
+    if (!isset($identificador) || !is_numeric($identificador) || intval($identificador) <= 0) $errores['identificador'] = "El identificador es obligatorio y debe ser un número mayor que 0";
+    if (empty(trim($tamaño))) $errores['tamaño'] = "El tamaño es obligatorio";
+    if (empty(trim($situacion))) $errores['situacion'] = "La situación es obligatoria";
+    if (empty(trim($fechaNacimiento))) $errores['fechaNacimiento'] = "La fecha de nacimiento es obligatoria";
+    if (empty(trim($fechaEntrada))) $errores['fechaEntrada'] = "La fecha de entrada es obligatoria";
+    if(!isset($peso) || !is_numeric($peso) || floatval($peso) < 0) $errores['peso'] = "El peso debe ser un número positivo";
+    if (!isset($nivel) || !is_numeric($nivel) || intval($nivel) < 1 || intval($nivel) > 5) $errores['nivel'] = "El nivel es obligatorio y debe ser un número entre 1 y 5";
     if (empty($clase)) $errores['clase'] = "La clase es obligatoria";
-    if (empty($raza)) $errores['raza'] = "La clase es obligatoria";
-    if (empty($sexo)) $errores['sexo'] = "El sexo es obligatorio";
-    if (empty($identificador) || $identificador === 0 || is_nan($identificador)) $errores['identificador'] = "El identificador es obligatorio y debe ser un número mayor que 0";
-    if (empty($tamaño)) $errores['tamaño'] = "El tamaño es obligatorio";
-    if (empty($situacion)) $errores['situacion'] = "La situación es obligatoria";
-    if (empty($fechaNacimiento)) $errores['fechaNacimiento'] = "La fecha de nacimiento es obligatoria";
-    if (empty($fechaEntrada)) $errores['fechaEntrada'] = "La fecha de entrada es obligatoria";
-    if(empty($peso) || is_nan($peso)|| $peso <0) $errores['peso'] = "El peso debe ser un número positivo";
-    if (empty($nivel) || is_nan($nivel)) $errores['nivel'] = "El nivel es obligatorio y debe ser un número entre 1 y 5";
-    if (empty($clase)) $errores['clase'] = "La clase es obligatoria";
-    if(empty($localidad)) $errores['localidad']="La localidad es obligatoria";
-    if(empty($disponibilidad)) $errores['disponibilidad']="La disponibilidad es obligatoria";
+    if(empty(trim($localidad))) $errores['localidad']="La localidad es obligatoria";
+    if(empty(trim($disponibilidad))) $errores['disponibilidad']="La disponibilidad es obligatoria";
      // Validar el formato de la fecha
     $fecha_obj = DateTime::createFromFormat('Y-m-d', $fechaNacimiento);
     if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $fechaNacimiento) {
