@@ -89,8 +89,8 @@ const EditarAnimal = ({animal,onClose})=>{
         formData.append("localidad", localidad);
         formData.append("disponibilidad", disponibilidad.join(","));
         console.log("id_animal: ", animal.id_animal);
-        if (foto) {
-          formData.append("file", foto); // Adjuntar la imagen
+        if (foto && foto instanceof File) {
+          formData.append("file", foto); // Solo si es un archivo
         }
         // Juntar todos los datos en una variable de texto
         const datosHTML  = `
