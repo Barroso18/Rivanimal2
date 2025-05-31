@@ -224,8 +224,8 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     }
 
     // Verificacion de duplicidad del identificador
-    $fila = buscaAnimalPorID($conn,$identificador);
-    if ($fila && isset($fila['identificador']) && intval($fila['identificador']) === intval($identificador)) $errores['identificador'] = "el identificador ya existe";
+    $fila = compruebaIdentificadorDuplicado($conn,$identificador,$id_animal);
+    if ($fila) $errores['identificador'] = "el identificador ya existe";
     
     //Verificacion gatos no PPP
     if($clase === "gato" && $ppp === 1) $errores['clase']="un gato no puede ser ppp";

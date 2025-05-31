@@ -22,6 +22,20 @@ use \Firebase\JWT\JWT;
             return null;
         }
     }
+    function compruebaIdentificadorDuplicado($conn, $identificador, $id_animal){
+        $sql = "SELECT id_animal FROM animal WHERE identificador = ? AND id_animal <> ? LIMIT 1";
+        $stmt = $conn->prepare($sql);
+        $stmt->bind_param("ii", $identificador, $id_animal);
+        $stmt->execute();
+        $result = $stmt->get_result();
+
+        if ($result->num_rows > 0) {
+            return true;
+        }
+        else{
+            return false;
+        }
+    }
     //Comprueba duplicidades de reporte diario en un dia de un usuario
     function compruebaDuplicados($conn,$usuario,$fecha,$horario){
         $checkSql = "SELECT usuario, fecha, horario FROM reporte_diario WHERE usuario = ? AND fecha = ? AND horario = ?";
