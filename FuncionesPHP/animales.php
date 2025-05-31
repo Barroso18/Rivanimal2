@@ -242,13 +242,13 @@ if($funcion === 'actualizaAnimal'){
             nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, foto=?, comportamiento=?, socializacion=?, ppp=?, localidad=?, disponibilidad=?
             WHERE id_animal=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssissssidsissssi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $foto, $comportamiento, $socializacion, $ppp, $localidad, $disponibilidad, $id_animal);
+        $stmt->bind_param("ssssissssdisssisssi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $foto, $comportamiento, $socializacion, $ppp, $localidad, $disponibilidad, $id_animal);
     } else {
         $sql = "UPDATE animal SET 
             nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, comportamiento=?, socializacion=?, ppp=?, localidad=?, disponibilidad=?
             WHERE id_animal=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssissssidsisssi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $comportamiento, $socializacion, $ppp, $localidad, $disponibilidad, $id_animal);
+       $stmt->bind_param("ssssissssdississi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $comportamiento, $socializacion, $ppp, $localidad, $disponibilidad, $id_animal);
     }
 
     if ($stmt->execute()) {
