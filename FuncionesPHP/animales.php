@@ -169,7 +169,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     $conn->close();
 }
 if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
-    var_dump($_POST);
+    //var_dump($_POST);
     //$input = json_decode(file_get_contents("php://input"), true);
     // Accede directamente a $_POST en lugar de leer php://input
     $id_animal = $_POST['id_animal']??0;
@@ -182,7 +182,7 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     $situacion = $_POST['situacion'] ?? '';
     $fechaNacimiento = $_POST['fechaNacimiento'] ?? '';
     $fechaEntrada = $_POST['fechaEntrada'] ?? '';
-    var_dump($_POST['peso']);
+    //var_dump($_POST['peso']);
     $peso = isset($_POST['peso']) ? str_replace(',', '.', $_POST['peso']) : 0;
     //$peso = $_POST['peso'] ?? 0;
     $descripcion = $_POST['descripcion'] ?? '';
