@@ -53,7 +53,8 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     $situacion = $_POST['situacion'] ?? '';
     $fechaNacimiento = $_POST['fechaNacimiento'] ?? '';
     $fechaEntrada = $_POST['fechaEntrada'] ?? '';
-    $peso = $_POST['peso'] ?? 0;
+    var_dump($_POST['peso']);
+    $peso = str_replace(',', '.', $_POST['peso']) ?? 0;
     $descripcion = $_POST['descripcion'] ?? '';
     $comportamiento = $_POST['comportamiento'] ?? '';
     $socializacion = $_POST['socializacion'] ?? '';
@@ -146,11 +147,12 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
 
     //agregaAnimal($conn);
 
-    $sql = "INSERT INTO animal (nombre, clase, raza, sexo,identificador,tamaño,situacion,fecha_nacimiento,fecha_entrada,nivel,peso,descripcion,foto,comportamiento,socializacion,ppp,disponibilidad,localidad) 
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?,?,?,?,?)";
+   $sql = "INSERT INTO animal (nombre, clase, raza, sexo, identificador, tamaño, situacion, fecha_nacimiento, fecha_entrada, nivel, peso, descripcion, foto, comportamiento, socializacion, ppp, disponibilidad, localidad) 
+        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
     $stmt = $conn->prepare($sql);
-    $stmt->bind_param("ssssissssiissssiss", $nombre, $clase, $raza, $sexo,$identificador,$tamaño,$situacion,$fechaNacimiento,$fechaEntrada,$nivel,$peso,$descripcion,$foto,$comportamiento,$socializacion,$ppp,$disponibilidad,$localidad);
-    
+    $stmt->bind_param("ssssissssidsississ", 
+        $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $foto, $comportamiento, $socializacion, $ppp, $disponibilidad, $localidad
+    );
     if ($stmt->execute()) {
         echo json_encode(["message" => "Registro de animal exitoso"]);
     } else {
@@ -174,7 +176,9 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     $situacion = $_POST['situacion'] ?? '';
     $fechaNacimiento = $_POST['fechaNacimiento'] ?? '';
     $fechaEntrada = $_POST['fechaEntrada'] ?? '';
-    $peso = $_POST['peso'] ?? 0;
+    var_dump($_POST['peso']);
+    $peso = str_replace(',', '.', $_POST['peso']) ?? 0;
+    //$peso = $_POST['peso'] ?? 0;
     $descripcion = $_POST['descripcion'] ?? '';
     $comportamiento = $_POST['comportamiento'] ?? '';
     $socializacion = $_POST['socializacion'] ?? '';
@@ -273,14 +277,14 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
             nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, foto=?, comportamiento=?, socializacion=?, ppp=?, localidad=?, disponibilidad=?
             WHERE id_animal=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssissssiissssissi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $foto, $comportamiento, $socializacion, $ppp,$localidad, $disponibilidad, $id_animal);
+        $stmt->bind_param("ssssissssidsisssissi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $foto, $comportamiento, $socializacion, $ppp,$localidad, $disponibilidad, $id_animal);
     } else {
         // Si no se subió nueva foto, no actualices el campo foto
         $sql = "UPDATE animal SET 
             nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, comportamiento=?, socializacion=?, ppp=?, localidad=?, disponibilidad=?
             WHERE id_animal=?";
         $stmt = $conn->prepare($sql);
-        $stmt->bind_param("ssssissssiisssissi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $comportamiento, $socializacion, $ppp,$localidad, $disponibilidad, $id_animal);
+        $stmt->bind_param("ssssissssidsississi", $nombre, $clase, $raza, $sexo, $identificador, $tamaño, $situacion, $fechaNacimiento, $fechaEntrada, $nivel, $peso, $descripcion, $comportamiento, $socializacion, $ppp,$localidad, $disponibilidad, $id_animal);
     }
 
     if ($stmt->execute()) {
