@@ -169,7 +169,7 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     $conn->close();
 }
 if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
-    
+    var_dump($_POST);
     //$input = json_decode(file_get_contents("php://input"), true);
     // Accede directamente a $_POST en lugar de leer php://input
     $id_animal = $_POST['id_animal']??0;
