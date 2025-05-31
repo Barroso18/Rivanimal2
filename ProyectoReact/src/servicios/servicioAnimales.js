@@ -24,16 +24,10 @@ class ServicioAnimales {
     return https.post(`/animales.php?funcion=buscaEstadoAnimal`, { id_animal });
   }
   async registro(datosRegistro) {
-      return https.post(`/animales.php?funcion=agregaAnimal`, datosRegistro ,{
-         headers: {
-           'Content-Type': 'multipart/form-data',
-         }});
+      return https.post(`/animales.php?funcion=agregaAnimal`, datosRegistro );
    }
    async actualiza(datosRegistro) {
-      return https.post(`/animales.php?funcion=actualizaAnimal`, datosRegistro ,{
-         headers: {
-           'Content-Type': 'multipart/form-data',
-         }});
+      return https.post(`/animales.php?funcion=actualizaAnimal`, datosRegistro );
    }
 
   borraAnimalPorId(id_animal){

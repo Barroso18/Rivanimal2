@@ -195,7 +195,7 @@ if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
     $foto = '';
     $errores = [];
     // Validaciones básicas
-    if (empty(trim($nombre))) $errores['nombre'] = "El nombre es obligatorio";
+    if (empty($nombre)) $errores['nombre'] = "El nombre es obligatorio";
     if (empty(trim($clase))) $errores['clase'] = "La clase es obligatoria";
     if (empty(trim($raza))) $errores['raza'] = "La clase es obligatoria";
     if (empty(trim($sexo))) $errores['sexo'] = "El sexo es obligatorio";
