@@ -23,7 +23,7 @@ const EditarAnimal = ({animal,onClose})=>{
     const [mensaje, setMensaje] = useState('');
     const [error, setError] = useState('');
     const [preview, setPreview] = useState(animal.foto);
-    const [foto, setFoto] = useState(null);
+    const [foto, setFoto] = useState(animal.foto);
     const [localidad, setLocalidad] = useState(animal.localidad || "");
     const [disponibilidad, setDisponibilidad] = useState(
       animal.disponibilidad
@@ -76,16 +76,16 @@ const EditarAnimal = ({animal,onClose})=>{
         formData.append("sexo",sexo);
         formData.append("tamaño",tamaño);
         formData.append("ppp",ppp);
-        formData.append("identificador",identificador);
-        formData.append("nivel",nivel);
+        formData.append("identificador",parseInt(identificador));
+        formData.append("nivel",parseInt(nivel));
         formData.append("situacion",situacion);
         formData.append("fechaNacimiento",fechaNacimiento);
         formData.append("fechaEntrada",fechaEntrada);
-        formData.append("peso",peso);
+        formData.append("peso",parseFloat(peso));
         formData.append("descripcion",descripcion);
         formData.append("comportamiento",comportamiento);
         formData.append("socializacion",socializacion);
-        formData.append("id_animal",animal.id_animal);
+        formData.append("id_animal",parseInt(animal.id_animal));
         formData.append("localidad", localidad);
         formData.append("disponibilidad", disponibilidad.join(","));
         console.log("id_animal: ", animal.id_animal);

@@ -168,8 +168,8 @@ if($funcion === 'agregaAnimal'){//Agrega un animal a la base de datos
     $stmt->close();
     $conn->close();
 }
-if($funcion === 'actualizaAnimal'){
-    $id_animal = $_POST['id_animal'] ?? 0;
+if($funcion === 'actualizaAnimal'){//Agrega un animal a la base de datos
+    $id_animal = $_POST['id_animal']??0;
     $nombre = $_POST['nombre'] ?? '';
     $clase = $_POST['clase'] ?? '';
     $raza = $_POST['raza'] ?? '';
@@ -179,7 +179,9 @@ if($funcion === 'actualizaAnimal'){
     $situacion = $_POST['situacion'] ?? '';
     $fechaNacimiento = $_POST['fechaNacimiento'] ?? '';
     $fechaEntrada = $_POST['fechaEntrada'] ?? '';
+    //var_dump($_POST['peso']);
     $peso = isset($_POST['peso']) ? str_replace(',', '.', $_POST['peso']) : 0;
+    //$peso = $_POST['peso'] ?? 0;
     $descripcion = $_POST['descripcion'] ?? '';
     $comportamiento = $_POST['comportamiento'] ?? '';
     $socializacion = $_POST['socializacion'] ?? '';
@@ -189,36 +191,72 @@ if($funcion === 'actualizaAnimal'){
     $disponibilidad = $_POST['disponibilidad'] ?? '';
     $foto = '';
     $errores = [];
-
-    // Validaciones similares a las que ya tienes (omito por brevedad)...
-
-    // Validar fechas (igual que antes)
+    // Validaciones básicas
+    if (empty($nombre)) $errores['nombre'] = "El nombre es obligatorio";
+    if (empty(trim($clase))) $errores['clase'] = "La clase es obligatoria";
+    if (empty(trim($raza))) $errores['raza'] = "La clase es obligatoria";
+    if (empty(trim($sexo))) $errores['sexo'] = "El sexo es obligatorio";
+    if (!isset($identificador) || !is_numeric($identificador) || intval($identificador) <= 0) $errores['identificador'] = "El identificador es obligatorio y debe ser un número mayor que 0";
+    if (empty(trim($tamaño))) $errores['tamaño'] = "El tamaño es obligatorio";
+    if (empty(trim($situacion))) $errores['situacion'] = "La situación es obligatoria";
+    if (empty(trim($fechaNacimiento))) $errores['fechaNacimiento'] = "La fecha de nacimiento es obligatoria";
+    if (empty(trim($fechaEntrada))) $errores['fechaEntrada'] = "La fecha de entrada es obligatoria";
+    if(!isset($peso) || !is_numeric($peso) || floatval($peso) < 0) $errores['peso'] = "El peso debe ser un número positivo";
+    if (!isset($nivel) || !is_numeric($nivel) || intval($nivel) < 1 || intval($nivel) > 5) $errores['nivel'] = "El nivel es obligatorio y debe ser un número entre 1 y 5";
+    if(empty(trim($localidad))) $errores['localidad']="La localidad es obligatoria";
+    if(empty(trim($disponibilidad))) $errores['disponibilidad']="La disponibilidad es obligatoria";
+     // Validar el formato de la fecha
     $fecha_obj = DateTime::createFromFormat('Y-m-d', $fechaNacimiento);
     if (!$fecha_obj || $fecha_obj->format('Y-m-d') !== $fechaNacimiento) {
         $errores['fechaNacimiento'] = "Formato de fecha de Nacimiento inválido";
     }
+     // Validar el formato de la fecha
     $fecha_obj2 = DateTime::createFromFormat('Y-m-d', $fechaEntrada);
     if (!$fecha_obj2 || $fecha_obj2->format('Y-m-d') !== $fechaEntrada) {
         $errores['fechaEntrada'] = "Formato de fecha de entrada inválido";
     }
-
-    // Si hay errores, responder
     if (!empty($errores)) {
         echo json_encode(["errores" => $errores]);
         exit();
     }
 
-    // Procesa foto si viene
+    // Verificacion de duplicidad del identificador
+    $fila = compruebaIdentificadorDuplicado($conn,$identificador,$id_animal);
+    if ($fila) $errores['identificador'] = "el identificador ya existe";
+    
+    //Verificacion gatos no PPP
+    if($clase === "gato" && $ppp === 1) $errores['clase']="un gato no puede ser ppp";
+
+    //Verificacion nivel entre 0 y 5
+    if($nivel<0 || $nivel>5)$errores['nivel'] = "el nivel debe estar entre 0 y 5";
+
+    if (!empty($errores)) {
+        echo json_encode(["errores" => $errores]);
+        exit();
+    }
+    /*
+    echo json_encode(["data" => $nombre,"message" => "Registro exitoso"]);
+    exit();
+*/
+
+
+    // Procesa la foto si fue enviada
     if (isset($_FILES['file']) && $_FILES['file']['error'] === UPLOAD_ERR_OK) {
         $extension = pathinfo($_FILES['file']['name'], PATHINFO_EXTENSION);
-        $fotoNombre = 'A_'.$nombre.'_'.($clase === 'perro' ? 'P' : 'G').'.'.$extension;
+        if($clase === 'perro'){
+            $fotoNombre = 'A_'.$nombre.'_P'. '.' . $extension;
+        }
+        if($clase === 'gato'){
+            $fotoNombre = 'A_'.$nombre.'_G'. '.' . $extension;
+        }
         $carpetaFotos = "/var/www/html/Rivanimal2/imagenes/";
         $fotoRuta = $carpetaFotos . $fotoNombre;
         $mime = mime_content_type($_FILES['file']['tmp_name']);
         $permitidos = ['image/jpeg', 'image/png', 'image/gif'];
 
         if (!in_array($mime, $permitidos)) {
-            echo json_encode(["error" => "Formato de imagen no permitido"]);
+            $errores['foto'] = "Formato de imagen no permitido";
+            echo json_encode(["errores" => $errores]);
             exit();
         }
         if (!is_dir($carpetaFotos)) {
@@ -228,12 +266,16 @@ if($funcion === 'actualizaAnimal'){
         if (move_uploaded_file($_FILES['file']['tmp_name'], $fotoRuta)) {
             $foto = "https://rivanimal-gestion.es/imagenes/".$fotoNombre;
         } else {
-            echo json_encode(["error" => "Error al subir la foto"]);
+            $errores['foto'] = "Error al subir la foto";
+            echo json_encode(["errores" => $errores]);
             exit();
         }
     }
 
-    // Preparar UPDATE
+
+    //agregaAnimal($conn);
+
+    // Si se subió una nueva foto, actualiza también el campo foto
     if (!empty($foto)) {
         $sql = "UPDATE animal SET 
             nombre=?, clase=?, raza=?, sexo=?, identificador=?, tamaño=?, situacion=?, fecha_nacimiento=?, fecha_entrada=?, nivel=?, peso=?, descripcion=?, foto=?, comportamiento=?, socializacion=?, ppp=?, localidad=?, disponibilidad=?
